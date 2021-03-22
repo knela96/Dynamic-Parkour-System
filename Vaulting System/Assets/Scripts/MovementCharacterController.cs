@@ -37,9 +37,8 @@ public class MovementCharacterController : MonoBehaviour
 
         if (velocity.magnitude > 0)
         {
-            //Lerp with current velocity with Axis
-            rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
-            smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime*4);
+            rb.velocity = new Vector3(velocity.x * speed, rb.velocity.y, velocity.z * speed);
+            smoothSpeed = rb.velocity.magnitude;
         }
         else
         {
@@ -50,6 +49,11 @@ public class MovementCharacterController : MonoBehaviour
     }
 
     public Vector3 Velocity { get => rb.velocity; set => velocity = value; }
+
+    public void ResetSpeed()
+    {
+        smoothSpeed = 0;
+    }
     
     public void SetCurrentState(MovementState state) 
     {
