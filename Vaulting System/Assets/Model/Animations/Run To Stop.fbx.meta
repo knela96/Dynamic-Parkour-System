@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: ac61465a13d9cde4a8ae02f87aba2407
+guid: 8b7641127beae2f4caa7489af19d781a
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Idle To Sprint
+    second: Run To Stop
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,13 +35,13 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle To Sprint
+      name: Run To Stop
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 24
+      lastFrame: 27
       wrapMode: 0
-      orientationOffsetY: -0.28
+      orientationOffsetY: 9.14
       level: 0
       cycleOffset: 0
       loop: 0
@@ -51,9 +51,9 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
