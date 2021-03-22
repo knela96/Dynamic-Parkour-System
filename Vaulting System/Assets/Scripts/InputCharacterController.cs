@@ -5,17 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(ThirdPersonController))]
 public class InputCharacterController : MonoBehaviour
 {
-    private MovementCharacterController controller;
+    private ThirdPersonController character;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<MovementCharacterController>();
+        character = GetComponent<ThirdPersonController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        controller.AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+        character.AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.Joystick1Button10))
+        {
+            character.ToggleRun();
+        }
     }
 }

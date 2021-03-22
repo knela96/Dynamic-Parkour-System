@@ -18,6 +18,7 @@ public class AnimationCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         animator.SetFloat("Velocity", controller.GetCurrentVelocity());
     }
 }
