@@ -37,8 +37,8 @@ public class MovementCharacterController : MonoBehaviour
 
         if (velocity.magnitude > 0)
         {
-            rb.velocity = new Vector3(velocity.x * speed, rb.velocity.y, velocity.z * speed);
-            smoothSpeed = rb.velocity.magnitude;
+            rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
+            smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
         }
         else
         {

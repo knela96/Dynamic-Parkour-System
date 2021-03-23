@@ -38,10 +38,10 @@ ModelImporter:
       name: Idle To Sprint
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
+      firstFrame: 5
       lastFrame: 24
       wrapMode: 0
-      orientationOffsetY: -0.27
+      orientationOffsetY: -1.42
       level: 0
       cycleOffset: 0
       loop: 0
@@ -53,7 +53,7 @@ ModelImporter:
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
