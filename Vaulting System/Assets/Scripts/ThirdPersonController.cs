@@ -12,8 +12,7 @@ public class ThirdPersonController : MonoBehaviour
     private float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     public Transform camReference;
-    private Vector3 velocity;
-
+    int counter = 0;
 
     private void Start()
     {
@@ -44,23 +43,28 @@ public class ThirdPersonController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             //Move Player to camera directin
-            velocity = translation;
+            characterAnimation.animator.SetBool("Released", false);
         }
         else
         {
-            velocity = Vector3.zero;
+            characterAnimation.animator.SetBool("Released", true);
 
             //Reset Sprint to Walk Velocity
             if (characterMovement.GetState() == MovementState.Running)
             {
                 characterMovement.SetCurrentState(MovementState.Walking);
-                characterMovement.ResetSpeed();
+                ResetMovement();
             }
         }
+        characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
 
-        characterMovement.Velocity = translation;
     }
 
+    public void ResetMovement()
+    {
+        characterMovement.ResetSpeed();
+        characterAnimation.animator.applyRootMotion = true;
+    }
 
     public void ToggleRun()
     {
@@ -68,13 +72,12 @@ public class ThirdPersonController : MonoBehaviour
         {
             characterMovement.SetCurrentState(MovementState.Running);
             //characterAnimation.SetRootMotion(true);
-            velocity = Vector3.zero;
-            characterMovement.ResetSpeed();
+            //characterMovement.ResetSpeed();
         }
     }
 
     public float GetCurrentVelocity()
     {
-        return characterMovement.Velocity.magnitude;
+        return characterMovement.GetAnimVelocity().magnitude;
     }
 }

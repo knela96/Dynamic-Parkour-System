@@ -10,8 +10,13 @@ public class MovementCharacterController : MonoBehaviour
     private ThirdPersonController controller;
     private Rigidbody rb;
     private Vector3 velocity;
+    private Vector3 animVelocity;
     public float speed = 6f;
     private float smoothSpeed;
+
+    public float walkSpeed;
+    public float JogSpeed;
+    public float RunSpeed;
 
 
     //public CharacterController charactercontroller;
@@ -23,6 +28,7 @@ public class MovementCharacterController : MonoBehaviour
     {
         controller = GetComponent<ThirdPersonController>();
         rb = GetComponent<Rigidbody>();
+        SetCurrentState(MovementState.Walking);
     }
 
     // Update is called once per frame
@@ -37,18 +43,23 @@ public class MovementCharacterController : MonoBehaviour
 
         if (velocity.magnitude > 0)
         {
-            rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
             smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
+            rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
+            UpdateAnimVelocity(rb.velocity);
         }
         else
         {
             //Lerp with current velocity of the rigidbody
-            rb.velocity = new Vector3(Velocity.normalized.x * smoothSpeed, rb.velocity.y, Velocity.normalized.z * smoothSpeed);
-            smoothSpeed = Mathf.Lerp(smoothSpeed, 0, Time.deltaTime*4);
+            smoothSpeed = Mathf.Lerp(smoothSpeed, 0, Time.deltaTime * 6);
+            rb.velocity = new Vector3(GetVelocity().normalized.x * smoothSpeed, rb.velocity.y, GetVelocity().normalized.z * smoothSpeed);
+            UpdateAnimVelocity(GetAnimVelocity().normalized * smoothSpeed);
         }
     }
 
-    public Vector3 Velocity { get => rb.velocity; set => velocity = value; }
+    public Vector3 GetVelocity() { return rb.velocity; }
+    public Vector3 GetAnimVelocity() { return animVelocity; }
+    public void SetVelocity(Vector3 value) { velocity = value; }
+    public void UpdateAnimVelocity(Vector3 value) { animVelocity = value; }
 
     public void ResetSpeed()
     {
@@ -62,10 +73,11 @@ public class MovementCharacterController : MonoBehaviour
         switch (currentState)
         {
             case MovementState.Walking:
-                speed = 6f;
+                speed = walkSpeed;
                 break;
             case MovementState.Running:
-                speed = 9f;
+                speed = RunSpeed;
+                smoothSpeed = speed;
                 break;
         }
     }

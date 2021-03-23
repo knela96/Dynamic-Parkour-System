@@ -605,7 +605,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: -0.047300108, y: 0.047220625, z: 0.002238552, w: 0.9977615}
+  m_LocalRotation: {x: -0.04729998, y: 0.047275662, z: 0.002241161, w: 0.99775887}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -782,7 +782,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.07105276, y: 0.06623376, z: -0.0047285054, w: 0.9952599}
+  m_LocalRotation: {x: 0.071052395, y: 0.06631153, z: -0.004734057, w: 0.99525476}
   m_LocalPosition: {x: 0, y: 1.94, z: -4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -889,7 +889,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.07105273, y: 0.06623376, z: -0.0047285035, w: 0.9952599}
+  m_LocalRotation: {x: 0.07105237, y: 0.06631152, z: -0.0047340556, w: 0.99525476}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -993,7 +993,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.115112886, y: 0.06595896, z: -0.007660672, w: 0.9911306}
+  m_LocalRotation: {x: 0.11511229, y: 0.0660364, z: -0.0076696677, w: 0.9911254}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1143,9 +1143,9 @@ GameObject:
   - component: {fileID: 1585646071}
   - component: {fileID: 1585646070}
   - component: {fileID: 1585646076}
-  - component: {fileID: 1585646072}
-  - component: {fileID: 1585646074}
   - component: {fileID: 1585646075}
+  - component: {fileID: 1585646074}
+  - component: {fileID: 1585646072}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1229,7 +1229,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: e3e25480d2d5544409a577f05406fb17, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -1248,6 +1248,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
+  walkSpeed: 3
+  JogSpeed: 3
+  RunSpeed: 5.625
 --- !u!114 &1585646075
 MonoBehaviour:
   m_ObjectHideFlags: 0

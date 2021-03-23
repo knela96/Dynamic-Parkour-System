@@ -38,10 +38,10 @@ ModelImporter:
       name: Run To Stop
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
+      firstFrame: 6
       lastFrame: 27
       wrapMode: 0
-      orientationOffsetY: 9.14
+      orientationOffsetY: 9.1
       level: 0
       cycleOffset: 0
       loop: 0

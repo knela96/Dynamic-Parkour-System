@@ -18,7 +18,15 @@ public class AnimationCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         animator.SetFloat("Velocity", controller.GetCurrentVelocity());
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Root"))
+        {
+            animator.applyRootMotion = true;
+        }
+        else
+        {
+            animator.applyRootMotion = false;
+        }
     }
 }
