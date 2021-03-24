@@ -38,10 +38,10 @@ ModelImporter:
       name: Idle To Sprint
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 5
+      firstFrame: 8
       lastFrame: 24
       wrapMode: 0
-      orientationOffsetY: -1.42
+      orientationOffsetY: -0.54
       level: 0
       cycleOffset: 0
       loop: 0
