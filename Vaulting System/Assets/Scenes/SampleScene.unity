@@ -968,7 +968,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.13783823, y: 0.06567668, z: -0.009160555, w: 0.98823243}
+  m_LocalRotation: {x: 0.13783824, y: 0.06567668, z: -0.009160556, w: 0.98823243}
   m_LocalPosition: {x: 0, y: 2.49, z: -4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1075,7 +1075,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.1378382, y: 0.065676674, z: -0.009160551, w: 0.98823243}
+  m_LocalRotation: {x: 0.13783821, y: 0.065676674, z: -0.009160552, w: 0.98823243}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1541,7 +1541,7 @@ MonoBehaviour:
   feetToIKPositionSpeed: 0.25
   leftFootAnimVariableName: LeftFootCurve
   rightFootAnimVariableName: RightFootCurve
-  useProIKFeature: 0
+  useProIKFeature: 1
   showDebug: 1
 --- !u!114 &1585646075
 MonoBehaviour:
@@ -1734,7 +1734,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 22b711a6bc0709f418fc54e2888f622e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22b711a6bc0709f418fc54e2888f622e,
         type: 3}
