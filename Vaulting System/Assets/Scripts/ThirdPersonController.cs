@@ -78,6 +78,6 @@ public class ThirdPersonController : MonoBehaviour
 
     public float GetCurrentVelocity()
     {
-        return characterMovement.GetAnimVelocity().magnitude;
+        return characterMovement.GetVelocity().magnitude;
     }
 }

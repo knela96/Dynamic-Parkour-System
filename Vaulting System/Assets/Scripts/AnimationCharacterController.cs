@@ -6,8 +6,8 @@ using UnityEngine;
 public class AnimationCharacterController : MonoBehaviour
 {
     public Animator animator;
-
     private ThirdPersonController controller;
+    private Vector3 animVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,7 @@ public class AnimationCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.SetFloat("Velocity", controller.GetCurrentVelocity());
+        animator.SetFloat("Velocity", animVelocity.magnitude);
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Root"))
         {
@@ -28,5 +28,8 @@ public class AnimationCharacterController : MonoBehaviour
         {
             animator.applyRootMotion = false;
         }
+
     }
+    public void SetAnimVelocity(Vector3 value) { animVelocity = value; }
+    public Vector3 GetAnimVelocity() { return animVelocity; }
 }
