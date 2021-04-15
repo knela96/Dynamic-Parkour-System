@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MovementState { Walking, Running }
+public enum MovementState { Walking, Running, Jumping }
 
 [RequireComponent(typeof(ThirdPersonController))]
 public class MovementCharacterController : MonoBehaviour
@@ -19,6 +19,7 @@ public class MovementCharacterController : MonoBehaviour
     public float walkSpeed;
     public float JogSpeed;
     public float RunSpeed;
+    public float jumpForce;
 
     private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
     Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -40,6 +41,11 @@ public class MovementCharacterController : MonoBehaviour
 
     MovementState currentState;
 
+    public delegate void OnLandedDelegate();
+    public delegate void OnFallDelegate();
+    public event OnLandedDelegate OnLanded;
+    public event OnFallDelegate OnFall;
+
     //public CharacterController charactercontroller;
 
 
@@ -60,7 +66,32 @@ public class MovementCharacterController : MonoBehaviour
 
         ApplyInputMovement();
 
-        
+        if (controller.inAir)
+        {
+            if (controller.characterDetection.IsGrounded() && rb.velocity.y < 0)
+            {
+                OnLanded();
+                controller.inAir = false;
+            }
+            else
+            {
+                OnFall();
+            }
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (!enableFeetIK)
+            return;
+        if (anim == null)
+            return;
+
+        AdjustFeetTarget(ref rightFootPosition, HumanBodyBones.RightFoot);
+        AdjustFeetTarget(ref leftFootPosition, HumanBodyBones.LeftFoot);
+
+        //Raycast to Ground
+        FeetPositionSolver(rightFootPosition, ref rightFootIKPosition, ref rightFootIKRotation);
+        FeetPositionSolver(leftFootPosition, ref leftFootIKPosition, ref leftFootIKRotation);
     }
 
     #region Movement
@@ -115,24 +146,19 @@ public class MovementCharacterController : MonoBehaviour
         return currentState;
     }
 
+    public void Jump()
+    {
+        if (controller.isGrounded)
+        {
+            rb.AddForce(new Vector3(0, jumpForce * 10, 0),ForceMode.Impulse);
+            controller.inAir = true;
+        }
+    }
+
     #endregion
 
     #region Foot IK
 
-    private void FixedUpdate()
-    {
-        if (!enableFeetIK)
-            return;
-        if (anim == null)
-            return;
-
-        AdjustFeetTarget(ref rightFootPosition, HumanBodyBones.RightFoot);
-        AdjustFeetTarget(ref leftFootPosition, HumanBodyBones.LeftFoot);
-
-        //Raycast to Ground
-        FeetPositionSolver(rightFootPosition, ref rightFootIKPosition, ref rightFootIKRotation);
-        FeetPositionSolver(leftFootPosition, ref leftFootIKPosition, ref leftFootIKRotation);
-    }
 
     private void OnAnimatorIK(int layerIndex)
     {

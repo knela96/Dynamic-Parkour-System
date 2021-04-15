@@ -968,7 +968,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.13783824, y: 0.06567668, z: -0.009160556, w: 0.98823243}
+  m_LocalRotation: {x: 0.13783823, y: 0.06567668, z: -0.009160555, w: 0.98823243}
   m_LocalPosition: {x: 0, y: 2.49, z: -4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1075,7 +1075,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.13783821, y: 0.065676674, z: -0.009160552, w: 0.98823243}
+  m_LocalRotation: {x: 0.1378382, y: 0.065676674, z: -0.009160551, w: 0.98823243}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1421,6 +1421,7 @@ GameObject:
   - component: {fileID: 1585646073}
   - component: {fileID: 1585646071}
   - component: {fileID: 1585646070}
+  - component: {fileID: 1585646077}
   - component: {fileID: 1585646076}
   - component: {fileID: 1585646075}
   - component: {fileID: 1585646074}
@@ -1492,9 +1493,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovement: {fileID: 1585646074}
   characterAnimation: {fileID: 1585646075}
+  characterDetection: {fileID: 1585646077}
   cam: {fileID: 963194228}
   Transform_Mesh: {fileID: 1341899574}
   camReference: {fileID: 310059466}
+  isGrounded: 0
 --- !u!95 &1585646073
 Animator:
   serializedVersion: 3
@@ -1526,13 +1529,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e4e8fc79c695540bc086f95f326b45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 3
   walkSpeed: 3
   JogSpeed: 3
   RunSpeed: 5.625
+  jumpForce: 60
   enableFeetIK: 1
-  heightFromGroundRaycast: 1.4
-  raycastDownDistance: 1.5
+  heightFromGroundRaycast: 0.88
+  raycastDownDistance: 0.685
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -1566,6 +1570,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cfd175c44e9f6f4f81bd4cda4afa01f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1585646077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585646068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0522215dee5274f88c2307db9d9006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1632943567
@@ -1820,6 +1836,7 @@ GameObject:
   - component: {fileID: 1989027582}
   - component: {fileID: 1989027581}
   - component: {fileID: 1989027580}
+  - component: {fileID: 1989027584}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1902,3 +1919,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1989027584
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989027579}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

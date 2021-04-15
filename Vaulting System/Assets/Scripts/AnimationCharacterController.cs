@@ -30,6 +30,29 @@ public class AnimationCharacterController : MonoBehaviour
         }
 
     }
-    public void SetAnimVelocity(Vector3 value) { animVelocity = value; }
+    public void SetAnimVelocity(Vector3 value) { animVelocity = value; animVelocity.y = 0; }
     public Vector3 GetAnimVelocity() { return animVelocity; }
+
+    public void Jump()
+    {
+        animator.SetBool("Jump", true);
+        animator.SetBool("Fall", false);
+        animator.SetBool("Land", false);
+        controller.characterMovement.enableFeetIK = false;
+    }
+    public void Fall()
+    {
+        animator.SetBool("Jump", false);
+        animator.SetBool("Fall", true);
+        animator.SetBool("Land", false);
+        controller.characterMovement.enableFeetIK = false;
+    }
+
+    public void Land()
+    {
+        animator.SetBool("Jump", false);
+        animator.SetBool("Fall", false);
+        animator.SetBool("Land", true);
+        controller.characterMovement.enableFeetIK = true;
+    }
 }

@@ -22,5 +22,10 @@ public class InputCharacterController : MonoBehaviour
         {
             character.ToggleRun();
         }
+
+        if(Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1))
+        {
+            character.Jump();
+        }
     }
 }

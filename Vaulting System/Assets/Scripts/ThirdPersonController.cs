@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class ThirdPersonController : MonoBehaviour
 {
     public MovementCharacterController characterMovement;
     public AnimationCharacterController characterAnimation;
+    public DetectionCharacterController characterDetection;
 
     public Transform cam;
     public Transform Transform_Mesh;
@@ -13,16 +15,31 @@ public class ThirdPersonController : MonoBehaviour
     float turnSmoothVelocity;
     public Transform camReference;
     int counter = 0;
+    public bool isGrounded = false;
+    public bool inAir = false;
 
     private void Start()
     {
         //camReference = new GameObject("Camera Aux").transform;
+        characterMovement.OnLanded += characterAnimation.Land;
+        characterMovement.OnFall += characterAnimation.Fall;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Player is falling
+        if (!characterDetection.IsGrounded() && characterMovement.GetVelocity().y < 0)
+        {
+            inAir = true;
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        //add ocndition if jumped dont check if velocity > 0
+
+        
     }
 
     public void AddMovementInput(float vertical, float horizontal)
@@ -60,6 +77,15 @@ public class ThirdPersonController : MonoBehaviour
 
     }
 
+    public void Jump()
+    {
+        if (isGrounded == true && !inAir)
+        {
+            characterMovement.Jump();
+            characterAnimation.Jump();
+        }
+    }
+
     public void ResetMovement()
     {
         characterMovement.ResetSpeed();
@@ -75,6 +101,7 @@ public class ThirdPersonController : MonoBehaviour
             //characterMovement.ResetSpeed();
         }
     }
+
 
     public float GetCurrentVelocity()
     {
