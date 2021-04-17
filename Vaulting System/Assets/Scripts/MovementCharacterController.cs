@@ -20,6 +20,7 @@ public class MovementCharacterController : MonoBehaviour
     public float JogSpeed;
     public float RunSpeed;
     public float jumpForce;
+    public float fallForce;
 
     private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
     Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -97,6 +98,12 @@ public class MovementCharacterController : MonoBehaviour
     #region Movement
     public void ApplyInputMovement()
     {
+        //Apply fall multiplier
+        if(rb.velocity.y < 0)
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.deltaTime;
+        }
+
         if (GetState() == MovementState.Running)
         {
             velocity.Normalize();
@@ -150,7 +157,7 @@ public class MovementCharacterController : MonoBehaviour
     {
         if (controller.isGrounded)
         {
-            rb.AddForce(new Vector3(0, jumpForce * 10, 0),ForceMode.Impulse);
+            rb.velocity = Vector3.up * jumpForce;
             controller.inAir = true;
         }
     }
@@ -259,4 +266,13 @@ public class MovementCharacterController : MonoBehaviour
 
     #endregion
 
+
+    #region Climb
+    
+    public void SetKinematic(bool active)
+    {
+        rb.isKinematic = active;
+    }
+
+    #endregion
 }

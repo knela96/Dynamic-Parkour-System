@@ -17,6 +17,7 @@ public class ThirdPersonController : MonoBehaviour
     int counter = 0;
     public bool isGrounded = false;
     public bool inAir = false;
+    public bool inGrab = false;
 
     private void Start()
     {
@@ -28,18 +29,29 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isGrounded = characterDetection.IsGrounded();
         //Player is falling
-        if (!characterDetection.IsGrounded() && characterMovement.GetVelocity().y < 0)
+        if (!isGrounded && characterMovement.GetVelocity().y < 0)
         {
             inAir = true;
         }
+
+       
     }
 
     private void FixedUpdate()
     {
-        //add ocndition if jumped dont check if velocity > 0
+        if (!isGrounded)
+        {
+            bool ledgeFound = false;
+            ledgeFound = characterDetection.LedgeCollision(transform.position);
 
-        
+            if (ledgeFound)
+            {
+                characterMovement.SetKinematic(true);
+                inGrab = true;
+            }
+        }
     }
 
     public void AddMovementInput(float vertical, float horizontal)
