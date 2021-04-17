@@ -27,36 +27,46 @@ public class DetectionCharacterController : MonoBehaviour
         
     }
 
-    public bool LedgeCollision(Vector3 position)
+    //Detect point to grab the Ledge
+    public bool LedgeCollision()
     {
         RaycastHit feetHit;
+        Vector3 rayOrigin = transform.TransformDirection(OriginLedgeRay) + transform.position;
 
-        if (Physics.Raycast(position + OriginLedgeRay, Vector3.down, out feetHit, OriginLedgeLength, climbLayer))
+        if (Physics.Raycast(rayOrigin, Vector3.down, out feetHit, OriginLedgeLength, climbLayer))
         {
             if (showDebug)
-                Debug.DrawLine(position + OriginLedgeRay, position + OriginLedgeRay + Vector3.down * OriginLedgeLength, Color.green);
-            position.y = feetHit.point.y;
+                Debug.DrawLine(rayOrigin, rayOrigin + Vector3.down * OriginLedgeLength, Color.green);
 
-            if (Physics.Raycast(position, Vector3.forward, out feetHit, OriginLedgeLength, climbLayer))
+            Vector3 rayOrigin2 = transform.position;
+            rayOrigin2.y = feetHit.point.y;
+
+            if (Physics.Raycast(rayOrigin2, transform.forward, out feetHit, OriginLedgeLength, climbLayer))
             {
-                if (showDebug)
-                    Debug.DrawLine(position, position + Vector3.forward * OriginLedgeLength, Color.green);
 
-                LedgePosition = feetHit.point;
+                LedgePosition.y = feetHit.point.y;
+
+                transform.rotation = Quaternion.FromToRotation(-transform.forward, feetHit.normal) * transform.rotation;
+                
+                //transform.position = LedgePosition;
+
+                if (showDebug)
+                {
+                    Debug.DrawLine(rayOrigin2, rayOrigin2 + transform.forward * OriginLedgeLength, Color.green);
+                }
+
                 return true;
             }
             else
             {
                 if (showDebug)
-                    Debug.DrawLine(position, position + Vector3.forward * OriginLedgeLength, Color.red);
+                    Debug.DrawLine(rayOrigin2, rayOrigin2 + transform.forward * OriginLedgeLength, Color.red);
                 LedgePosition = Vector3.zero;
             }
-
-
         }
 
         if (showDebug)
-            Debug.DrawLine(position + OriginLedgeRay, position + OriginLedgeRay + Vector3.down * OriginLedgeLength, Color.red);
+            Debug.DrawLine(rayOrigin, rayOrigin + Vector3.down * OriginLedgeLength, Color.red);
         return false;
     }
 

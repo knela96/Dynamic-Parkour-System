@@ -44,7 +44,7 @@ public class ThirdPersonController : MonoBehaviour
         if (!isGrounded)
         {
             bool ledgeFound = false;
-            ledgeFound = characterDetection.LedgeCollision(transform.position);
+            ledgeFound = characterDetection.LedgeCollision();
 
             if (ledgeFound)
             {
@@ -64,12 +64,15 @@ public class ThirdPersonController : MonoBehaviour
 
         if (translation.magnitude > 0 )
         {
-            //Get direction with camera rotation
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            if (!inGrab)
+            {
+                //Get direction with camera rotation
+                float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 
-            //Rotate Mesh to Movement
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                //Rotate Mesh to Movement
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            }
 
             //Move Player to camera directin
             characterAnimation.animator.SetBool("Released", false);
