@@ -43,7 +43,6 @@ public class DetectionCharacterController : MonoBehaviour
 
             if (Physics.Raycast(rayOrigin2, transform.forward, out feetHit, OriginLedgeLength, climbLayer))
             {
-
                 LedgePosition.y = feetHit.point.y;
 
                 transform.rotation = Quaternion.FromToRotation(-transform.forward, feetHit.normal) * transform.rotation;

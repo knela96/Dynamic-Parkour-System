@@ -10,7 +10,7 @@ public class MovementCharacterController : MonoBehaviour
     #region Variables
     private ThirdPersonController controller;
     private Animator anim;
-    private Rigidbody rb;
+    public Rigidbody rb;
     private Vector3 velocity;
     private Vector3 animVelocity;
     public float speed = 6f;

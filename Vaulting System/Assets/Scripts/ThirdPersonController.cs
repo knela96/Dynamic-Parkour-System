@@ -8,6 +8,7 @@ public class ThirdPersonController : MonoBehaviour
     public MovementCharacterController characterMovement;
     public AnimationCharacterController characterAnimation;
     public DetectionCharacterController characterDetection;
+    public JumpPredictionController jumpPrediction;
 
     public Transform cam;
     public Transform Transform_Mesh;
@@ -17,7 +18,9 @@ public class ThirdPersonController : MonoBehaviour
     int counter = 0;
     public bool isGrounded = false;
     public bool inAir = false;
-    public bool inGrab = false;
+    public bool dummy = false;
+    bool ledgeFound = false;
+    bool toTarget = false;
 
     private void Start()
     {
@@ -29,50 +32,70 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = characterDetection.IsGrounded();
         //Player is falling
+        isGrounded = (characterDetection.IsGrounded() && characterMovement.GetVelocity().y <= 0) ? true : false;
+
         if (!isGrounded && characterMovement.GetVelocity().y < 0)
         {
             inAir = true;
         }
 
-       
-    }
-
-    private void FixedUpdate()
-    {
         if (!isGrounded)
         {
-            bool ledgeFound = false;
+            RaycastHit hit;
             ledgeFound = characterDetection.LedgeCollision();
 
-            if (ledgeFound)
+            if (ledgeFound && !dummy)
             {
-                characterMovement.SetKinematic(true);
-                inGrab = true;
+                DisableController();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            toTarget = jumpPrediction.SetParabola(transform, GameObject.Find("Target").transform);
+
+            if (toTarget)
+            {
+                DisableController();
+                characterAnimation.Jump();
+            }
+        }
+
+        if (!jumpPrediction.hasArrived() && toTarget)
+        {
+            jumpPrediction.FollowParabola();
+        }
+        else if (jumpPrediction.hasArrived() && toTarget)
+        {
+            characterAnimation.Land();
+            toTarget = false;
+        }
+
+        //Dismount
+        if (Input.GetKeyDown(KeyCode.C))
+            EnableController();
     }
 
     public void AddMovementInput(float vertical, float horizontal)
     {
+        if (dummy)
+            return;
+
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
         camReference.eulerAngles = new Vector3(0, cam.eulerAngles.y, 0);
         Vector3 translation = camReference.transform.forward * vertical + camReference.transform.right * horizontal;
         translation.y = 0;
 
-        if (translation.magnitude > 0 )
+        if (translation.magnitude > 0)
         {
-            if (!inGrab)
-            {
-                //Get direction with camera rotation
-                float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            //Get direction with camera rotation
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
 
-                //Rotate Mesh to Movement
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                transform.rotation = Quaternion.Euler(0f, angle, 0f);
-            }
+            //Rotate Mesh to Movement
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             //Move Player to camera directin
             characterAnimation.animator.SetBool("Released", false);
@@ -109,7 +132,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void ToggleRun()
     {
-        if(characterMovement.GetState() != MovementState.Running)
+        if (characterMovement.GetState() != MovementState.Running)
         {
             characterMovement.SetCurrentState(MovementState.Running);
             //characterAnimation.SetRootMotion(true);
@@ -121,5 +144,18 @@ public class ThirdPersonController : MonoBehaviour
     public float GetCurrentVelocity()
     {
         return characterMovement.GetVelocity().magnitude;
+    }
+
+    public void DisableController()
+    {
+        characterMovement.SetKinematic(true);
+        GetComponent<Collider>().isTrigger = true;
+        dummy = true;
+    }
+    public void EnableController()
+    {
+        characterMovement.SetKinematic(false);
+        GetComponent<Collider>().isTrigger = false;
+        dummy = false;
     }
 }

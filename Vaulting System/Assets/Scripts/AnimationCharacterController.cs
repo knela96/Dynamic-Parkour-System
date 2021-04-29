@@ -36,14 +36,14 @@ public class AnimationCharacterController : MonoBehaviour
     public void Jump()
     {
         animator.SetBool("Jump", true);
-        animator.SetBool("Fall", false);
+        animator.SetBool("onAir", false);
         animator.SetBool("Land", false);
         controller.characterMovement.enableFeetIK = false;
     }
     public void Fall()
     {
         animator.SetBool("Jump", false);
-        animator.SetBool("Fall", true);
+        animator.SetBool("onAir", true);
         animator.SetBool("Land", false);
         controller.characterMovement.enableFeetIK = false;
     }
@@ -51,7 +51,7 @@ public class AnimationCharacterController : MonoBehaviour
     public void Land()
     {
         animator.SetBool("Jump", false);
-        animator.SetBool("Fall", false);
+        animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
         controller.characterMovement.enableFeetIK = true;
     }
