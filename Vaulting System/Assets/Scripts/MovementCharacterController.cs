@@ -272,6 +272,7 @@ public class MovementCharacterController : MonoBehaviour
     public void SetKinematic(bool active)
     {
         rb.isKinematic = active;
+        enableFeetIK = !active;
     }
 
     #endregion

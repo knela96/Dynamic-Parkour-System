@@ -16,16 +16,16 @@ public class InputCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        character.AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+        //character.AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.Joystick1Button10))
-        {
-            character.ToggleRun();
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1))
-        {
-            character.Jump();
-        }
+        //if(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.Joystick1Button10))
+        //{
+        //    character.ToggleRun();
+        //}
+        //
+        //if(Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1))
+        //{
+        //    //character.Jump();
+        //}
     }
 }

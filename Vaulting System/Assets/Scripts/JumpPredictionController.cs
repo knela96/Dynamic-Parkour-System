@@ -12,8 +12,12 @@ public class JumpPredictionController : MonoBehaviour
     [SerializeField]
     public float maxTime = 2.0f;
 
+    float turnSmoothVelocity;
+
     Vector3 origin;
     Vector3 target;
+
+    public bool showDebug = false;
 
     bool move = false;
 
@@ -23,6 +27,9 @@ public class JumpPredictionController : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (!showDebug)
+            return;
+
         if (!Application.isPlaying)
             origin = transform.position;
 
@@ -57,8 +64,14 @@ public class JumpPredictionController : MonoBehaviour
             }
             else
             {
-                animationTime += (Time.deltaTime * 0.8f);
-                transform.position = SampleParabola(origin, target, maxHeight, Mathf.Clamp(animationTime, 0.0f, 1.0f));
+                animationTime += Time.deltaTime;
+                transform.position = SampleParabola(origin, target, maxHeight, animationTime);
+
+                //Rotate Mesh to Movement
+                Vector3 travelDirection = target - origin;
+                float targetAngle = Mathf.Atan2(travelDirection.x, travelDirection.z) * Mathf.Rad2Deg;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
             }
         }
     }
@@ -78,7 +91,9 @@ public class JumpPredictionController : MonoBehaviour
 
         origin = start.position;
         target = end.position;
-        move = true;
+        move = true; 
+        
+        animationTime = 0.0f;
 
         return true;
     }
@@ -86,9 +101,19 @@ public class JumpPredictionController : MonoBehaviour
     Vector3 SampleParabola(Vector3 start, Vector3 end, float height, float t)
     {
         float parabolicT = t * 2 - 1;
+        Vector3 travelDirection = end - start;
+        Vector3 result = start + t * travelDirection;
+        result.y += (-parabolicT * parabolicT + 1) * height;
+
+        //Vector3 travelDirection = end - start;
+        //Vector3 result = start + t * travelDirection;
+        //result.y += Mathf.Sin(t * Mathf.PI) * height;
+
+        return result;
+
+        /*
         if (Mathf.Abs(start.y - end.y) < 0.1f)
         {
-            //start and end are roughly level, pretend they are - simpler solution with less steps
             Vector3 travelDirection = end - start;
             Vector3 result = start + t * travelDirection;
             result.y += (-parabolicT * parabolicT + 1) * height;
@@ -96,16 +121,17 @@ public class JumpPredictionController : MonoBehaviour
         }
         else
         {
-            //start and end are not level, gets more complicated
             Vector3 travelDirection = end - start;
-            Vector3 levelDirecteion = end - new Vector3(start.x, end.y, start.z);
-            Vector3 right = Vector3.Cross(travelDirection, levelDirecteion);
-            Vector3 up = Vector3.Cross(right, levelDirecteion);
-            if (end.y > start.y) up = -up;
+            //Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
+            //Vector3 right = Vector3.Cross(travelDirection, levelDirection);
+            //Vector3 up = Vector3.Cross(right, levelDirection);
+            Vector3 up = Vector3.up;
+            //if (end.y > start.y) up = -up;
             Vector3 result = start + t * travelDirection;
-            result += ((-parabolicT * parabolicT + 1) * height) * up.normalized;
+            result += ((-parabolicT * parabolicT + 1) * height) * Vector3.up;
             return result;
         }
+        */
     }
 
 }

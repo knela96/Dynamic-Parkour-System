@@ -26,7 +26,7 @@ namespace Climbing
         public Point furthestLeft;
         public Point furthestRight;
 
-        [HideInInspector]
+        //[HideInInspector]
         public List<Point> pointsInOrder;
 
         void HandlePrefab()
@@ -135,6 +135,7 @@ namespace Climbing
                 else
                 {
                     furthestRight.transform.parent.transform.localPosition = transform.InverseTransformPoint(positions[i]);
+                    pointsInOrder.Add(furthestRight);
                     break;
                 }
             }

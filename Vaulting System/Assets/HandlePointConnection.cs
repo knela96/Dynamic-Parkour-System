@@ -14,6 +14,7 @@ namespace Climbing
 
         List<Point> allPoints = new List<Point>();
         Vector3[] availableDirections = new Vector3[8];
+        public float validAngleRange = 22.5f;
 
         void CreateDirections()
         {
@@ -74,8 +75,7 @@ namespace Climbing
                         if(Vector3.Distance(curPoint.transform.position, closest.transform.position) < minDistance)
                         {
                             //Skip diagonal anchors
-                            if(Mathf.Abs(availableDirections[d].y) > 0 &&
-                                Mathf.Abs(availableDirections[d].x) > 0)
+                            if(Mathf.Abs(availableDirections[d].y) > 0 && Mathf.Abs(availableDirections[d].x) > 0)
                             {
                                 if(Vector3.Distance(curPoint.transform.position, closest.transform.position) > directThreshold)
                                 {
@@ -135,7 +135,7 @@ namespace Climbing
             float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.y) * Mathf.Rad2Deg;
             float angle = Mathf.Atan2(candidate.x, candidate.y) * Mathf.Rad2Deg;
 
-            if(angle < targetAngle + 22.5f && angle > targetAngle - 22.5f)
+            if(angle < targetAngle + validAngleRange && angle > targetAngle - validAngleRange)
             {
                 ret = true;
             }

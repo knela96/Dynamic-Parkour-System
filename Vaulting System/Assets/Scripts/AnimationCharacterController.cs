@@ -45,6 +45,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", true);
         animator.SetBool("Land", false);
+        animator.SetBool("Hanging", false);
         controller.characterMovement.enableFeetIK = false;
     }
 
@@ -54,5 +55,14 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
         controller.characterMovement.enableFeetIK = true;
+    }
+
+    public void HangLedge()
+    {
+        animator.SetBool("Hanging", true);
+    }
+    public void DropLedge()
+    {
+        animator.SetBool("Hanging", false);
     }
 }

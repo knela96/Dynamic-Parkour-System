@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Climbing;
+
 public class ThirdPersonController : MonoBehaviour
 {
     public MovementCharacterController characterMovement;
     public AnimationCharacterController characterAnimation;
     public DetectionCharacterController characterDetection;
     public JumpPredictionController jumpPrediction;
+    public ClimbController climbController;
 
     public Transform cam;
     public Transform Transform_Mesh;
@@ -19,7 +22,6 @@ public class ThirdPersonController : MonoBehaviour
     public bool isGrounded = false;
     public bool inAir = false;
     public bool dummy = false;
-    bool ledgeFound = false;
     bool toTarget = false;
 
     private void Start()
@@ -32,56 +34,57 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Player is falling
-        isGrounded = (characterDetection.IsGrounded() && characterMovement.GetVelocity().y <= 0) ? true : false;
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    toTarget = jumpPrediction.SetParabola(transform, GameObject.Find("Target").transform);
+        //
+        //    if (toTarget)
+        //    {
+        //        DisableController();
+        //        characterAnimation.Jump();
+        //    }
+        //}
 
-        if (!isGrounded && characterMovement.GetVelocity().y < 0)
+        //if (!jumpPrediction.hasArrived() && toTarget)
+        //{
+        //    jumpPrediction.FollowParabola();
+        //}
+        //else if (jumpPrediction.hasArrived() && toTarget)
+        //{
+        //    characterAnimation.Land();
+        //    EnableController();
+        //    toTarget = false;
+        //}
+
+        if (!dummy)
         {
-            inAir = true;
-        }
+            AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 
-        if (!isGrounded)
-        {
-            RaycastHit hit;
-            ledgeFound = characterDetection.LedgeCollision();
-
-            if (ledgeFound && !dummy)
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.Joystick1Button10))
             {
-                DisableController();
+                ToggleRun();
+            }
+
+            //Player is falling
+            isGrounded = (characterDetection.IsGrounded() && characterMovement.GetVelocity().y <= 0) ? true : false;
+
+            if (!isGrounded && characterMovement.GetVelocity().y < 0)
+            {
+                inAir = true;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            toTarget = jumpPrediction.SetParabola(transform, GameObject.Find("Target").transform);
-
-            if (toTarget)
-            {
-                DisableController();
-                characterAnimation.Jump();
-            }
-        }
-
-        if (!jumpPrediction.hasArrived() && toTarget)
-        {
-            jumpPrediction.FollowParabola();
-        }
-        else if (jumpPrediction.hasArrived() && toTarget)
-        {
-            characterAnimation.Land();
-            toTarget = false;
-        }
-
-        //Dismount
-        if (Input.GetKeyDown(KeyCode.C))
-            EnableController();
     }
 
     public void AddMovementInput(float vertical, float horizontal)
     {
-        if (dummy)
-            return;
+        Vector3 translation = Vector3.zero;
 
+        translation = GroundMovement(vertical, horizontal);
+        characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
+    }
+
+    Vector3 GroundMovement(float vertical, float horizontal)
+    {
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
         camReference.eulerAngles = new Vector3(0, cam.eulerAngles.y, 0);
@@ -111,8 +114,8 @@ public class ThirdPersonController : MonoBehaviour
                 ResetMovement();
             }
         }
-        characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
 
+        return translation;
     }
 
     public void Jump()
@@ -155,7 +158,9 @@ public class ThirdPersonController : MonoBehaviour
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
+        characterAnimation.DropLedge();
         GetComponent<Collider>().isTrigger = false;
         dummy = false;
+        toTarget = false;
     }
 }
