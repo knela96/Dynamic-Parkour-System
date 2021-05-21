@@ -3102,7 +3102,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: 0.13806492, y: 0.037311286, z: -0.0052049574, w: 0.98970646}
+  m_LocalRotation: {x: 0.1380653, y: 0.03723749, z: -0.005194662, w: 0.98970926}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7478,7 +7478,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.16831727, y: 0.056037877, z: -0.009584613, w: 0.9840921}
+  m_LocalRotation: {x: 0.16831824, y: 0.05593394, z: -0.009566835, w: 0.98409796}
   m_LocalPosition: {x: -1.97, y: 2.809, z: -7.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8210,7 +8210,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.16831723, y: 0.056037884, z: -0.00958461, w: 0.98409206}
+  m_LocalRotation: {x: 0.16831821, y: 0.05593393, z: -0.0095668305, w: 0.984098}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9300,7 +9300,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.21178655, y: 0.055557776, z: -0.012059914, w: 0.975661}
+  m_LocalRotation: {x: 0.21178782, y: 0.055454716, z: -0.012037545, w: 0.9756669}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12020,7 +12020,6 @@ GameObject:
   - component: {fileID: 1585646071}
   - component: {fileID: 1585646070}
   - component: {fileID: 1585646077}
-  - component: {fileID: 1585646076}
   - component: {fileID: 1585646075}
   - component: {fileID: 1585646074}
   - component: {fileID: 1585646079}
@@ -12170,18 +12169,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1585646073}
---- !u!114 &1585646076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585646068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cfd175c44e9f6f4f81bd4cda4afa01f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1585646077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12217,7 +12204,9 @@ MonoBehaviour:
   onLedge: 0
   characterDetection: {fileID: 1585646077}
   characterController: {fileID: 1585646072}
+  pointConnection: {fileID: 2025069583}
   rootOffset: 1.09
+  lateralSpeed: 20
   limitLHand: {fileID: 2087593746}
   limitRHand: {fileID: 1888416096}
 --- !u!114 &1585646079
@@ -13314,7 +13303,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4ec10ecc4385674ca83ee7fd88e43fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConnectedPoints: []
+  ConnectedPoints:
+  - direction: {x: 1, y: 0, z: 0}
+    target: {fileID: 321773152}
+    type: 0
+  - direction: {x: -1, y: 0, z: 0}
+    target: {fileID: 1761686209}
+    type: 0
+  - direction: {x: 0, y: 1, z: 0}
+    target: {fileID: 1253333220}
+    type: 1
   refresh: 0
 --- !u!114 &1685401878
 MonoBehaviour:
@@ -16388,6 +16386,37 @@ MonoBehaviour:
   directThreshold: 1
   updateConnections: 0
   resetConnections: 0
+  allPoints:
+  - {fileID: 2058996628}
+  - {fileID: 450480366}
+  - {fileID: 1874295879}
+  - {fileID: 1988222715}
+  - {fileID: 2110560577}
+  - {fileID: 493978906}
+  - {fileID: 157465319}
+  - {fileID: 960156412}
+  - {fileID: 232081416}
+  - {fileID: 1777569899}
+  - {fileID: 598050655}
+  - {fileID: 1253333220}
+  - {fileID: 1390068164}
+  - {fileID: 1236689045}
+  - {fileID: 759382848}
+  - {fileID: 1600889284}
+  - {fileID: 1685401879}
+  - {fileID: 1472953543}
+  - {fileID: 1134253068}
+  - {fileID: 1761686209}
+  - {fileID: 1554528111}
+  - {fileID: 2018101603}
+  - {fileID: 183873087}
+  - {fileID: 761677276}
+  - {fileID: 843308006}
+  - {fileID: 321773152}
+  - {fileID: 111872511}
+  - {fileID: 1577336363}
+  - {fileID: 1691826737}
+  - {fileID: 1766132479}
   validAngleRange: 5
 --- !u!114 &2025069584
 MonoBehaviour:

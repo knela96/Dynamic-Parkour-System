@@ -12,7 +12,7 @@ namespace Climbing
         public bool updateConnections;
         public bool resetConnections;
 
-        List<Point> allPoints = new List<Point>();
+        public List<Point> allPoints = new List<Point>();
         Vector3[] availableDirections = new Vector3[8];
         public float validAngleRange = 22.5f;
 
@@ -128,7 +128,7 @@ namespace Climbing
             return ret;
         }
 
-        bool IsDirectionValid(Vector3 targetDirection, Vector3 candidate)
+        public bool IsDirectionValid(Vector3 targetDirection, Vector3 candidate)
         {
             bool ret = false;
 
