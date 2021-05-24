@@ -180,6 +180,23 @@ namespace Climbing
             leftPoint.transform.localPosition = Vector3.zero;
             leftPoint.transform.localEulerAngles = Vector3.zero;    
         }
+
+        public Point GetClosestPoint(Vector3 playerPos)
+        {
+            Point ret = null;
+            float minDist = float.PositiveInfinity;
+            for (int i = 0; i < pointsInOrder.Count; i++)
+            {
+                float dist = Vector3.Distance(pointsInOrder[i].transform.position, playerPos);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    ret = pointsInOrder[i];
+                }
+            }
+
+            return ret;
+        }
     }
 
 }

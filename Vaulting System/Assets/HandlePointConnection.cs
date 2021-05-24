@@ -11,6 +11,7 @@ namespace Climbing
         public float directThreshold = 1.0f;
         public bool updateConnections;
         public bool resetConnections;
+        public bool skipDiagonals = true;
 
         public List<Point> allPoints = new List<Point>();
         Vector3[] availableDirections = new Vector3[8];
@@ -74,10 +75,10 @@ namespace Climbing
                     {
                         if(Vector3.Distance(curPoint.transform.position, closest.transform.position) < minDistance)
                         {
-                            //Skip diagonal anchors
-                            if(Mathf.Abs(availableDirections[d].y) > 0 && Mathf.Abs(availableDirections[d].x) > 0)
+                            ////Skip diagonal anchors
+                            if(Mathf.Abs(availableDirections[d].y) > 0 && Mathf.Abs(availableDirections[d].x) > 0 && skipDiagonals)
                             {
-                                if(Vector3.Distance(curPoint.transform.position, closest.transform.position) > directThreshold)
+                                if(Vector3.Distance(curPoint.transform.position, closest.transform.position) > directThreshold )
                                 {
                                     continue;
                                 }
@@ -132,10 +133,13 @@ namespace Climbing
         {
             bool ret = false;
 
+            if (targetDirection == Vector3.zero) //No Input Direction
+                return false;
+
             float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.y) * Mathf.Rad2Deg;
             float angle = Mathf.Atan2(candidate.x, candidate.y) * Mathf.Rad2Deg;
 
-            if(angle < targetAngle + validAngleRange && angle > targetAngle - validAngleRange)
+            if (angle < targetAngle + validAngleRange && angle > targetAngle - validAngleRange)
             {
                 ret = true;
             }

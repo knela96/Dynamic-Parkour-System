@@ -21,6 +21,7 @@ public class ClimbController : MonoBehaviour
     GameObject curLedge;
 
     Point targetPoint = null;
+    Point currentPoint = null;
 
     bool debug = false;
 
@@ -36,6 +37,8 @@ public class ClimbController : MonoBehaviour
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
         }
     }
 
@@ -45,6 +48,19 @@ public class ClimbController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             onLedge = true;
+        }
+
+        if (onLedge)
+        {
+            ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                curLedge = null;
+                targetPoint = null;
+                currentPoint = null;
+                characterController.EnableController();
+            }
         }
 
         if (!characterController.dummy)
@@ -59,43 +75,27 @@ public class ClimbController : MonoBehaviour
                     ReachLedge(hit);
             }
         }
-
-        if (onLedge)
-        {
-            ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                curLedge = null;
-                characterController.EnableController();
-            }
-        }
     }
 
     public void ClimbMovement(float vertical, float horizontal)
     {
         Vector3 translation = transform.right * horizontal * (lateralSpeed * 0.001f);
+        bool valid = CheckValidMovement(translation);
 
-        if (CheckValidMovement(translation) && !debug)
+        if (valid)
         {
             transform.position += translation;
         }
-        else //Check for Near Ledge
+        else if(!valid && Input.GetKeyDown(KeyCode.Space)) //Check for Near Ledge
         {
-            Point point = null;
-            
-            if (horizontal > 0)//Right Movement
-            {
-                point = curLedge.GetComponentInChildren<HandlePoints>().furthestRight;
-            }
-            else if (horizontal < 0)// Left Movement
-            {
-                point = curLedge.GetComponentInChildren<HandlePoints>().furthestLeft;
-            }
+            Point point = null;            
+
+            point = curLedge.GetComponentInChildren<HandlePoints>().GetClosestPoint(transform.position);
+            currentPoint = point;
 
             if (point)
             {
-                Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+                Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
                 
                 Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours);
 
@@ -117,6 +117,7 @@ public class ClimbController : MonoBehaviour
                         }
                         transform.position = target;
                         onLedge = false;
+
                     }
                     if (toPoint.type == ConnectionType.inBetween) //Continuous Ledge
                     {
@@ -141,7 +142,7 @@ public class ClimbController : MonoBehaviour
 
             Vector3 direction = targetPoint.target.transform.position - from.transform.position;
             Vector3 relativeDirection = from.transform.InverseTransformDirection(direction).normalized;
-
+            Debug.Log("HERE");
             if (pointConnection.IsDirectionValid(targetDirection, relativeDirection))
             {
                 float dist = Vector3.Distance(from.transform.position, targetPoint.target.transform.position);
@@ -165,8 +166,6 @@ public class ClimbController : MonoBehaviour
             ret = characterController.characterDetection.ThrowRayToLedge(limitLHand.transform.position);
         if (translation.normalized.x > 0)
             ret = characterController.characterDetection.ThrowRayToLedge(limitRHand.transform.position);
-        if (translation.normalized.x == 0)
-            ret = true;
 
         return ret;
     }
