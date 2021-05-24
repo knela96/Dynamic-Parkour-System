@@ -161,11 +161,20 @@ public class ClimbController : MonoBehaviour
     bool CheckValidMovement(Vector3 translation)
     {
         bool ret = false;
+        RaycastHit hit;
 
         if (translation.normalized.x < 0)
-            ret = characterController.characterDetection.ThrowRayToLedge(limitLHand.transform.position);
-        if (translation.normalized.x > 0)
-            ret = characterController.characterDetection.ThrowRayToLedge(limitRHand.transform.position);
+        {
+            ret = characterController.characterDetection.ThrowHandRayToLedge(limitLHand.transform.position, out hit);
+            if (ret)
+                curLedge = hit.collider.transform.parent.gameObject;
+        }
+        else if (translation.normalized.x > 0)
+        {
+            ret = characterController.characterDetection.ThrowHandRayToLedge(limitRHand.transform.position, out hit);
+            if(ret)
+                curLedge = hit.collider.transform.parent.gameObject;
+        }
 
         return ret;
     }

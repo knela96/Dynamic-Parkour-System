@@ -84,14 +84,13 @@ namespace Climbing
 
         }
 
-        public bool ThrowRayToLedge(Vector3 origin)
+        public bool ThrowHandRayToLedge(Vector3 origin, out RaycastHit hit)
         {
             if (showDebug)
             {
                 Debug.DrawLine(origin, origin + transform.forward * 0.25f, Color.green);
             }
 
-            RaycastHit hit;
             return Physics.Raycast(origin, transform.forward, out hit, 0.25f, climbLayer);
         }
 
