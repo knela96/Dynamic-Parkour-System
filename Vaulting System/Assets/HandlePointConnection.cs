@@ -139,7 +139,7 @@ namespace Climbing
             float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.y) * Mathf.Rad2Deg;
             float angle = Mathf.Atan2(candidate.x, candidate.y) * Mathf.Rad2Deg;
 
-            if (angle < targetAngle + validAngleRange && angle > targetAngle - validAngleRange)
+            if (angle <= targetAngle + validAngleRange && angle >= targetAngle - validAngleRange)
             {
                 ret = true;
             }

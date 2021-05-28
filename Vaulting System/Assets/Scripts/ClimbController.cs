@@ -7,12 +7,14 @@ public class ClimbController : MonoBehaviour
 {
     bool ledgeFound = false;
     public bool onLedge = false;
+    public bool toLedge = false;
 
     public DetectionCharacterController characterDetection;
     public ThirdPersonController characterController;
     public HandlePointConnection pointConnection;
     public float rootOffset;
     Vector3 target = Vector3.zero;
+    Quaternion targetRot = Quaternion.identity;
     public float lateralSpeed = 25f;
 
     public GameObject limitLHand;
@@ -45,14 +47,10 @@ public class ClimbController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            onLedge = true;
-        }
-
+        //Arrived on Ledge
         if (onLedge)
         {
-            ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+            ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
 
             if (Input.GetKeyDown(KeyCode.C))
             {
@@ -63,17 +61,41 @@ public class ClimbController : MonoBehaviour
             }
         }
 
+        //Groud
         if (!characterController.dummy)
         {
             onLedge = false;
             RaycastHit hit;
-            ledgeFound = characterDetection.FindLedgeCollision(out hit);
-
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1))
+            if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1)) && !toLedge && !onLedge)
             {
+                ledgeFound = characterDetection.FindLedgeCollision(out hit);
+                
                 if (ledgeFound)
-                    ReachLedge(hit);
+                {
+                    target = ReachLedge(hit);
+                    targetRot = Quaternion.LookRotation(-hit.normal);
+                    characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
+                    toLedge = true;
+                }
+                else
+                {
+                    target = Vector3.zero;
+                    targetRot = Quaternion.identity;
+                }
             }
+        }      
+
+        //Jump to Point
+        if (toLedge)
+        {
+            characterController.jumpPrediction.FollowParabola(2.0f);
+
+            if (characterController.jumpPrediction.hasArrived())
+            {
+                onLedge = true;
+                toLedge = false;
+            }
+            transform.rotation = targetRot;
         }
     }
 
@@ -103,7 +125,7 @@ public class ClimbController : MonoBehaviour
                 {
                     if (toPoint.type == ConnectionType.direct) //Jump Reachable
                     {
-                        Vector3 target = toPoint.target.transform.position - new Vector3(0, rootOffset, 0);
+                        target = toPoint.target.transform.position;
                         curLedge = toPoint.target.transform.parent.parent.parent.gameObject;
                         targetPoint = toPoint.target;
 
@@ -115,13 +137,9 @@ public class ClimbController : MonoBehaviour
                         {
                             target.x -= 0.5f;
                         }
-                        transform.position = target;
-                        onLedge = false;
-
-                    }
-                    if (toPoint.type == ConnectionType.inBetween) //Continuous Ledge
-                    {
-
+                        //transform.position = target - new Vector3(0, rootOffset, 0);
+                        characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
+                        toLedge = true;
                     }
                 }
             }
@@ -142,7 +160,7 @@ public class ClimbController : MonoBehaviour
 
             Vector3 direction = targetPoint.target.transform.position - from.transform.position;
             Vector3 relativeDirection = from.transform.InverseTransformDirection(direction).normalized;
-            Debug.Log("HERE");
+            
             if (pointConnection.IsDirectionValid(targetDirection, relativeDirection))
             {
                 float dist = Vector3.Distance(from.transform.position, targetPoint.target.transform.position);
@@ -179,8 +197,10 @@ public class ClimbController : MonoBehaviour
         return ret;
     }
 
-    void ReachLedge(RaycastHit hit)
+    Vector3 ReachLedge(RaycastHit hit)
     {
+        Vector3 targetPos = Vector3.zero;
+
         curLedge = hit.transform.parent.gameObject;
         List<Point> points = hit.transform.parent.GetComponentInChildren<HandlePoints>().pointsInOrder;
 
@@ -192,14 +212,14 @@ public class ClimbController : MonoBehaviour
             if (point2root < dist)
             {
                 dist = point2root;
-                target = points[i].transform.position;
+                targetPos = points[i].transform.position;
                 if (i == 0)//Left Point
                 {
-                    target.x += 0.5f;
+                    targetPos.x += 0.5f;
                 }
                 else if(i == points.Count - 1)//Right Point
                 {
-                    target.x -= 0.5f;
+                    targetPos.x -= 0.5f;
                 }
             }
         }
@@ -208,8 +228,8 @@ public class ClimbController : MonoBehaviour
         characterController.characterAnimation.HangLedge();
         onLedge = true;
         characterController.characterAnimation.animator.CrossFade("Hanging Idle", 0.0f);
-        transform.rotation = Quaternion.LookRotation(-hit.normal);
-        transform.position = target - new Vector3(0, rootOffset, 0);
+
+        return targetPos;
     }
 
 }

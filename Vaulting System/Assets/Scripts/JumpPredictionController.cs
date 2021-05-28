@@ -53,7 +53,7 @@ public class JumpPredictionController : MonoBehaviour
     {
     }
 
-    public void FollowParabola()
+    public void FollowParabola(float speed)
     {
         if (move == true)
         {
@@ -64,7 +64,7 @@ public class JumpPredictionController : MonoBehaviour
             }
             else
             {
-                animationTime += Time.deltaTime;
+                animationTime += Time.deltaTime * speed;
                 transform.position = SampleParabola(origin, target, maxHeight, animationTime);
 
                 //Rotate Mesh to Movement
@@ -93,6 +93,23 @@ public class JumpPredictionController : MonoBehaviour
         target = end.position;
         move = true; 
         
+        animationTime = 0.0f;
+
+        return true;
+    }
+
+    public bool SetParabola(Vector3 start, Vector3 end)
+    {
+        Vector2 a = new Vector2(start.x, start.z);
+        Vector2 b = new Vector2(end.x, end.z);
+
+        if (end.y - start.y > maxHeight || (Vector2.Distance(a, b) > maxDistance))
+            return false;
+
+        origin = start;
+        target = end;
+        move = true;
+
         animationTime = 0.0f;
 
         return true;
