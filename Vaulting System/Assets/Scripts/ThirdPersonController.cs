@@ -11,7 +11,6 @@ public class ThirdPersonController : MonoBehaviour
     public AnimationCharacterController characterAnimation;
     public DetectionCharacterController characterDetection;
     public JumpPredictionController jumpPrediction;
-    public ClimbController climbController;
 
     public Transform cam;
     public Transform Transform_Mesh;
@@ -20,7 +19,8 @@ public class ThirdPersonController : MonoBehaviour
     public Transform camReference;
     int counter = 0;
     public bool isGrounded = false;
-    public bool inAir = false;
+    public bool isJumping = false;
+    public bool inSlope = false;
     public bool dummy = false;
     bool toTarget = false;
 
@@ -66,13 +66,30 @@ public class ThirdPersonController : MonoBehaviour
             }
 
             //Player is falling
-            isGrounded = (characterDetection.IsGrounded() && characterMovement.GetVelocity().y <= 0) ? true : false;
+            isGrounded = OnGround();
 
-            if (!isGrounded && characterMovement.GetVelocity().y < 0)
-            {
-                inAir = true;
-            }
         }
+    }
+    private bool OnGround()
+    {
+        RaycastHit hit;
+        if (characterDetection.IsGrounded(out hit))
+        {
+            if (isJumping)
+                return false;
+
+            if (hit.normal != Vector3.up)
+            {
+                inSlope = true;
+            }
+            else
+            {
+                inSlope = false;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public void AddMovementInput(float vertical, float horizontal)
@@ -120,7 +137,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void Jump()
     {
-        if (isGrounded == true && !inAir)
+        if (isGrounded)
         {
             characterMovement.Jump();
             characterAnimation.Jump();

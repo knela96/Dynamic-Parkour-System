@@ -67,19 +67,32 @@ public class MovementCharacterController : MonoBehaviour
 
         ApplyInputMovement();
 
-        if (controller.inAir)
+        //if (controller.inAir)
+        //{
+        //    if (controller.characterDetection.IsGrounded() && rb.velocity.y < 0)
+        //    {
+        //        OnLanded();
+        //        controller.inAir = false;
+        //    }
+        //    else
+        //    {
+        //        OnFall();
+        //    }
+        //}
+
+        if (controller.isGrounded)
         {
-            if (controller.characterDetection.IsGrounded() && rb.velocity.y < 0)
-            {
-                OnLanded();
-                controller.inAir = false;
-            }
-            else
-            {
-                OnFall();
-            }
+            OnLanded();
+            controller.isJumping = false;
+        }
+        else
+        {
+            OnFall();
         }
     }
+
+
+
     private void FixedUpdate()
     {
         if (!enableFeetIK)
@@ -111,6 +124,9 @@ public class MovementCharacterController : MonoBehaviour
 
         if (velocity.magnitude > 0)
         {
+            if (controller.inSlope)
+                rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.2f * Time.deltaTime;
+
             smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
             rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
             controller.characterAnimation.SetAnimVelocity(rb.velocity);
@@ -158,7 +174,7 @@ public class MovementCharacterController : MonoBehaviour
         if (controller.isGrounded)
         {
             rb.velocity = Vector3.up * jumpForce;
-            controller.inAir = true;
+            controller.isJumping = true;
         }
     }
 

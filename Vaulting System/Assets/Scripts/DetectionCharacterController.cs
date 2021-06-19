@@ -104,8 +104,8 @@ namespace Climbing
             }
         }
 
-        public bool IsGrounded() {
-            return Physics.Linecast(transform.position, transform.position + new Vector3(0, -0.1f, 0));
+        public bool IsGrounded(out RaycastHit hit) {
+            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f);
         }
 
         public void OnTriggerEnterEvent(Collider other)

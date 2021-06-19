@@ -89,6 +89,7 @@ public class ClimbController : MonoBehaviour
         if (toLedge)
         {
             characterController.jumpPrediction.FollowParabola(2.0f);
+            //transform.position = target - new Vector3(0, rootOffset, 0);
 
             if (characterController.jumpPrediction.hasArrived())
             {
