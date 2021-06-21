@@ -13,6 +13,7 @@ namespace Climbing
         Animator anim;
         ClimbIK ik;
 
+        ThirdPersonController controller;
         Manager curManager;
         Point targetPoint;
         Point curPoint;
@@ -77,6 +78,7 @@ namespace Climbing
         {
             anim = GetComponentInChildren<Animator>();
             ik = GetComponentInChildren<ClimbIK>();
+            controller = GetComponent<ThirdPersonController>();
             SetCurveReferences();
         }
 
@@ -122,9 +124,10 @@ namespace Climbing
 
             if (Physics.Raycast(ray, out hit, maxDistance, lm))
             {
-                if (hit.transform.GetComponentInParent<Manager>())
+                Manager tm = hit.transform.GetComponentInParent<Manager>();
+
+                if (tm)
                 {
-                    Manager tm = hit.transform.GetComponentInParent<Manager>();
                     Point closesPoint = tm.ReturnClosest(transform.position);
                     float distanceToPoint = Vector3.Distance(transform.position, closesPoint.transform.parent.position);
 
@@ -139,7 +142,7 @@ namespace Climbing
                         targetState = ClimbStates.onPoint;
 
                         anim.CrossFade("To_Climb", 0.4f);
-                        GetComponent<ThirdPersonController>().DisableController();
+                        controller.DisableController();
 
                         waitToStartClimb = true;
                     }
@@ -223,7 +226,7 @@ namespace Climbing
                     climbing = false;
                     initTransit = false;
                     //ik.AddWeightInfluenceAll(0);
-                    GetComponent<ThirdPersonController>().EnableController();
+                    controller.EnableController();
                     anim.SetBool("onAir", true);
                 }
             }

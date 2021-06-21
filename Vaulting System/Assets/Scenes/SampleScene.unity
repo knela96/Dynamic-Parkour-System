@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 29028447}
   m_Layer: 0
   m_Name: Cube (7)
-  m_TagString: Untagged
+  m_TagString: Vault
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3199,7 +3199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: 0.13806503, y: 0.037289202, z: -0.005201877, w: 0.98970735}
+  m_LocalRotation: {x: 0.13806546, y: 0.037211258, z: -0.0051910034, w: 0.9897103}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7575,7 +7575,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.16831754, y: 0.05600676, z: -0.00957929, w: 0.9840939}
+  m_LocalRotation: {x: 0.16831863, y: 0.05589697, z: -0.009560512, w: 0.98410016}
   m_LocalPosition: {x: -1.97, y: 3.05, z: -7.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8307,7 +8307,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.16831753, y: 0.056006745, z: -0.009579286, w: 0.98409384}
+  m_LocalRotation: {x: 0.16831858, y: 0.05589697, z: -0.0095605105, w: 0.9841001}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9397,7 +9397,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.21178691, y: 0.05552691, z: -0.012053211, w: 0.97566277}
+  m_LocalRotation: {x: 0.2117883, y: 0.055418085, z: -0.012029593, w: 0.97566897}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12121,6 +12121,7 @@ GameObject:
   - component: {fileID: 1585646074}
   - component: {fileID: 1585646079}
   - component: {fileID: 1585646078}
+  - component: {fileID: 1585646076}
   - component: {fileID: 1585646072}
   m_Layer: 0
   m_Name: Player
@@ -12266,6 +12267,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1585646073}
+--- !u!114 &1585646076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585646068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0fa37f735bf1b46b01f94365ed169e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbController: {fileID: 0}
+  controller: {fileID: 0}
+  kneeRaycastOrigin: {x: 0, y: 0.28, z: 0}
+  kneeRaycastLength: 1
 --- !u!114 &1585646077
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,12 +5,14 @@ using UnityEngine;
 public class VaultingController : MonoBehaviour
 {
     public ClimbController climbController;
+    public ThirdPersonController controller;
     public Vector3 kneeRaycastOrigin;
     public float kneeRaycastLength = 1.0f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        controller = GetComponent<ThirdPersonController>();
+        climbController = GetComponent<ClimbController>();
     }
 
     // Update is called once per frame
@@ -23,11 +25,13 @@ public class VaultingController : MonoBehaviour
     private void CheckVaultObject()
     {
         RaycastHit hit;
-        Physics.Raycast(kneeRaycastOrigin, transform.forward, out hit, kneeRaycastLength);
-       
+
+        if (!Physics.Raycast(transform.position + kneeRaycastOrigin, transform.forward, out hit, kneeRaycastLength))
+            return;
+
         if (hit.transform.tag == "Vault")
         {
-            //Play anim
+            controller.characterAnimation.animator.SetBool("Vault", true);
         }
     }
 }
