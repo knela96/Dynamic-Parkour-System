@@ -18,7 +18,7 @@ public class VaultingController : MonoBehaviour
     public bool debug = false;
     public AnimationClip clip;
 
-    private Vector3 leftHandPosition, handRestPosition;
+    private Vector3 leftHandPosition;
     private Quaternion leftHandRotation;
     public string HandAnimVariableName = "HandCurve";
     [Range(0, 1f)] [SerializeField] private float handToIKPositionSpeed = 0.25f;
@@ -56,9 +56,8 @@ public class VaultingController : MonoBehaviour
     private void OnAnimatorIK(int layerIndex)
     {
         float curve = animator.GetFloat(HandAnimVariableName);
-        Debug.Log(curve);
         animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
-        animator.SetIKPosition(AvatarIKGoal.LeftHand, handRestPosition);
+        animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
         animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, curve);
         animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandRotation);
     }
@@ -84,12 +83,11 @@ public class VaultingController : MonoBehaviour
                     vaultTime = 0;
                     animLength = clip.length;
 
-                    handRestPosition = hit.point + new Vector3(0, hit.transform.localScale.y / 2, 0);
-
+                    //Calculate Hand Rest Position n Rotation
                     Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
-
-                    handRestPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
-
+                    leftHandPosition = hit.point + (-hit.normal * (hit.transform.localScale.z / 2));
+                    leftHandPosition.y = hit.transform.position.y + hit.transform.localScale.y / 2;
+                    leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
                     leftHandRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
                 }
             }
@@ -108,7 +106,7 @@ public class VaultingController : MonoBehaviour
         if (debug && isVaulting) {
             Gizmos.DrawSphere(targetPos, 0.08f);
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(handRestPosition, 0.08f);
+            Gizmos.DrawSphere(leftHandPosition, 0.08f);
         }
     }
 }
