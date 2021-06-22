@@ -64,8 +64,8 @@ public class MovementCharacterController : MonoBehaviour
     void Update()
     {
         //charactercontroller.Move(Velocity.normalized * speed * Time.deltaTime);
-
-        ApplyInputMovement();
+        if(!controller.dummy)
+            ApplyInputMovement();
 
         //if (controller.inAir)
         //{
@@ -95,7 +95,7 @@ public class MovementCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!enableFeetIK)
+        if (!enableFeetIK || controller.dummy)
             return;
         if (anim == null)
             return;

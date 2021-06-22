@@ -23,12 +23,14 @@ public class ThirdPersonController : MonoBehaviour
     public bool inSlope = false;
     public bool dummy = false;
     bool toTarget = false;
+    Collider collider;
 
     private void Start()
     {
         //camReference = new GameObject("Camera Aux").transform;
         characterMovement.OnLanded += characterAnimation.Land;
         characterMovement.OnFall += characterAnimation.Fall;
+        collider = GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -147,7 +149,7 @@ public class ThirdPersonController : MonoBehaviour
     public void ResetMovement()
     {
         characterMovement.ResetSpeed();
-        characterAnimation.animator.applyRootMotion = true;
+        //characterAnimation.animator.applyRootMotion = true;
     }
 
     public void ToggleRun()
@@ -169,14 +171,14 @@ public class ThirdPersonController : MonoBehaviour
     public void DisableController()
     {
         characterMovement.SetKinematic(true);
-        GetComponent<Collider>().isTrigger = true;
+        collider.isTrigger = true; 
         dummy = true;
     }
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
         characterAnimation.DropLedge();
-        GetComponent<Collider>().isTrigger = false;
+        collider.isTrigger = false;
         dummy = false;
         toTarget = false;
     }
