@@ -367,8 +367,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29028445}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.1099713, y: -0.72, z: -6.34}
-  m_LocalScale: {x: 3.1906803, y: 1.2248018, z: 0.23159105}
+  m_LocalPosition: {x: -2.1099713, y: -0.918, z: -5.838}
+  m_LocalScale: {x: 3.1906803, y: 0.81985456, z: 0.23159105}
   m_Children: []
   m_Father: {fileID: 183349923}
   m_RootOrder: 6
@@ -3199,7 +3199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: 0.13806546, y: 0.037211258, z: -0.0051910034, w: 0.9897103}
+  m_LocalRotation: {x: 0.13806497, y: 0.037297986, z: -0.0052031004, w: 0.989707}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7575,7 +7575,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.16831863, y: 0.05589697, z: -0.009560512, w: 0.98410016}
+  m_LocalRotation: {x: 0.16831744, y: 0.05601914, z: -0.0095814075, w: 0.9840931}
   m_LocalPosition: {x: -1.97, y: 3.05, z: -7.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8307,7 +8307,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.16831858, y: 0.05589697, z: -0.0095605105, w: 0.9841001}
+  m_LocalRotation: {x: 0.16831742, y: 0.05601914, z: -0.009581408, w: 0.9840931}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9397,7 +9397,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.2117883, y: 0.055418085, z: -0.012029593, w: 0.97566897}
+  m_LocalRotation: {x: 0.21178678, y: 0.0555392, z: -0.012055885, w: 0.97566205}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12281,8 +12281,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   climbController: {fileID: 0}
   controller: {fileID: 0}
-  kneeRaycastOrigin: {x: 0, y: 0.28, z: 0}
+  animator: {fileID: 0}
+  kneeRaycastOrigin: {x: 0, y: 0.5, z: 0}
   kneeRaycastLength: 1
+  landOffset: 0.2
+  debug: 0
+  clip: {fileID: -203655887218126122, guid: 0c012699e8b1f064ab54e8d0c62e4436, type: 3}
+  HandAnimVariableName: HandCurve
+  handToIKPositionSpeed: 0.25
 --- !u!114 &1585646077
 MonoBehaviour:
   m_ObjectHideFlags: 0

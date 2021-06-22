@@ -6,6 +6,7 @@ public class VaultingController : MonoBehaviour
 {
     public ClimbController climbController;
     public ThirdPersonController controller;
+    public Animator animator;
     public Vector3 kneeRaycastOrigin;
     public float kneeRaycastLength = 1.0f;
     public float landOffset = 0.2f;
@@ -17,11 +18,17 @@ public class VaultingController : MonoBehaviour
     public bool debug = false;
     public AnimationClip clip;
 
+    private Vector3 leftHandPosition, handRestPosition;
+    private Quaternion leftHandRotation;
+    public string HandAnimVariableName = "HandCurve";
+    [Range(0, 1f)] [SerializeField] private float handToIKPositionSpeed = 0.25f;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<ThirdPersonController>();
         climbController = GetComponent<ClimbController>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -37,13 +44,23 @@ public class VaultingController : MonoBehaviour
 
             if (vaultTime > 1)
             {
-                controller.characterAnimation.animator.SetBool("Vault", false);
+                animator.SetBool("Vault", false);
                 isVaulting = false;
                 controller.EnableController();
             }
 
             transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
         }
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        float curve = animator.GetFloat(HandAnimVariableName);
+        Debug.Log(curve);
+        animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
+        animator.SetIKPosition(AvatarIKGoal.LeftHand, handRestPosition);
+        animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, curve);
+        animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandRotation);
     }
 
     private void CheckVaultObject()
@@ -66,6 +83,14 @@ public class VaultingController : MonoBehaviour
                     controller.DisableController();
                     vaultTime = 0;
                     animLength = clip.length;
+
+                    handRestPosition = hit.point + new Vector3(0, hit.transform.localScale.y / 2, 0);
+
+                    Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
+
+                    handRestPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
+
+                    leftHandRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
                 }
             }
         }
@@ -80,7 +105,10 @@ public class VaultingController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (debug && isVaulting)
+        if (debug && isVaulting) {
             Gizmos.DrawSphere(targetPos, 0.08f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(handRestPosition, 0.08f);
+        }
     }
 }
