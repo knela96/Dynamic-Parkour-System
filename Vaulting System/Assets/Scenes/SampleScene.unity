@@ -367,7 +367,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29028445}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.1099713, y: -0.918, z: -5.838}
+  m_LocalPosition: {x: -2.1099713, y: -0.917, z: -5.838}
   m_LocalScale: {x: 3.1906803, y: 0.81985456, z: 0.23159105}
   m_Children: []
   m_Father: {fileID: 183349923}
@@ -9397,7 +9397,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.21178678, y: 0.0555392, z: -0.012055885, w: 0.97566205}
+  m_LocalRotation: {x: 0.21178678, y: 0.05553919, z: -0.012055882, w: 0.97566205}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12283,8 +12283,8 @@ MonoBehaviour:
   controller: {fileID: 0}
   animator: {fileID: 0}
   kneeRaycastOrigin: {x: 0, y: 0.5, z: 0}
-  kneeRaycastLength: 1
-  landOffset: 0.2
+  kneeRaycastLength: 0.5
+  landOffset: 0.71
   debug: 0
   clip: {fileID: -203655887218126122, guid: 0c012699e8b1f064ab54e8d0c62e4436, type: 3}
   HandAnimVariableName: HandCurve

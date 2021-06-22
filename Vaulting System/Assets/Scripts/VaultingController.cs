@@ -12,6 +12,7 @@ public class VaultingController : MonoBehaviour
     public float landOffset = 0.2f;
     Vector3 targetPos;
     Vector3 startPos;
+    Quaternion startRot;
     bool isVaulting;
     float vaultTime = 0.0f;
     float animLength = 0.0f;
@@ -49,6 +50,11 @@ public class VaultingController : MonoBehaviour
                 controller.EnableController();
             }
 
+            Vector3 dir = targetPos - startPos;
+            dir.y = 0;
+            Quaternion rot = Quaternion.LookRotation(dir);
+
+            transform.rotation = Quaternion.Lerp(startRot, rot, 0.5f);
             transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
         }
     }
@@ -78,6 +84,7 @@ public class VaultingController : MonoBehaviour
                     controller.characterAnimation.animator.CrossFade("Vault", 0.2f);
                     isVaulting = true;
                     startPos = transform.position;
+                    startRot = transform.rotation;
                     targetPos = hit2.point + (-hit.normal * (hit.transform.localScale.z + landOffset));
                     controller.DisableController();
                     vaultTime = 0;
