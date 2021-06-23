@@ -58,7 +58,7 @@ public class ThirdPersonController : MonoBehaviour
         //    toTarget = false;
         //}
 
-        if (!dummy)
+        if (!dummy && !characterAnimation.RootMotion())
         {
             AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 
@@ -171,6 +171,7 @@ public class ThirdPersonController : MonoBehaviour
     public void DisableController()
     {
         characterMovement.SetKinematic(true);
+        characterMovement.SetVelocity(Vector3.zero);
         collider.isTrigger = true; 
         dummy = true;
     }

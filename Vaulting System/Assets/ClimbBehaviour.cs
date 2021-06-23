@@ -31,12 +31,6 @@ namespace Climbing
             inTransit
         }
 
-        //CurvesHolder curvesHolder;
-        //BezierCurve directCurveHorizontal;
-        //BezierCurve directCurveVertical;
-        //BezierCurve dismountCurve;
-        //BezierCurve mountCurve;
-        //BezierCurve curCurve;
 
         Vector3 _startPos;
         Vector3 _targetPos;
@@ -61,25 +55,11 @@ namespace Climbing
         float _rmMax = 0.25f;
         float _rmT;
 
-        void SetCurveReferences()
-        {
-            GameObject curvePrefab = Resources.Load("CurvesHolder") as GameObject;
-            GameObject chGO = Instantiate(curvePrefab);
-
-            //curvesHolder = chGO.GetComponent<CurvesHolder>();
-            //
-            //directCurveHorizontal = curvesHolder.ReturnCurve(CurvesHolder.CurveType.horizontal);
-            //directCurveVertical = curvesHolder.ReturnCurve(CurvesHolder.CurveType.vertical);
-            //dismountCurve = curvesHolder.ReturnCurve(CurvesHolder.CurveType.dismount);
-            //mountCurve = curvesHolder.ReturnCurve(CurvesHolder.CurveType.mount);
-        }
-
         void Start()
         {
             anim = GetComponentInChildren<Animator>();
             ik = GetComponentInChildren<ClimbIK>();
             controller = GetComponent<ThirdPersonController>();
-            SetCurveReferences();
         }
 
         void FixedUpdate()
@@ -91,11 +71,6 @@ namespace Climbing
                     HandleClimbing();
                     InitiateFallOff();
                 }
-                else
-                {
-                    InitClimbing();
-                    HandleMount();
-                }
             }
             else
             {
@@ -104,6 +79,7 @@ namespace Climbing
                     transform.parent = null;
                     initClimb = false;
                 }
+
                 if (Input.GetKey(KeyCode.Space))
                 {
                     LookForClimbSpot();
@@ -150,73 +126,6 @@ namespace Climbing
             }
         }
 
-        void InitClimbing()
-        {
-            if (!initClimb)
-            {
-                initClimb = true;
-                if(ik != null)
-                {
-                    //ik.UpdateAllPointsOnOne(targetPoint);
-                    //ik.UpdateAllTargetPositions(targetPoint);
-                    //ik.ImmediatePlaceHelpers();
-                }
-
-                curConnection = ConnectionType.direct;
-                targetState = ClimbStates.onPoint;
-            }
-        }
-
-        void HandleMount()
-        {
-            if (!initTransit)
-            {
-                initTransit = true;
-                ikFollowSideReached = false;
-                ikLandSideReached = false;
-                _t = 0;
-                _startPos = transform.position;
-                //_targetPos = targetPosition + rootOffset;
-                //
-                //curCurve = mountCurve;
-                //curCurve.transform.rotation = targetPoint.transform.rotation;
-                //BezierPoint[] points = curCurve.GetAnchorPoints();
-                //points[0].transform.position = _startPos;
-                //points[points.Length - 1].transform.position = _targetPos;
-            }
-
-            if (enableRootMovement)
-                _t += Time.deltaTime * 2;
-
-            if(_t >= 0.99f)
-            {
-                _t = 1;
-                waitToStartClimb = false;
-                lockInput = false;
-                initTransit = false;
-                ikLandSideReached = false;
-                climbState = targetState;
-            }
-
-            //Vector3 targetPos = curCurve.GetPointAt(_t);
-            //transform.position = targetPos;
-            //
-            //HandleWeightAll(_t, a_mountCurve);
-
-            HandleRotation();
-        }
-
-        void HandleRotation()
-        {
-            Vector3 targetDir = targetPoint.transform.forward;
-
-            if (targetDir == Vector3.zero)
-                targetDir = transform.forward;
-
-            Quaternion targetRot = Quaternion.LookRotation(targetDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 2);
-        }
-
         void InitiateFallOff()
         {
             if(climbState == ClimbStates.onPoint)
@@ -255,19 +164,8 @@ namespace Climbing
                             break;
                     }
                 }
-
                 transform.parent = curPoint.transform.parent;
 
-                if(climbState == ClimbStates.onPoint)
-                {
-                    //ik.UpdateAllTargetPositions(curPoint);
-                    //ik.ImmediatePlaceHelpers();
-                }
-
-            }
-            else
-            {
-                InTransit(inputDirection);
             }
         }
 
@@ -359,31 +257,6 @@ namespace Climbing
                     anim.SetInteger("JumpType", 20);
                     anim.SetBool("Move", true);
                     break;
-            }
-        }
-
-        void InTransit(Vector3 dir)
-        {
-            switch(curConnection)
-            {
-                //case ConnectionType.inBetween:
-                //    UpdateLinearVariables();
-                //    Linear_RootMovement();
-                //    LerpIKLandingSide_Linear();
-                //    WrapUp();
-                //    break;
-                //case ConnectionType.direct:
-                //    UpdateDirectVariables(inputDirection);
-                //    Direct_RootMovement();
-                //    DirectHandleIK();
-                //    WrapUp(true);
-                //    break;
-                //case ConnectionType.dismount:
-                //    HandleDismountVariables();
-                //    Dismount_RootMovement();
-                //    HandleDismountIK();
-                //    DismountWrapUp(true);
-                //    break;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Climbing;
 
 [RequireComponent(typeof(ThirdPersonController))]
 public class AnimationCharacterController : MonoBehaviour
@@ -33,6 +34,8 @@ public class AnimationCharacterController : MonoBehaviour
     public void SetAnimVelocity(Vector3 value) { animVelocity = value; animVelocity.y = 0; }
     public Vector3 GetAnimVelocity() { return animVelocity; }
 
+    public bool RootMotion() { return animator.applyRootMotion; }
+
     public void Jump()
     {
         animator.SetBool("Jump", true);
@@ -60,9 +63,12 @@ public class AnimationCharacterController : MonoBehaviour
     public void HangLedge()
     {
         animator.SetBool("Hanging", true);
+        animator.CrossFade("Idle To Braced Hang", 0.2f);
+        animator.SetInteger("Climb State", 0);
     }
     public void DropLedge()
     {
         animator.SetBool("Hanging", false);
+        animator.SetInteger("Climb State", 2);
     }
 }
