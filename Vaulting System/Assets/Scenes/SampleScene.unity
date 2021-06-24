@@ -3169,7 +3169,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: 0.13806511, y: 0.037270036, z: -0.005199202, w: 0.989708}
+  m_LocalRotation: {x: 0.13806519, y: 0.03725572, z: -0.005197204, w: 0.98970854}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7545,7 +7545,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.16831782, y: 0.055979785, z: -0.009574677, w: 0.9840954}
+  m_LocalRotation: {x: 0.16831802, y: 0.055959597, z: -0.0095712235, w: 0.9840965}
   m_LocalPosition: {x: -1.97, y: 3.05, z: -7.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8277,7 +8277,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.1683178, y: 0.055979785, z: -0.009574675, w: 0.9840954}
+  m_LocalRotation: {x: 0.16831799, y: 0.0559596, z: -0.009571222, w: 0.9840966}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9367,7 +9367,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.21178725, y: 0.055500172, z: -0.012047413, w: 0.97566426}
+  m_LocalRotation: {x: 0.2117875, y: 0.055480167, z: -0.012043068, w: 0.97566545}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12058,10 +12058,10 @@ GameObject:
   - component: {fileID: 1585646070}
   - component: {fileID: 1585646077}
   - component: {fileID: 1585646075}
-  - component: {fileID: 1585646074}
   - component: {fileID: 1585646079}
   - component: {fileID: 1585646078}
   - component: {fileID: 1585646076}
+  - component: {fileID: 1585646074}
   - component: {fileID: 1585646072}
   m_Layer: 0
   m_Name: Player
@@ -12249,7 +12249,7 @@ MonoBehaviour:
     m_Bits: 256
   WallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   LedgePosition: {x: 0, y: 0, z: 0}
   debugSphereSize: 0.05
 --- !u!114 &1585646078
