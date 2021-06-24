@@ -21,6 +21,8 @@ namespace Climbing
         Quaternion targetRot = Quaternion.identity;
         public float lateralSpeed = 25f;
         public float grabLedgeOffset = 0.28f;
+        public Vector3 FreeHangOffset;
+        public Vector3 BracedHangOffset;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -92,7 +94,7 @@ namespace Climbing
                     {
                         target = ReachLedge(hit);
                         targetRot = Quaternion.LookRotation(-hit.normal);
-                        transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * grabLedgeOffset);
+                        //transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * grabLedgeOffset);
                         //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
 
                         wallFound = characterDetection.FindFootCollision(target, hit.normal);
@@ -103,7 +105,6 @@ namespace Climbing
                             curClimbState = ClimbState.FHanging;
 
                         characterController.characterAnimation.HangLedge(curClimbState);
-
                     }
                     else
                     {
@@ -120,14 +121,22 @@ namespace Climbing
                 //transform.position = target - new Vector3(0, rootOffset, 0);
 
                 //if (characterController.jumpPrediction.hasArrived())
-                if ((characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
-                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang")) && 
-                    characterAnimation.animator.IsInTransition(0))
+                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
+                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang"))
                 {
-                    onLedge = true;
-                    toLedge = false;
+                    if(wallFound)
+                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * BracedHangOffset);
+                    else
+                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * FreeHangOffset);
+
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.5f);
+
+                    if (characterAnimation.animator.IsInTransition(0)){
+                        onLedge = true;
+                        toLedge = false;
+                    }
+
                 }
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.5f);
             }
         }
 
@@ -236,7 +245,7 @@ namespace Climbing
             Vector3 targetPos = Vector3.zero;
 
             curLedge = hit.transform.parent.gameObject;
-            List<Point> points = hit.transform.parent.GetComponentInChildren<HandlePoints>().pointsInOrder;
+            List<Point> points = hit.transform.parent.GetComponentInChildren<HandlePointsV2>().pointsInOrder;
 
             float dist = float.PositiveInfinity;
             for (int i = 0; i < points.Count; i++)

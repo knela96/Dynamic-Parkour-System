@@ -10,10 +10,18 @@ public class AnimationCharacterController : MonoBehaviour
     private ThirdPersonController controller;
     private Vector3 animVelocity;
 
+    public AvatarTarget avatarTarget;
+    public Transform target;
+    public float startnormalizedTime;
+    public float targetNormalizedTime;
+    private MatchTargetWeightMask matchTargetWeightMask = new MatchTargetWeightMask(Vector3.one, 0);
+    private bool isMatchTargeted = true;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<ThirdPersonController>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -30,6 +38,7 @@ public class AnimationCharacterController : MonoBehaviour
             animator.applyRootMotion = false;
         }
     }
+
     public void SetAnimVelocity(Vector3 value) { animVelocity = value; animVelocity.y = 0; }
     public Vector3 GetAnimVelocity() { return animVelocity; }
 
@@ -60,8 +69,7 @@ public class AnimationCharacterController : MonoBehaviour
 
     public void HangLedge(ClimbController.ClimbState state)
     {
-        
-        if(state == ClimbController.ClimbState.BHanging)
+        if (state == ClimbController.ClimbState.BHanging)
             animator.CrossFade("Idle To Braced Hang", 0.2f);
         else if (state == ClimbController.ClimbState.FHanging)
             animator.CrossFade("Idle To Freehang", 0.2f);
@@ -83,5 +91,19 @@ public class AnimationCharacterController : MonoBehaviour
     public void EnableController()
     {
         controller.EnableController();
+    }
+    public void SetMatchTarget(Vector3 targetPos, Quaternion targetRot, Vector3 offset)
+    {
+        if (animator.isMatchingTarget)
+            return;
+
+        float normalizeTime = Mathf.Repeat(animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f);
+
+        if (normalizeTime > targetNormalizedTime)
+            return;
+
+        animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
+        animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
+
     }
 }
