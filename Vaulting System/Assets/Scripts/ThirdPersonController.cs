@@ -66,11 +66,10 @@ public class ThirdPersonController : MonoBehaviour
             {
                 ToggleRun();
             }
-
-            //Player is falling
-            isGrounded = OnGround();
-
         }
+
+        //Player is falling
+        isGrounded = OnGround();
     }
     private bool OnGround()
     {
@@ -178,7 +177,6 @@ public class ThirdPersonController : MonoBehaviour
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
-        characterAnimation.DropLedge();
         collider.isTrigger = false;
         dummy = false;
         toTarget = false;

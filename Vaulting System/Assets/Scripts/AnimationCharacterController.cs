@@ -21,7 +21,7 @@ public class AnimationCharacterController : MonoBehaviour
     {
         animator.SetFloat("Velocity", animVelocity.magnitude);
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Root"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Root") || animator.GetCurrentAnimatorStateInfo(0).IsTag("Drop"))
         {
             animator.applyRootMotion = true;
         }
@@ -48,7 +48,6 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", true);
         animator.SetBool("Land", false);
-        animator.SetBool("Hanging", false);
         controller.characterMovement.enableFeetIK = false;
     }
 
@@ -66,9 +65,9 @@ public class AnimationCharacterController : MonoBehaviour
         animator.CrossFade("Idle To Braced Hang", 0.2f);
         animator.SetInteger("Climb State", 0);
     }
-    public void DropLedge()
+    public void DropLedge(int state)
     {
         animator.SetBool("Hanging", false);
-        animator.SetInteger("Climb State", 2);
+        animator.SetInteger("Climb State", state);
     }
 }

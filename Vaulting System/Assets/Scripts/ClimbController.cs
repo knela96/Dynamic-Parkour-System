@@ -30,8 +30,8 @@ namespace Climbing
         Point currentPoint = null;
 
         bool debug = false;
-        public enum ClimbState { ToHang, Hanging, Dropping };
-        private ClimbState curClimbState = ClimbState.ToHang;
+        public enum ClimbState { None, BHanging, BDropping };
+        private ClimbState curClimbState = ClimbState.None;
 
         // Start is called before the first frame update
         void Start()
@@ -59,18 +59,25 @@ namespace Climbing
             {
                 ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
 
+                //Enable COntroller when ground animation ends
+                if (characterAnimation.animator.GetInteger("Climb State") > 0 && characterAnimation.animator.IsInTransition(0))
+                {
+                    characterController.EnableController();
+                }
+
+                //Dismount from Ledge
                 if (Input.GetKeyDown(KeyCode.C))
                 {
                     curLedge = null;
                     targetPoint = null;
                     currentPoint = null;
-                    curClimbState = ClimbState.Dropping;
-                    characterAnimation.DropLedge();
+                    curClimbState = ClimbState.BDropping;
+                    if(Input.GetKey(KeyCode.S))
+                        curClimbState = ClimbState.BHanging;
+
+                    characterAnimation.DropLedge((int)curClimbState);
                 }
-                if (characterAnimation.animator.GetInteger("Climb State") == (int)ClimbState.Dropping && characterAnimation.animator.IsInTransition(0))
-                {
-                    characterController.EnableController();
-                }
+
             }
 
             //Groud
@@ -86,7 +93,7 @@ namespace Climbing
                     {
                         target = ReachLedge(hit);
                         targetRot = Quaternion.LookRotation(-hit.normal);
-                        transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * 0.3f);
+                        transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * 0.25f);
                         //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
                     }
                     else

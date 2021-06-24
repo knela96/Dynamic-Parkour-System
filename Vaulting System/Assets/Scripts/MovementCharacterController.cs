@@ -64,8 +64,20 @@ public class MovementCharacterController : MonoBehaviour
     void Update()
     {
         //charactercontroller.Move(Velocity.normalized * speed * Time.deltaTime);
-        if(!controller.dummy)
+        if (!controller.dummy)
+        {
             ApplyInputMovement();
+        }
+
+        if (controller.isGrounded)
+        {
+            OnLanded();
+            controller.isJumping = false;
+        }
+        else
+        {
+            OnFall();
+        }
 
         //if (controller.inAir)
         //{
@@ -80,15 +92,7 @@ public class MovementCharacterController : MonoBehaviour
         //    }
         //}
 
-        if (controller.isGrounded)
-        {
-            OnLanded();
-            controller.isJumping = false;
-        }
-        else
-        {
-            OnFall();
-        }
+
     }
 
 
