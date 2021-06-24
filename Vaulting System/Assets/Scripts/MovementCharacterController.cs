@@ -79,6 +79,13 @@ public class MovementCharacterController : MonoBehaviour
             OnFall();
         }
 
+
+        if (!controller.dummy && controller.isGrounded)
+        {
+            EnableFeetIK();
+            lastPelvisPositionY = 0.0f;
+        }
+
         //if (controller.inAir)
         //{
         //    if (controller.characterDetection.IsGrounded() && rb.velocity.y < 0)
@@ -116,7 +123,7 @@ public class MovementCharacterController : MonoBehaviour
     public void ApplyInputMovement()
     {
         //Apply fall multiplier
-        if(rb.velocity.y < 0)
+        if(rb.velocity.y <= 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.deltaTime;
         }
@@ -145,7 +152,9 @@ public class MovementCharacterController : MonoBehaviour
     }
 
     public Vector3 GetVelocity() { return rb.velocity; }
-    public void SetVelocity(Vector3 value) { velocity = value; }
+    public void SetVelocity(Vector3 value) { 
+        velocity = value; 
+    }
 
     public void ResetSpeed()
     {
@@ -189,7 +198,7 @@ public class MovementCharacterController : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (!enableFeetIK)
+        if (!enableFeetIK || controller.dummy)
             return;
         if (anim == null)
             return;
@@ -267,7 +276,7 @@ public class MovementCharacterController : MonoBehaviour
         if (showDebug)
             Debug.DrawLine(fromRaycastPosition, fromRaycastPosition + Vector3.down * (raycastDownDistance + heightFromGroundRaycast),Color.green);
 
-        if (Physics.Raycast(fromRaycastPosition, Vector3.down, out feetHit, raycastDownDistance + raycastDownDistance, environmentLayer))
+        if (Physics.Raycast(fromRaycastPosition, Vector3.down, out feetHit, raycastDownDistance + heightFromGroundRaycast, environmentLayer))
         {
             feetIKPositions = fromRaycastPosition;
             feetIKPositions.y = feetHit.point.y + pelvisOffset;
@@ -292,8 +301,18 @@ public class MovementCharacterController : MonoBehaviour
     public void SetKinematic(bool active)
     {
         rb.isKinematic = active;
-        enableFeetIK = !active;
     }
 
+
     #endregion
+
+    public void EnableFeetIK()
+    {
+        enableFeetIK = true;
+    }
+
+    public void ApplyGravity()
+    {
+        rb.velocity += Vector3.up * -0.300f;
+    }
 }

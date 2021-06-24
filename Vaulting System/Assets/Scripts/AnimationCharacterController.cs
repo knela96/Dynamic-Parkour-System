@@ -29,7 +29,6 @@ public class AnimationCharacterController : MonoBehaviour
         {
             animator.applyRootMotion = false;
         }
-
     }
     public void SetAnimVelocity(Vector3 value) { animVelocity = value; animVelocity.y = 0; }
     public Vector3 GetAnimVelocity() { return animVelocity; }
@@ -56,18 +55,33 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
-        controller.characterMovement.enableFeetIK = true;
+        //controller.characterMovement.enableFeetIK = true;
     }
 
-    public void HangLedge()
+    public void HangLedge(ClimbController.ClimbState state)
     {
+        
+        if(state == ClimbController.ClimbState.BHanging)
+            animator.CrossFade("Idle To Braced Hang", 0.2f);
+        else if (state == ClimbController.ClimbState.FHanging)
+            animator.CrossFade("Idle To Freehang", 0.2f);
+
+        animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
-        animator.CrossFade("Idle To Braced Hang", 0.2f);
-        animator.SetInteger("Climb State", 0);
     }
     public void DropLedge(int state)
     {
         animator.SetBool("Hanging", false);
         animator.SetInteger("Climb State", state);
+    }
+
+    public void EnableIKSolver()
+    {
+        controller.characterMovement.EnableFeetIK();
+    }
+
+    public void EnableController()
+    {
+        controller.EnableController();
     }
 }

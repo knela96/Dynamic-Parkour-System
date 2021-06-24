@@ -13,11 +13,17 @@ namespace Climbing
         public bool showDebug = true;
 
         public Vector3 OriginLedgeRay;
+        public Vector3 OriginFeetRay;
         public float OriginLedgeLength;
+        public float OriginFeetLength;
         public LayerMask climbLayer;
+        public LayerMask WallLayer;
 
         public Vector3 LedgePosition;
         public float debugSphereSize = 0.05f;
+        bool foundWall = false;
+        Vector3 PointFoot = Vector3.zero;
+        Vector3 PointFootFwd = Vector3.zero;
 
         void Start()
         {
@@ -47,6 +53,26 @@ namespace Climbing
             //Set invalid hit
             Physics.Raycast(Vector3.zero, Vector3.forward, out hit, 0, -1);
             return false;
+        }
+
+        public bool FindFootCollision(Vector3 targetPos, Vector3 normal)
+        {
+            foundWall = true;
+            Vector3 rayOrigin = targetPos;
+            PointFoot = rayOrigin;
+            PointFootFwd = -normal;
+
+            RaycastHit hit;
+            if (!Physics.Raycast(rayOrigin + new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay, -normal, out hit, OriginFeetLength, WallLayer))
+            {
+                foundWall = false;
+            }
+            if (!Physics.Raycast(rayOrigin + new Vector3(0.10f, 0, 0) + OriginFeetRay, -normal, out hit, OriginFeetLength, WallLayer))
+            {
+                foundWall = false;
+            }
+
+            return foundWall;
         }
 
         bool ThrowRayToLedge(Vector3 origin, out RaycastHit hit)
@@ -102,10 +128,18 @@ namespace Climbing
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(LedgePosition, debugSphereSize);
             }
+
+            //Draw Feet IK Rays
+            if(PointFoot != Vector3.zero)
+            {
+                Color color = (foundWall == true) ? Color.green : Color.red;
+                Debug.DrawLine(PointFoot + new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay, PointFoot + OriginFeetRay + new Vector3(-0.15f, -0.10f, 0) + PointFootFwd * OriginFeetLength, color); 
+                Debug.DrawLine(PointFoot + new Vector3(0.10f, 0, 0) + OriginFeetRay, PointFoot + OriginFeetRay + new Vector3(0.10f, 0, 0) + PointFootFwd * OriginFeetLength, color);
+            }
         }
 
         public bool IsGrounded(out RaycastHit hit) {
-            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f);
+            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.2f);
         }
 
         public void OnTriggerEnterEvent(Collider other)

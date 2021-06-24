@@ -71,6 +71,7 @@ public class ThirdPersonController : MonoBehaviour
         //Player is falling
         isGrounded = OnGround();
     }
+
     private bool OnGround()
     {
         RaycastHit hit;
@@ -171,12 +172,14 @@ public class ThirdPersonController : MonoBehaviour
     {
         characterMovement.SetKinematic(true);
         characterMovement.SetVelocity(Vector3.zero);
+        characterMovement.enableFeetIK = false;
         collider.isTrigger = true; 
         dummy = true;
     }
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
+        characterMovement.ApplyGravity();
         collider.isTrigger = false;
         dummy = false;
         toTarget = false;

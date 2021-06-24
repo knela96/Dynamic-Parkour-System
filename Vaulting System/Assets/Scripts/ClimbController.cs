@@ -8,6 +8,7 @@ namespace Climbing
     public class ClimbController : MonoBehaviour
     {
         bool ledgeFound = false;
+        bool wallFound = false;
         public bool onLedge = false;
         public bool toLedge = false;
 
@@ -19,6 +20,7 @@ namespace Climbing
         Vector3 target = Vector3.zero;
         Quaternion targetRot = Quaternion.identity;
         public float lateralSpeed = 25f;
+        public float grabLedgeOffset = 0.28f;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -30,7 +32,7 @@ namespace Climbing
         Point currentPoint = null;
 
         bool debug = false;
-        public enum ClimbState { None, BHanging, BDropping };
+        public enum ClimbState { None, BHanging, FHanging};
         private ClimbState curClimbState = ClimbState.None;
 
         // Start is called before the first frame update
@@ -59,23 +61,20 @@ namespace Climbing
             {
                 ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
 
-                //Enable COntroller when ground animation ends
-                if (characterAnimation.animator.GetInteger("Climb State") > 0 && characterAnimation.animator.IsInTransition(0))
-                {
-                    characterController.EnableController();
-                }
-
                 //Dismount from Ledge
                 if (Input.GetKeyDown(KeyCode.C))
                 {
                     curLedge = null;
                     targetPoint = null;
                     currentPoint = null;
-                    curClimbState = ClimbState.BDropping;
-                    if(Input.GetKey(KeyCode.S))
-                        curClimbState = ClimbState.BHanging;
-
+                    curClimbState = ClimbState.None;
                     characterAnimation.DropLedge((int)curClimbState);
+                }
+
+                //Enable Controller when dismount animation ends
+                if (!characterAnimation.animator.GetBool("ClimbAnimations"))
+                {
+                    characterController.EnableController();
                 }
 
             }
@@ -93,8 +92,18 @@ namespace Climbing
                     {
                         target = ReachLedge(hit);
                         targetRot = Quaternion.LookRotation(-hit.normal);
-                        transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * 0.25f);
+                        transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * grabLedgeOffset);
                         //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
+
+                        wallFound = characterDetection.FindFootCollision(target, hit.normal);
+
+                        if (wallFound)
+                            curClimbState = ClimbState.BHanging;
+                        else
+                            curClimbState = ClimbState.FHanging;
+
+                        characterController.characterAnimation.HangLedge(curClimbState);
+
                     }
                     else
                     {
@@ -111,7 +120,9 @@ namespace Climbing
                 //transform.position = target - new Vector3(0, rootOffset, 0);
 
                 //if (characterController.jumpPrediction.hasArrived())
-                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") && characterAnimation.animator.IsInTransition(0))
+                if ((characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
+                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang")) && 
+                    characterAnimation.animator.IsInTransition(0))
                 {
                     onLedge = true;
                     toLedge = false;
@@ -248,9 +259,16 @@ namespace Climbing
             }
 
             characterController.DisableController();
-            characterController.characterAnimation.HangLedge();
             toLedge = true;
 
+           // wallFound = characterDetection.FindFootCollision(target, hit.normal);
+           //
+           // if (wallFound)
+           //     curClimbState = ClimbState.BHanging;
+           // else
+           //     curClimbState = ClimbState.FHanging;
+           //
+           // characterController.characterAnimation.HangLedge(curClimbState);
 
             return targetPos;
         }

@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 217d9fbe10f09ae4984eecb803fe6cea
+guid: 198a846163c67c548b491c2a3a7306ef
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Braced Hang Drop
+    second: Freehang Drop
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Braced Hang Drop
+      name: Freehang Drop
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 50
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -49,7 +49,7 @@ ModelImporter:
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
       keepOriginalPositionY: 0

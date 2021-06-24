@@ -2170,7 +2170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 237592838}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.1900287, y: -1.9484555, z: -3.2240467}
+  m_LocalPosition: {x: 10.793, y: -1.9484555, z: -0.842}
   m_LocalScale: {x: 2.1848, y: 2.1848, z: 2.1848}
   m_Children: []
   m_Father: {fileID: 183349923}
@@ -3169,7 +3169,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347225087}
-  m_LocalRotation: {x: 0.13806526, y: 0.03724647, z: -0.0051959152, w: 0.9897089}
+  m_LocalRotation: {x: 0.13806511, y: 0.037270036, z: -0.005199202, w: 0.989708}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7545,7 +7545,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.16831817, y: 0.055946615, z: -0.009569004, w: 0.9840973}
+  m_LocalRotation: {x: 0.16831782, y: 0.055979785, z: -0.009574677, w: 0.9840954}
   m_LocalPosition: {x: -1.97, y: 3.05, z: -7.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -8277,7 +8277,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058638585}
-  m_LocalRotation: {x: 0.16831811, y: 0.055946603, z: -0.009569, w: 0.9840973}
+  m_LocalRotation: {x: 0.1683178, y: 0.055979785, z: -0.009574675, w: 0.9840954}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9367,7 +9367,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216255855}
-  m_LocalRotation: {x: 0.21178764, y: 0.05546727, z: -0.012040267, w: 0.97566617}
+  m_LocalRotation: {x: 0.21178725, y: 0.055500172, z: -0.012047413, w: 0.97566426}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12181,7 +12181,7 @@ MonoBehaviour:
   fallForce: 4
   enableFeetIK: 1
   heightFromGroundRaycast: 0.88
-  raycastDownDistance: 0.31
+  raycastDownDistance: 0.5
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -12190,7 +12190,7 @@ MonoBehaviour:
   feetToIKPositionSpeed: 0.25
   leftFootAnimVariableName: LeftFootCurve
   rightFootAnimVariableName: RightFootCurve
-  useProIKFeature: 0
+  useProIKFeature: 1
   showDebug: 1
 --- !u!114 &1585646075
 MonoBehaviour:
@@ -12241,10 +12241,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebug: 1
   OriginLedgeRay: {x: 0, y: 1.63, z: 0.1}
+  OriginFeetRay: {x: 0.08, y: -0.21, z: 0}
   OriginLedgeLength: 1.5
+  OriginFeetLength: 0.6
   climbLayer:
     serializedVersion: 2
     m_Bits: 256
+  WallLayer:
+    serializedVersion: 2
+    m_Bits: 0
   LedgePosition: {x: 0, y: 0, z: 0}
   debugSphereSize: 0.05
 --- !u!114 &1585646078
@@ -12266,6 +12271,7 @@ MonoBehaviour:
   pointConnection: {fileID: 2025069583}
   rootOffset: 1.09
   lateralSpeed: 20
+  grabLedgeOffset: 0.28
   limitLHand: {fileID: 2087593746}
   limitRHand: {fileID: 1888416096}
 --- !u!114 &1585646079
@@ -16073,8 +16079,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1996960745}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.95, y: 0.06999993, z: -1.4729999}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 5.5, y: 0.06999993, z: -1.4729999}
+  m_LocalScale: {x: 1.5601455, y: 1, z: 1}
   m_Children:
   - {fileID: 381153647}
   - {fileID: 784721843}
