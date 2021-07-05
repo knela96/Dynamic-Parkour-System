@@ -23,6 +23,7 @@ namespace Climbing
         public float grabLedgeOffset = 0.28f;
         public Vector3 FreeHangOffset;
         public Vector3 BracedHangOffset;
+        public Vector3 originHandIKOffset;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -36,6 +37,8 @@ namespace Climbing
         bool debug = false;
         public enum ClimbState { None, BHanging, FHanging};
         private ClimbState curClimbState = ClimbState.None;
+
+        float horizontalMovement = 0.0f;
 
         // Start is called before the first frame update
         void Start()
@@ -141,14 +144,17 @@ namespace Climbing
 
         public void ClimbMovement(float vertical, float horizontal)
         {
-            Vector3 translation = transform.right * horizontal * (lateralSpeed * 0.001f);
-            bool valid = CheckValidMovement(translation);
+            horizontalMovement = horizontal;
+            characterAnimation.HangMovement(horizontalMovement);
 
+            Vector3 translation = transform.right * horizontal;// * (lateralSpeed * 0.001f);
+            bool valid = CheckValidMovement(translation);
+            
+            /*
             if (valid)
             {
                 transform.position += translation;
             }
-            /*
             else if(!valid && Input.GetKeyDown(KeyCode.Space)) //Check for Near Ledge
             {
                 Point point = null;            
@@ -220,23 +226,19 @@ namespace Climbing
 
         bool CheckValidMovement(Vector3 translation)
         {
-            bool ret = false;
-            RaycastHit hit;
+            curLedge = null;
+            RaycastHit hit1;
+            RaycastHit hit2;
 
-            if (translation.normalized.x < 0)
-            {
-                ret = characterController.characterDetection.ThrowHandRayToLedge(limitLHand.transform.position, out hit);
-                if (ret)
-                    curLedge = hit.collider.transform.parent.gameObject;
-            }
-            else if (translation.normalized.x > 0)
-            {
-                ret = characterController.characterDetection.ThrowHandRayToLedge(limitRHand.transform.position, out hit);
-                if (ret)
-                    curLedge = hit.collider.transform.parent.gameObject;
-            }
+            Vector3 origin = limitLHand.transform.position + (transform.rotation * originHandIKOffset);
+            Vector3 direction = Vector3.zero;
 
-            return ret;
+            if(characterController.characterDetection.ThrowHandRayToLedge(origin, new Vector3(0.25f,-0.15f,1), out hit1))
+                curLedge = hit1.collider.transform.parent.gameObject;
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin, new Vector3(-0.25f, -0.15f, 1), out hit2))
+                curLedge = hit2.collider.transform.parent.gameObject;
+
+            return (curLedge != null) ? true : false;
         }
 
         Vector3 ReachLedge(RaycastHit hit)

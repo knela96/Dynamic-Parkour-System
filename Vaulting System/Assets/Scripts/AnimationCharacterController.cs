@@ -83,6 +83,11 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetInteger("Climb State", state);
     }
 
+    public void HangMovement(float value)
+    {
+        animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 10));
+    }
+
     public void EnableIKSolver()
     {
         controller.characterMovement.EnableFeetIK();
@@ -101,7 +106,7 @@ public class AnimationCharacterController : MonoBehaviour
 
         if (normalizeTime > targetNormalizedTime)
             return;
-
+        
         animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
         animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
 
