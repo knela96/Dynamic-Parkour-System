@@ -22,7 +22,8 @@ namespace Climbing
         public Vector3 LedgePosition;
         public float debugSphereSize = 0.05f;
         bool foundWall = false;
-        Vector3 PointFoot = Vector3.zero;
+        Vector3 PointFoot1 = Vector3.zero;
+        Vector3 PointFoot2 = Vector3.zero;
         Vector3 PointFootFwd = Vector3.zero;
 
         void Start()
@@ -55,19 +56,20 @@ namespace Climbing
             return false;
         }
 
-        public bool FindFootCollision(Vector3 targetPos, Vector3 normal)
+        public bool FindFootCollision(Vector3 targetPos, Quaternion rot, Vector3 normal)
         {
             foundWall = true;
-            Vector3 rayOrigin = targetPos;
-            PointFoot = rayOrigin;
+
+            PointFoot1 = targetPos + rot * (new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay);
+            PointFoot2 = targetPos + rot * (new Vector3(0.10f, 0, 0) + OriginFeetRay);
             PointFootFwd = -normal;
 
             RaycastHit hit;
-            if (!Physics.Raycast(rayOrigin + new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay, -normal, out hit, OriginFeetLength, WallLayer))
+            if (!Physics.Raycast(PointFoot1, -normal, out hit, OriginFeetLength, WallLayer))
             {
                 foundWall = false;
             }
-            if (!Physics.Raycast(rayOrigin + new Vector3(0.10f, 0, 0) + OriginFeetRay, -normal, out hit, OriginFeetLength, WallLayer))
+            if (!Physics.Raycast(PointFoot2, -normal, out hit, OriginFeetLength, WallLayer))
             {
                 foundWall = false;
             }
@@ -130,12 +132,11 @@ namespace Climbing
             }
 
             //Draw Feet IK Rays
-            if(PointFoot != Vector3.zero)
-            {
-                Color color = (foundWall == true) ? Color.green : Color.red;
-                Debug.DrawLine(PointFoot + new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay, PointFoot + OriginFeetRay + new Vector3(-0.15f, -0.10f, 0) + PointFootFwd * OriginFeetLength, color); 
-                Debug.DrawLine(PointFoot + new Vector3(0.10f, 0, 0) + OriginFeetRay, PointFoot + OriginFeetRay + new Vector3(0.10f, 0, 0) + PointFootFwd * OriginFeetLength, color);
-            }
+            Color color = (foundWall == true) ? Color.green : Color.red;
+            if (PointFoot1 != Vector3.zero)
+                Debug.DrawLine(PointFoot1, PointFoot1 + PointFootFwd * OriginFeetLength, color);
+            if (PointFoot2 != Vector3.zero)
+                Debug.DrawLine(PointFoot2, PointFoot2 + PointFootFwd * OriginFeetLength, color);
         }
 
         public bool IsGrounded(out RaycastHit hit) {

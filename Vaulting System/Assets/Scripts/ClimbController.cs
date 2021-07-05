@@ -97,7 +97,7 @@ namespace Climbing
                         //transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * grabLedgeOffset);
                         //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
 
-                        wallFound = characterDetection.FindFootCollision(target, hit.normal);
+                        wallFound = characterDetection.FindFootCollision(target, targetRot, hit.normal);
 
                         if (wallFound)
                             curClimbState = ClimbState.BHanging;
@@ -124,9 +124,9 @@ namespace Climbing
                 if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
                     characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang"))
                 {
-                    if(wallFound)
+                    if(wallFound) //Braced
                         characterAnimation.SetMatchTarget(target, targetRot, targetRot * BracedHangOffset);
-                    else
+                    else //Free
                         characterAnimation.SetMatchTarget(target, targetRot, targetRot * FreeHangOffset);
 
                     transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.5f);
@@ -135,7 +135,6 @@ namespace Climbing
                         onLedge = true;
                         toLedge = false;
                     }
-
                 }
             }
         }
@@ -256,13 +255,13 @@ namespace Climbing
                 {
                     dist = point2root;
                     targetPos = points[i].transform.position;
-                    if (i == 0)//Left Point
+                    /*if (i == 0)//Left Point
                     {
-                        targetPos.x += 0.5f;
-                    }
-                    else if (i == points.Count - 1)//Right Point
+                        //targetPos += hit.transform.right * 0.1f;
+                    }*/
+                    if (i == points.Count - 1)//Right Point Offset to place the player on Ledge
                     {
-                        targetPos.x -= 0.5f;
+                        targetPos -= hit.transform.right * 0.5f;
                     }
                 }
             }
