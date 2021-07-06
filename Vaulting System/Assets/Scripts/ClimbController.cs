@@ -28,17 +28,25 @@ namespace Climbing
         public GameObject limitLHand;
         public GameObject limitRHand;
         bool dropping = false;
+        bool reachedEnd = false;
 
         GameObject curLedge;
 
         Point targetPoint = null;
         Point currentPoint = null;
 
+        Vector3 leftHandPosition, rightHandPosition, leftFootPosition, rightFootPosition = Vector3.zero;
+        public string LHandAnimVariableName = "LHandCurve";
+        public string RHandAnimVariableName = "RHandCurve";
+        public string LFootAnimVariableName = "LeftFootCurve";
+        public string RFootAnimVariableName = "RightFootCurve";
+
         bool debug = false;
         public enum ClimbState { None, BHanging, FHanging};
         private ClimbState curClimbState = ClimbState.None;
 
         float horizontalMovement = 0.0f;
+        float lasthorizontalMovement = 0.0f;
 
         // Start is called before the first frame update
         void Start()
@@ -144,12 +152,30 @@ namespace Climbing
 
         public void ClimbMovement(float vertical, float horizontal)
         {
-            horizontalMovement = horizontal;
-            characterAnimation.HangMovement(horizontalMovement);
 
-            Vector3 translation = transform.right * horizontal;// * (lateralSpeed * 0.001f);
-            bool valid = CheckValidMovement(translation);
+            if ((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0))//Detect change of input direction
+                reachedEnd = false;
+
+            if (!reachedEnd)
+            {
+                horizontalMovement = horizontal; //Stores player input direction
+
+                Vector3 translation = transform.right * horizontal;// * (lateralSpeed * 0.001f);
+
+                if (!CheckValidMovement(translation)) //Reached End
+                {
+                    reachedEnd = true;
+                }
+            }
+
+            if (reachedEnd)
+            {
+                horizontal = 0; //Stops Horizontal Movement
+            }
             
+
+            characterAnimation.HangMovement(horizontal);
+
             /*
             if (valid)
             {
@@ -230,15 +256,41 @@ namespace Climbing
             RaycastHit hit1;
             RaycastHit hit2;
 
-            Vector3 origin = limitLHand.transform.position + (transform.rotation * originHandIKOffset);
-            Vector3 direction = Vector3.zero;
+            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * originHandIKOffset);
+            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * originHandIKOffset);
+            origin1.y = transform.position.y + originHandIKOffset.y;
+            origin2.y = origin1.y;
 
-            if(characterController.characterDetection.ThrowHandRayToLedge(origin, new Vector3(0.25f,-0.15f,1), out hit1))
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin1, new Vector3(0.25f,-0.15f,1), out hit1) && translation.normalized.x < 0)
                 curLedge = hit1.collider.transform.parent.gameObject;
-            if (characterController.characterDetection.ThrowHandRayToLedge(origin, new Vector3(-0.25f, -0.15f, 1), out hit2))
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin2, new Vector3(-0.25f, -0.15f, 1), out hit2) && translation.normalized.x > 0)
                 curLedge = hit2.collider.transform.parent.gameObject;
 
+            CalculateIKPositions(hit1, hit2);
+
             return (curLedge != null) ? true : false;
+        }
+
+        void CalculateIKPositions(RaycastHit LHand, RaycastHit RHand)
+        {
+            leftHandPosition = transform.InverseTransformPoint(characterAnimation.animator.GetIKPosition(AvatarIKGoal.LeftHand));
+            leftHandPosition.z = LHand.point.z;
+            leftHandPosition = transform.TransformPoint(leftHandPosition);
+
+            rightHandPosition = RHand.point;
+        }
+
+        private void OnAnimatorIK(int layerIndex)
+        {
+            characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, characterAnimation.animator.GetFloat(LHandAnimVariableName));
+            characterAnimation.animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
+            Debug.Log("Hand: " + limitLHand.transform.position + "Ray: " + leftHandPosition);
+            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, characterAnimation.animator.GetFloat(RHandAnimVariableName));
+            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition);
+            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, characterAnimation.animator.GetFloat(LFootAnimVariableName));
+            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.LeftHand, leftFootPosition);
+            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, characterAnimation.animator.GetFloat(RFootAnimVariableName));
+            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.LeftHand, rightFootPosition);
         }
 
         Vector3 ReachLedge(RaycastHit hit)

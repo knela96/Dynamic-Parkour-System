@@ -116,13 +116,13 @@ namespace Climbing
         {
             if (showDebug)
             {
-                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * 0.3f, Color.green);
+                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * 0.5f, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, 0.3f, climbLayer);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, 0.5f, climbLayer);
         }
 
-        void OnDrawGizmosSelected()
+        void OnDrawGizmos()
         {
             // Draw a yellow sphere at the transform's position
             if (LedgePosition != Vector3.zero)

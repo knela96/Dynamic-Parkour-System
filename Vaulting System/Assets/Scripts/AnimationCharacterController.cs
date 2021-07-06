@@ -85,7 +85,7 @@ public class AnimationCharacterController : MonoBehaviour
 
     public void HangMovement(float value)
     {
-        animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 10));
+            animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 10));
     }
 
     public void EnableIKSolver()
