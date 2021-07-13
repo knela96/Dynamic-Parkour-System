@@ -77,7 +77,7 @@ namespace Climbing
             return foundWall;
         }
 
-        bool ThrowRayToLedge(Vector3 origin, out RaycastHit hit)
+        public bool ThrowRayToLedge(Vector3 origin, out RaycastHit hit)
         {
             if (showDebug)
             {
@@ -112,14 +112,23 @@ namespace Climbing
 
         }
 
-        public bool ThrowHandRayToLedge(Vector3 origin, Vector3 direction, out RaycastHit hit)
+        public bool ThrowHandRayToLedge(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
         {
             if (showDebug)
             {
-                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * 0.5f, Color.green);
+                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, 0.5f, climbLayer);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, climbLayer);
+        }
+        public bool ThrowFootRayToLedge(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
+        {
+            if (showDebug)
+            {
+                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
+            }
+
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, WallLayer);
         }
 
         void OnDrawGizmos()
@@ -132,11 +141,12 @@ namespace Climbing
             }
 
             //Draw Feet IK Rays
-            Color color = (foundWall == true) ? Color.green : Color.red;
+            /*Color color = (foundWall == true) ? Color.green : Color.red;
             if (PointFoot1 != Vector3.zero)
                 Debug.DrawLine(PointFoot1, PointFoot1 + PointFootFwd * OriginFeetLength, color);
             if (PointFoot2 != Vector3.zero)
                 Debug.DrawLine(PointFoot2, PointFoot2 + PointFootFwd * OriginFeetLength, color);
+            */
         }
 
         public bool IsGrounded(out RaycastHit hit) {

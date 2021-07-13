@@ -19,14 +19,19 @@ namespace Climbing
         public float rootOffset;
         Vector3 target = Vector3.zero;
         Quaternion targetRot = Quaternion.identity;
-        public float lateralSpeed = 25f;
-        public float grabLedgeOffset = 0.28f;
         public Vector3 FreeHangOffset;
         public Vector3 BracedHangOffset;
         public Vector3 originHandIKOffset;
+        public Vector3 originFootIKOffset;
+        public float IKHandRayLength = 0.5f;
+        public float IKFootRayLength = 0.5f;
+        public float distanceToLedge = 0.1f;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
+        public GameObject limitLFoot;
+        public GameObject limitRFoot;
+
         bool dropping = false;
         bool reachedEnd = false;
 
@@ -78,6 +83,7 @@ namespace Climbing
                 //Dismount from Ledge
                 if (Input.GetKeyDown(KeyCode.C))
                 {
+                    wallFound = false;
                     curLedge = null;
                     targetPoint = null;
                     currentPoint = null;
@@ -106,8 +112,6 @@ namespace Climbing
                     {
                         target = ReachLedge(hit);
                         targetRot = Quaternion.LookRotation(-hit.normal);
-                        //transform.position = new Vector3(target.x, transform.position.y, target.z) + (hit.normal * grabLedgeOffset);
-                        //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
 
                         wallFound = characterDetection.FindFootCollision(target, targetRot, hit.normal);
 
@@ -173,9 +177,11 @@ namespace Climbing
             {
                 horizontal = 0; //Stops Horizontal Movement
             }
-            
 
+            //Move on Ledge
             characterAnimation.HangMovement(horizontal);
+
+            IKSolver();
 
             /*
             if (valid)
@@ -251,52 +257,109 @@ namespace Climbing
             return retPoint;
         }
 
+        bool IKSolver()
+        {
+            RaycastHit hit1;
+            RaycastHit hit2;
+            RaycastHit hit3;
+            RaycastHit hit4;
+
+            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * new Vector3(-originHandIKOffset.x, originHandIKOffset.y, originHandIKOffset.z));
+            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * new Vector3(originHandIKOffset.x, originHandIKOffset.y, originHandIKOffset.z));
+            Vector3 origin3 = limitLFoot.transform.position + (transform.rotation * originFootIKOffset);
+            Vector3 origin4 = limitRFoot.transform.position + (transform.rotation * originFootIKOffset);
+            origin1.y = transform.position.y + originHandIKOffset.y;
+            origin2.y = origin1.y;
+            origin3.z = transform.position.z + originFootIKOffset.z;
+            origin4.z = origin3.z;
+
+            leftHandPosition = Vector3.zero;
+            rightHandPosition = Vector3.zero;
+            leftFootPosition = Vector3.zero;
+            rightFootPosition = Vector3.zero;
+
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin1, new Vector3(0.25f, -0.15f, 1).normalized, IKHandRayLength, out hit1))
+            {
+                leftHandPosition = hit1.point;
+            }
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin2, new Vector3(-0.25f, -0.15f, 1).normalized, IKHandRayLength, out hit2))
+            {
+                rightHandPosition = hit2.point;
+            }
+
+            if (characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength, out hit3))
+            {
+                leftFootPosition = hit3.point + hit3.normal * 0.15f;
+            }
+            if (characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength, out hit4))
+            {
+                rightFootPosition = hit4.point + hit4.normal * 0.15f;
+            }
+
+            return (curLedge != null) ? true : false;
+        }
         bool CheckValidMovement(Vector3 translation)
         {
             curLedge = null;
             RaycastHit hit1;
             RaycastHit hit2;
 
-            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * originHandIKOffset);
-            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * originHandIKOffset);
+            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * (originHandIKOffset + new Vector3(-0.18f,0,0)));
+            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * (originHandIKOffset));
             origin1.y = transform.position.y + originHandIKOffset.y;
             origin2.y = origin1.y;
 
-            leftHandPosition = Vector3.zero;
-            rightHandPosition = Vector3.zero;
-
-            if (characterController.characterDetection.ThrowHandRayToLedge(origin1, new Vector3(0.25f,-0.15f,1), out hit1))
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin1, Vector3.forward, IKHandRayLength, out hit1))
             {
                 if (translation.normalized.x < 0)
                 {
                     curLedge = hit1.collider.transform.parent.gameObject;
                 }
-                leftHandPosition = hit1.point;
             }
-            if (characterController.characterDetection.ThrowHandRayToLedge(origin2, new Vector3(-0.25f, -0.15f, 1), out hit2)){
+            if (characterController.characterDetection.ThrowHandRayToLedge(origin2, Vector3.forward, IKHandRayLength, out hit2)){
                 if (translation.normalized.x > 0)
                 {
                     curLedge = hit2.collider.transform.parent.gameObject;
                 }
-                rightHandPosition = hit2.point;
+            }
+
+            //If movement is valid adjust player with the motion
+            if (hit1.collider != null && hit2.collider != null)
+            {
+                //Rotates the character towards the ledge while moving
+                Vector3 direction = hit2.point - hit1.point;
+                Vector3 tangent = Vector3.Cross(Vector3.up, direction).normalized;
+                transform.rotation = Quaternion.LookRotation(-tangent);
+
+                //Sets the model at a relative distance from the ledge
+                Vector3 origin = transform.position;
+                origin.y += originHandIKOffset.y;
+
+                RaycastHit hit;
+                Debug.DrawLine(origin, origin + -tangent * distanceToLedge, Color.cyan);
+                if (Physics.Raycast(origin, -tangent, out hit, distanceToLedge))
+                {
+                    Vector3 newPos = (hit.point + hit.normal * distanceToLedge);
+                    transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
+                }
             }
 
             return (curLedge != null) ? true : false;
         }
 
-        void CalculateIKPositions(AvatarIKGoal handIK, ref Vector3 HandpositionIK)
+        void CalculateIKPositions(AvatarIKGoal IKGoal, ref Vector3 IKPosition)
         {
-            Vector3 targetIKPosition = characterAnimation.animator.GetIKPosition(handIK);
+            Vector3 targetIKPosition = characterAnimation.animator.GetIKPosition(IKGoal);
 
-            if (HandpositionIK != Vector3.zero)
+            if (IKPosition != Vector3.zero)
             {
-                HandpositionIK = transform.InverseTransformPoint(HandpositionIK);
+                Vector3 _IKPosition = transform.InverseTransformPoint(IKPosition);
                 targetIKPosition = transform.InverseTransformPoint(targetIKPosition);
-                targetIKPosition.z = HandpositionIK.z;
+                targetIKPosition.z = _IKPosition.z;
                 targetIKPosition = transform.TransformPoint(targetIKPosition);
             }
 
-            characterAnimation.animator.SetIKPosition(handIK, targetIKPosition);
+            characterAnimation.animator.SetIKPosition(IKGoal, targetIKPosition);
         }
 
         private void OnAnimatorIK(int layerIndex)
@@ -306,14 +369,18 @@ namespace Climbing
             characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
             CalculateIKPositions(AvatarIKGoal.RightHand, ref rightHandPosition);
 
-
-            Debug.Log("Hand: " + limitLHand.transform.position + "Ray: " + leftHandPosition);
-            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, characterAnimation.animator.GetFloat(RHandAnimVariableName));
-            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition);
-            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, characterAnimation.animator.GetFloat(LFootAnimVariableName));
-            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.LeftHand, leftFootPosition);
-            //characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, characterAnimation.animator.GetFloat(RFootAnimVariableName));
-            //characterAnimation.animator.SetIKPosition(AvatarIKGoal.LeftHand, rightFootPosition);
+            if (wallFound)
+            {
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
+                CalculateIKPositions(AvatarIKGoal.LeftFoot, ref leftFootPosition);
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
+                CalculateIKPositions(AvatarIKGoal.RightFoot, ref rightFootPosition);
+            }
+            else
+            {
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
+            }
         }
 
         Vector3 ReachLedge(RaycastHit hit)
