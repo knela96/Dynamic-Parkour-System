@@ -165,8 +165,13 @@ namespace Climbing
             else if (curClimbState == ClimbState.FHanging)
                 curOriginGrabOffset = originHandIKFreeOffset;
 
-            //if ((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0))//Detect change of input direction
+            //Detect change of input direction & Braced To Free animation Ended
+            if ((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0) || 
+                (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") &&
+                characterAnimation.animator.IsInTransition(0)))
+            {
                 reachedEnd = false;
+            }
 
             if (!reachedEnd)
             {
@@ -185,12 +190,15 @@ namespace Climbing
                 horizontal = 0; //Stops Horizontal Movement
             }
 
+            //Solver to position Limbs + Check if need to change climb state
             IKSolver();
 
             //Change from Braced Hang <-----> Free Hang
+
+            //NEED TO CHECK THIS!!!!
             if (wallFound && curClimbState != ClimbState.BHanging)
             {
-                //curClimbState = ClimbState.BHanging;
+                curClimbState = ClimbState.BHanging;
             }
             else if(!wallFound && curClimbState != ClimbState.FHanging)
             {
@@ -373,7 +381,7 @@ namespace Climbing
                     if (curClimbState == ClimbState.BHanging)
                         newPos = (hit.point + tangent * 0.25f);
                     else if (curClimbState == ClimbState.FHanging)
-                        newPos = (hit.point + tangent * 0.1f);
+                        newPos = (hit.point + tangent * 0.05f);
 
                     transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
                 }

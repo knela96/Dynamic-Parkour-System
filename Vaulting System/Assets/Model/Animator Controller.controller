@@ -522,11 +522,11 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.13118213
   m_TransitionOffset: 0
-  m_ExitTime: 0.83928573
+  m_ExitTime: 0.7938177
   m_HasExitTime: 0
-  m_HasFixedDuration: 1
+  m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
@@ -1574,9 +1574,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.07919997
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 0.91514295
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1983,7 +1983,7 @@ AnimatorStateMachine:
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 190, y: 340, z: 0}
-  m_EntryPosition: {x: -20, y: 190, z: 0}
+  m_EntryPosition: {x: 130, y: 200, z: 0}
   m_ExitPosition: {x: 80, y: 620, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -4157627159149685334}
@@ -2009,7 +2009,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 6409de9932b85574889c1d8bd705f759,
+    m_Motion: {fileID: -8581378346446569542, guid: 9cf4649a5b405e440a87cadd5d7f761c,
       type: 3}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
@@ -2027,7 +2027,7 @@ BlendTree:
     m_DirectBlendParameter: Velocity
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 6409de9932b85574889c1d8bd705f759,
+    m_Motion: {fileID: -203655887218126122, guid: 9cf4649a5b405e440a87cadd5d7f761c,
       type: 3}
     m_Threshold: 1
     m_Position: {x: -1, y: 0}
