@@ -83,9 +83,10 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetInteger("Climb State", state);
     }
 
-    public void HangMovement(float value)
+    public void HangMovement(float value, int climbstate)
     {
         animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 10));
+        animator.SetInteger("Climb State", climbstate);
     }
 
     public void EnableIKSolver()
