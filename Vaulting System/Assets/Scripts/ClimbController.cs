@@ -195,79 +195,83 @@ namespace Climbing
             else if (curClimbState == ClimbState.FHanging)
                 curOriginGrabOffset = originHandIKFreeOffset;
 
-            //Detect change of input direction & Braced To Free animation Ended
-            if (((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0)) ||
-                !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+            //Only allow to jump if is braced and not transitioning from free hang
+            if (Input.GetKeyDown(KeyCode.Space) && wallFound && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
-                reachedEnd = false;
+                JumpToLedge(horizontal, vertical);
             }
-
-            if (!reachedEnd)
+            else //Movement Behaviour on Ledge
             {
-                horizontalMovement = horizontal; //Stores player input direction
-
-                if (!CheckValidMovement(horizontal)) //Reached End
+                //Detect change of input direction to allow movement again after reaching end of the ledge
+                if (((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0)) ||
+                    !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
                 {
-                    reachedEnd = true;
+                    reachedEnd = false;
                 }
-            }
 
-            if (reachedEnd)
-            {
-                horizontal = 0; //Stops Horizontal Movement
-            }
-
-            //Solver to position Limbs + Check if need to change climb state
-            IKSolver();
-
-            //Change from Braced Hang <-----> Free Hang
-            ChangeBracedFreeHang();
-
-            //Move on Ledge
-            characterAnimation.HangMovement(horizontal, (int)curClimbState);
-
-            /*
-            if (valid)
-            {
-                transform.position += translation;
-            }
-            else if(!valid && Input.GetKeyDown(KeyCode.Space)) //Check for Near Ledge
-            {
-                Point point = null;            
-
-                point = curLedge.GetComponentInChildren<HandlePoints>().GetClosestPoint(transform.position);
-                currentPoint = point;
-
-                if (point)
+                if (!reachedEnd)//Stops Movement on Ledge
                 {
-                    Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
+                    horizontalMovement = horizontal; //Stores player input direction
 
-                    Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours);
-
-                    if (toPoint != null)
+                    if (!CheckValidMovement(horizontal)) //Reached End
                     {
-                        if (toPoint.type == ConnectionType.direct) //Jump Reachable
-                        {
-                            target = toPoint.target.transform.position;
-                            curLedge = toPoint.target.transform.parent.parent.parent.gameObject;
-                            targetPoint = toPoint.target;
+                        reachedEnd = true;
+                    }
+                }
 
-                            if (toPoint.target == curLedge.GetComponentInChildren<HandlePoints>().furthestLeft)//Left Point
-                            {
-                                target.x += 0.5f;
-                            }
-                            else if (toPoint.target == curLedge.GetComponentInChildren<HandlePoints>().furthestRight)//Right Point
-                            {
-                                target.x -= 0.5f;
-                            }
-                            //transform.position = target - new Vector3(0, rootOffset, 0);
-                            characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
-                            toLedge = true;
+                if (reachedEnd)
+                {
+                    horizontal = 0; //Stops Horizontal Movement
+                }
+
+                //Solver to position Limbs + Check if need to change climb state from Braced and Free Hang
+                IKSolver();
+
+                //Change from Braced Hang <-----> Free Hang
+                ChangeBracedFreeHang();
+
+                characterAnimation.HangMovement(horizontal, (int)curClimbState); //Move on Ledge Animations
+            }
+        }
+
+        void JumpToLedge(float horizontal, float vertical)
+        {
+            if (vertical == 0 && horizontal == 0)
+                return;
+
+            Point point = null;
+
+            point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(transform.position);
+            currentPoint = point;
+
+            if (point)
+            {
+                Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
+
+                Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours);
+
+                if (toPoint != null)
+                {
+                    if (toPoint.type == ConnectionType.direct) //Jump Reachable
+                    {
+                        target = toPoint.target.transform.position;
+                        curLedge = toPoint.target.transform.parent.parent.parent.gameObject;
+                        targetPoint = toPoint.target;
+
+                        if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestLeft)//Left Point
+                        {
+                            target.x += 0.5f;
                         }
+                        else if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestRight)//Right Point
+                        {
+                            target.x -= 0.5f;
+                        }
+                        transform.position = target;
+                        //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
+                        toLedge = true;
                     }
                 }
             }
-            */
         }
 
         public Neighbour CandidatePointOnDirection(Vector3 targetDirection, Point from, List<Neighbour> candidatePoints)
