@@ -194,28 +194,28 @@ namespace Climbing
             //Solver to position Limbs + Check if need to change climb state
             IKSolver();
 
-
             //Change from Braced Hang <-----> Free Hang
 
             if (wallFound && curClimbState != ClimbState.BHanging)
             {
                 curClimbState = ClimbState.BHanging; //reachedEnd = true;
-                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
-
-                if (curLedge)
-                    HandPosition.y = curLedge.transform.position.y + 0.1f;
             }
             else if(!wallFound && curClimbState != ClimbState.FHanging)
             {
                 curClimbState = ClimbState.FHanging; //reachedEnd = true;
-                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
-                if (curLedge)
-                    HandPosition.y = curLedge.transform.position.y;
             }
 
             if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
                 characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
             {
+
+                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+
+                if (curClimbState == ClimbState.FHanging)
+                    HandPosition.y = curLedge.transform.position.y;
+                else
+                    HandPosition.y = curLedge.transform.position.y + 0.05f;
+
                 characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0, 0.5f);
             }
 
@@ -336,7 +336,7 @@ namespace Climbing
         }
         bool CheckValidMovement(Vector3 translation)
         {
-            curLedge = null;
+            bool ret = false;
             RaycastHit hit1;
             RaycastHit hit2;
             RaycastHit hit3;
@@ -356,7 +356,7 @@ namespace Climbing
             }
             else
             {
-                origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.38f, 0, 0)));
+                origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.43f, 0, 0)));
                 origin4 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(0.35f, 0, 0)));
                 origin3.y = transform.position.y;
                 origin4.y = origin3.y;
@@ -367,12 +367,14 @@ namespace Climbing
                 if (translation.normalized.x < 0)
                 {
                     curLedge = hit1.collider.transform.parent.gameObject;
+                    ret = true;
                 }
             }
             if (characterController.characterDetection.ThrowHandRayToLedge(origin2, Vector3.forward, IKHandRayLength, out hit2)){
                 if (translation.normalized.x > 0)
                 {
                     curLedge = hit2.collider.transform.parent.gameObject;
+                    ret = true;
                 }
             }
 
@@ -415,7 +417,7 @@ namespace Climbing
                 }
             }
 
-            return (curLedge != null) ? true : false;
+            return ret;
         }
 
         void CalculateIKPositions(AvatarIKGoal IKGoal, ref Vector3 IKPosition)
