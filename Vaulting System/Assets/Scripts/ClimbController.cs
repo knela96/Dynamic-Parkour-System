@@ -82,7 +82,7 @@ namespace Climbing
         void Update()
         {
             //Arrived on Ledge
-            if (onLedge)
+            if (onLedge && characterController.dummy)
             {
                 ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
 
@@ -161,6 +161,33 @@ namespace Climbing
             }
         }
 
+        void ChangeBracedFreeHang()
+        {
+            if (curLedge)
+            {
+                if (wallFound && curClimbState != ClimbState.BHanging)
+                {
+                    curClimbState = ClimbState.BHanging;
+                    Vector3 offset = new Vector3(0, 0.15f, 0.0f);
+                    HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                    HandPosition.y = curLedge.transform.position.y + offset.y;
+                }
+                else if (!wallFound && curClimbState != ClimbState.FHanging)
+                {
+                    curClimbState = ClimbState.FHanging;
+                    Vector3 offset = new Vector3(0, -0.1f, 0.0f);
+                    HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                    HandPosition.y = curLedge.transform.position.y;
+                }
+
+                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
+                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
+                {
+                    characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
+                }
+            }
+        }
+
         public void ClimbMovement(float vertical, float horizontal)
         {
             if (curClimbState == ClimbState.BHanging)
@@ -169,9 +196,8 @@ namespace Climbing
                 curOriginGrabOffset = originHandIKFreeOffset;
 
             //Detect change of input direction & Braced To Free animation Ended
-            if ((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0) || 
-                (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") &&
-                characterAnimation.animator.IsInTransition(0)))
+            if (((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0)) ||
+                !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
                 reachedEnd = false;
             }
@@ -180,9 +206,7 @@ namespace Climbing
             {
                 horizontalMovement = horizontal; //Stores player input direction
 
-                Vector3 translation = transform.right * horizontal;// * (lateralSpeed * 0.001f);
-
-                if (!CheckValidMovement(translation)) //Reached End
+                if (!CheckValidMovement(horizontal)) //Reached End
                 {
                     reachedEnd = true;
                 }
@@ -195,36 +219,9 @@ namespace Climbing
 
             //Solver to position Limbs + Check if need to change climb state
             IKSolver();
-            
+
             //Change from Braced Hang <-----> Free Hang
-            
-            if (wallFound && curClimbState != ClimbState.BHanging)
-            {
-                curClimbState = ClimbState.BHanging; //reachedEnd = true;
-                Vector3 offset = new Vector3(0, +0.05f, 0.0f);
-                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position + transform.rotation * offset;
-            }
-            else if(!wallFound && curClimbState != ClimbState.FHanging)
-            {
-                curClimbState = ClimbState.FHanging; //reachedEnd = true;
-                Vector3 offset = new Vector3(0, -0.1f, 0.0f);
-                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position + transform.rotation * offset;
-            }
-            
-            if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
-                characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
-            {
-            
-                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
-                Debug.Log("1");
-
-            }
-
-            if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") && characterAnimation.animator.IsInTransition(0))
-            {
-                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0, 1.0f);
-                Debug.Log("2");
-            }
+            ChangeBracedFreeHang();
 
             //Move on Ledge
             characterAnimation.HangMovement(horizontal, (int)curClimbState);
@@ -349,7 +346,7 @@ namespace Climbing
                 characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
             }
         }
-        bool CheckValidMovement(Vector3 translation)
+        bool CheckValidMovement(float translation)
         {
             bool ret = false;
             RaycastHit hit1;
@@ -373,20 +370,20 @@ namespace Climbing
             {
                 origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.45f, 0, 0)));
                 origin4 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(0.35f, 0, 0)));
-                origin3.y = transform.position.y;
+                origin3.y = transform.position.y + 0.5f;
                 origin4.y = origin3.y;
             }
 
             if (characterController.characterDetection.ThrowHandRayToLedge(origin1, Vector3.forward, IKHandRayLength, out hit1))
             {
-                if (translation.normalized.x < 0)
+                if (translation < 0)
                 {
                     curLedge = hit1.collider.transform.parent.gameObject;
                     ret = true;
                 }
             }
             if (characterController.characterDetection.ThrowHandRayToLedge(origin2, Vector3.forward, IKHandRayLength, out hit2)){
-                if (translation.normalized.x > 0)
+                if (translation > 0)
                 {
                     curLedge = hit2.collider.transform.parent.gameObject;
                     ret = true;
