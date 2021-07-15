@@ -67,15 +67,18 @@ namespace Climbing
 
         private void OnDrawGizmos()
         {
-            if (targetPoint != null)
+            if (debug)
             {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
-            }
+                if (targetPoint != null)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
+                }
 
-            Gizmos.DrawSphere(HandPosition, 0.1f);
+                Gizmos.DrawSphere(HandPosition, 0.1f);
+            }
         }
 
         // Update is called once per frame

@@ -3546,7 +3546,7 @@ GameObject:
   - component: {fileID: 396093143}
   - component: {fileID: 396093142}
   - component: {fileID: 396093141}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12104,7 +12104,7 @@ MonoBehaviour:
     m_Bits: 256
   WallLayer:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1792
   LedgePosition: {x: 0, y: 0, z: 0}
   debugSphereSize: 0.05
 --- !u!114 &1585646078
@@ -12131,7 +12131,7 @@ MonoBehaviour:
   originHandIKFreeOffset: {x: 0.04, y: 2.32, z: -0.25}
   originFootIKOffset: {x: 0, y: 0, z: 0}
   IKHandRayLength: 0.69
-  IKFootRayLength: 0.7
+  IKFootRayLength: 0.79
   distanceToLedgeBraced: 0.27
   distanceToLedgeFree: 0.07
   limitLHand: {fileID: 2047927189}
@@ -15217,7 +15217,7 @@ GameObject:
   - component: {fileID: 1894711215}
   - component: {fileID: 1894711214}
   - component: {fileID: 1894711213}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17994,7 +17994,7 @@ GameObject:
   - component: {fileID: 2141612467}
   - component: {fileID: 2141612466}
   - component: {fileID: 2141612465}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
