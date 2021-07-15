@@ -45,7 +45,7 @@ ModelImporter:
       lastFrame: 35
       wrapMode: 0
       orientationOffsetY: -1.98
-      level: 0
+      level: 0.7
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
@@ -55,9 +55,9 @@ ModelImporter:
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 0
+      keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
-      heightFromFeet: 1
+      heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves:
@@ -228,7 +228,7 @@ ModelImporter:
       lastFrame: 35
       wrapMode: 0
       orientationOffsetY: -1.98
-      level: 0
+      level: 0.7
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
@@ -238,9 +238,9 @@ ModelImporter:
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 0
+      keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
-      heightFromFeet: 1
+      heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []

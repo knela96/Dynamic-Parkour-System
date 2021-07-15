@@ -123,7 +123,7 @@ public class AnimationCharacterController : MonoBehaviour
             return;
 
         animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
-        animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
+        animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime, true);
 
     }
 }

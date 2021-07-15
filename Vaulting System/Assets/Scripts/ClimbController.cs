@@ -74,6 +74,8 @@ namespace Climbing
                 Gizmos.color = Color.green;
                 Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
             }
+
+            Gizmos.DrawSphere(HandPosition, 0.1f);
         }
 
         // Update is called once per frame
@@ -168,7 +170,7 @@ namespace Climbing
 
             //Detect change of input direction & Braced To Free animation Ended
             if ((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0) || 
-                (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") &&
+                (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") &&
                 characterAnimation.animator.IsInTransition(0)))
             {
                 reachedEnd = false;
@@ -193,30 +195,35 @@ namespace Climbing
 
             //Solver to position Limbs + Check if need to change climb state
             IKSolver();
-
+            
             //Change from Braced Hang <-----> Free Hang
-
+            
             if (wallFound && curClimbState != ClimbState.BHanging)
             {
                 curClimbState = ClimbState.BHanging; //reachedEnd = true;
+                Vector3 offset = new Vector3(0, +0.05f, 0.0f);
+                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position + transform.rotation * offset;
             }
             else if(!wallFound && curClimbState != ClimbState.FHanging)
             {
                 curClimbState = ClimbState.FHanging; //reachedEnd = true;
+                Vector3 offset = new Vector3(0, -0.1f, 0.0f);
+                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position + transform.rotation * offset;
             }
-
+            
             if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
                 characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
             {
+            
+                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
+                Debug.Log("1");
 
-                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+            }
 
-                if (curClimbState == ClimbState.FHanging)
-                    HandPosition.y = curLedge.transform.position.y;
-                else
-                    HandPosition.y = curLedge.transform.position.y + 0.05f;
-
-                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0, 0.5f);
+            if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") && characterAnimation.animator.IsInTransition(0))
+            {
+                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0, 1.0f);
+                Debug.Log("2");
             }
 
             //Move on Ledge
@@ -329,9 +336,17 @@ namespace Climbing
             {
                 leftFootPosition = hit3.point + hit3.normal * 0.15f;
             }
+            else
+            {
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+            }
             if (characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength, out hit4))
             {
                 rightFootPosition = hit4.point + hit4.normal * 0.15f;
+            }
+            else
+            {
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
             }
         }
         bool CheckValidMovement(Vector3 translation)
@@ -344,7 +359,7 @@ namespace Climbing
 
             Vector3 origin1 = limitLHand.transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.18f,0,0)));
             Vector3 origin2 = limitRHand.transform.position + (transform.rotation * (curOriginGrabOffset));
-            origin1.y = transform.position.y + curOriginGrabOffset.y;
+            origin1.y = transform.position.y + curOriginGrabOffset.y - 0.05f;
             origin2.y = origin1.y;
 
             Vector3 origin3 = Vector3.zero;
@@ -356,7 +371,7 @@ namespace Climbing
             }
             else
             {
-                origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.43f, 0, 0)));
+                origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.45f, 0, 0)));
                 origin4 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(0.35f, 0, 0)));
                 origin3.y = transform.position.y;
                 origin4.y = origin3.y;
@@ -387,7 +402,7 @@ namespace Climbing
             {
                 wallFound = false;
             }
-
+            
             //If movement is valid adjust player with the motion
             if (hit1.collider != null && hit2.collider != null)
             {
@@ -403,15 +418,12 @@ namespace Climbing
                 float raylength = (curClimbState == ClimbState.BHanging) ? distanceToLedgeBraced : distanceToLedgeFree;
 
                 RaycastHit hit;
-                Debug.DrawLine(origin, origin + -tangent * raylength, Color.cyan);
-                if (Physics.Raycast(origin, -tangent, out hit, raylength))
+                Debug.DrawLine(origin, origin + -tangent * (raylength + 0.25f), Color.cyan);
+                if (Physics.Raycast(origin, -tangent, out hit, raylength + 0.25f, characterDetection.climbLayer))
                 {
                     Vector3 newPos = Vector3.zero;
 
-                    if (curClimbState == ClimbState.BHanging)
-                        newPos = (hit.point + tangent * 0.25f);
-                    else if (curClimbState == ClimbState.FHanging)
-                        newPos = (hit.point + tangent * 0.05f);
+                    newPos = (hit.point + tangent * raylength);
 
                     transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
                 }
