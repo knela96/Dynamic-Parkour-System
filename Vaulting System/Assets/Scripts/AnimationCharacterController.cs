@@ -112,4 +112,18 @@ public class AnimationCharacterController : MonoBehaviour
         animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
 
     }
+    public void SetMatchTarget(Vector3 targetPos, Quaternion targetRot, Vector3 offset, float startnormalizedTime, float targetNormalizedTime)
+    {
+        if (animator.isMatchingTarget)
+            return;
+
+        float normalizeTime = Mathf.Repeat(animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f);
+
+        if (normalizeTime > targetNormalizedTime)
+            return;
+
+        animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
+        animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
+
+    }
 }

@@ -29,6 +29,7 @@ namespace Climbing
         public float IKFootRayLength = 0.5f;
         public float distanceToLedgeBraced = 0.40f;
         public float distanceToLedgeFree = 0.25f;
+        Vector3 HandPosition;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -193,24 +194,33 @@ namespace Climbing
             //Solver to position Limbs + Check if need to change climb state
             IKSolver();
 
+
             //Change from Braced Hang <-----> Free Hang
 
-            //NEED TO CHECK THIS!!!!
             if (wallFound && curClimbState != ClimbState.BHanging)
             {
-                curClimbState = ClimbState.BHanging;
+                curClimbState = ClimbState.BHanging; //reachedEnd = true;
+                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+
+                if (curLedge)
+                    HandPosition.y = curLedge.transform.position.y + 0.1f;
             }
             else if(!wallFound && curClimbState != ClimbState.FHanging)
             {
-                curClimbState = ClimbState.FHanging;
+                curClimbState = ClimbState.FHanging; //reachedEnd = true;
+                HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                if (curLedge)
+                    HandPosition.y = curLedge.transform.position.y;
+            }
+
+            if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
+                characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
+            {
+                characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0, 0.5f);
             }
 
             //Move on Ledge
             characterAnimation.HangMovement(horizontal, (int)curClimbState);
-
-
-
-
 
             /*
             if (valid)
@@ -305,7 +315,6 @@ namespace Climbing
             rightHandPosition = Vector3.zero;
             leftFootPosition = Vector3.zero;
             rightFootPosition = Vector3.zero;
-            wallFound = true;
 
             if (characterController.characterDetection.ThrowHandRayToLedge(origin1, new Vector3(0.25f, -0.15f, 1).normalized, IKHandRayLength, out hit1))
             {
@@ -320,17 +329,9 @@ namespace Climbing
             {
                 leftFootPosition = hit3.point + hit3.normal * 0.15f;
             }
-            else
-            {
-                wallFound = false;
-            }
             if (characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength, out hit4))
             {
                 rightFootPosition = hit4.point + hit4.normal * 0.15f;
-            }
-            else
-            {
-                wallFound = false;
             }
         }
         bool CheckValidMovement(Vector3 translation)
@@ -338,11 +339,28 @@ namespace Climbing
             curLedge = null;
             RaycastHit hit1;
             RaycastHit hit2;
+            RaycastHit hit3;
+            RaycastHit hit4;
 
             Vector3 origin1 = limitLHand.transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.18f,0,0)));
             Vector3 origin2 = limitRHand.transform.position + (transform.rotation * (curOriginGrabOffset));
             origin1.y = transform.position.y + curOriginGrabOffset.y;
             origin2.y = origin1.y;
+
+            Vector3 origin3 = Vector3.zero;
+            Vector3 origin4 = Vector3.zero;
+            if (ClimbState.BHanging == curClimbState)
+            {
+                origin3 = transform.position + (transform.rotation * new Vector3(-0.10f, 0, 0));
+                origin4 = transform.position + (transform.rotation * new Vector3(0.10f, 0, 0));
+            }
+            else
+            {
+                origin3 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.38f, 0, 0)));
+                origin4 = transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(0.35f, 0, 0)));
+                origin3.y = transform.position.y;
+                origin4.y = origin3.y;
+            }
 
             if (characterController.characterDetection.ThrowHandRayToLedge(origin1, Vector3.forward, IKHandRayLength, out hit1))
             {
@@ -356,6 +374,16 @@ namespace Climbing
                 {
                     curLedge = hit2.collider.transform.parent.gameObject;
                 }
+            }
+
+            wallFound = true;
+            if (!characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength, out hit3))
+            {
+                wallFound = false;
+            }
+            if (!characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength, out hit4))
+            {
+                wallFound = false;
             }
 
             //If movement is valid adjust player with the motion
