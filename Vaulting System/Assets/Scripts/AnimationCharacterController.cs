@@ -77,6 +77,22 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
     }
+
+    public void LedgeToLedge(ClimbController.ClimbState state, Vector3 direction)
+    {
+        if (state == ClimbController.ClimbState.BHanging)
+            if(direction.x > 0)
+                animator.CrossFade("Braced Hang Hop Right", 0.2f);
+            else if(direction.x < 0)
+                animator.CrossFade("Braced Hang Hop Left", 0.2f);
+
+            else if (state == ClimbController.ClimbState.FHanging)
+            animator.CrossFade("Idle To Freehang", 0.2f);
+
+        animator.SetInteger("Climb State", (int)state);
+        animator.SetBool("Hanging", true);
+    }
+
     public void DropLedge(int state)
     {
         animator.SetBool("Hanging", false);
