@@ -146,45 +146,33 @@ namespace Climbing
             //Jump to Point
             if (toLedge)
             {
+                bool matchingTarget = false;
                 //Idle To Ledge
                 if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
                     characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang"))
                 {
+                    matchingTarget = true;
+
                     if (wallFound) //Braced
                         characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, 0, 0.56f);
                     else //Free
                         characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
-
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.5f);
-
-                    if (characterAnimation.animator.IsInTransition(0))
-                    {
-                        onLedge = true;
-                        toLedge = false;
-                        jumping = false;
-                        LastLHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
-                        LastRHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
-                    }
                 }
 
                 //Jump Ledge to Ledge 
                 if (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") && jumping == true)
                 {
-                    AvatarTarget avatarTarget;
-
-                    if (horizontalMovement > 0)
-                        avatarTarget = AvatarTarget.RightHand;
-                    else
-                        avatarTarget = AvatarTarget.LeftHand;
-
-                    avatarTarget = AvatarTarget.LeftHand;
+                    matchingTarget = true;
 
                     if (wallFound) //Braced
-                        characterAnimation.SetMatchTarget(avatarTarget, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
                     else //Free
-                        characterAnimation.SetMatchTarget(avatarTarget, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+                }
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, startTime);
+                if (matchingTarget)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.5f);
 
                     if (characterAnimation.animator.IsInTransition(0))
                     {
