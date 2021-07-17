@@ -9,22 +9,6 @@ namespace Climbing
     public class Point : MonoBehaviour
     {
         public List<Neighbour> neighbours = new List<Neighbour>();
-        public List<IKPositions> iks = new List<IKPositions>();
-
-        public IKPositions ReturnIK(AvatarIKGoal goal)
-        {
-            IKPositions retVal = null;
-
-            for(int i = 0; i < iks.Count; i++)
-            {
-                if(iks[i].ik == goal)
-                {
-                    retVal = iks[i];
-                    break;
-                }
-            }
-            return retVal;
-        }
 
         public Neighbour ReturnNeighbour(Point target)
         {
@@ -52,7 +36,6 @@ namespace Climbing
     [System.Serializable]
     public class IKPositions
     {
-        public AvatarIKGoal ik;
         public Transform target;
         public Transform hint;
     }

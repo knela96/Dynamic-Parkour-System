@@ -78,16 +78,63 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Hanging", true);
     }
 
-    public void LedgeToLedge(ClimbController.ClimbState state, Vector3 direction)
+    public void LedgeToLedge(ClimbController.ClimbState state, Vector3 direction, ref float startTime, ref float endTime)
     {
         if (state == ClimbController.ClimbState.BHanging)
             if(direction.x > 0)
-                animator.CrossFade("Braced Hang Hop Right", 0.2f);
+            {
+                if(direction.y > 0)
+                {
+                    animator.CrossFade("Braced Hang Hop Up", 0.2f);
+                    startTime = 0.3f;
+                    endTime = 0.48f;
+                }
+                else if(direction.y < 0)
+                {
+                    animator.CrossFade("Braced Hang Hop Down", 0.2f);
+                    startTime = 0.3f;
+                    endTime = 0.7f;
+                }
+                else
+                {
+                    animator.CrossFade("Braced Hang Hop Right", 0.2f);
+                    startTime = 0.2f;
+                    endTime = 0.49f;
+                }
+            }
             else if(direction.x < 0)
-                animator.CrossFade("Braced Hang Hop Left", 0.2f);
-
-            else if (state == ClimbController.ClimbState.FHanging)
-            animator.CrossFade("Idle To Freehang", 0.2f);
+            {
+                if (direction.y > 0)
+                {
+                    animator.CrossFade("Braced Hang Hop Up", 0.2f);
+                    startTime = 0.3f;
+                    endTime = 0.48f;
+                }
+                else if (direction.y < 0)
+                {
+                    animator.CrossFade("Braced Hang Hop Down", 0.2f);
+                    startTime = 0.3f;
+                    endTime = 0.7f;
+                }
+                else
+                {
+                    animator.CrossFade("Braced Hang Hop Left", 0.2f);
+                    startTime = 0.2f;
+                    endTime = 0.49f;
+                }
+            }
+            else if(direction.y < 0)
+            {
+                animator.CrossFade("Braced Hang Hop Down", 0.2f);
+                startTime = 0.3f;
+                endTime = 0.7f;
+            }
+            else if(direction.y > 0)
+            {
+                animator.CrossFade("Braced Hang Hop Up", 0.2f);
+                startTime = 0.3f;
+                endTime = 0.48f;
+            }
 
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
@@ -101,7 +148,7 @@ public class AnimationCharacterController : MonoBehaviour
 
     public void HangMovement(float value, int climbstate)
     {
-        animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 10));
+        animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 15));
         animator.SetInteger("Climb State", climbstate);
     }
 
@@ -128,7 +175,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
 
     }
-    public void SetMatchTarget(Vector3 targetPos, Quaternion targetRot, Vector3 offset, float startnormalizedTime, float targetNormalizedTime)
+    public void SetMatchTarget(AvatarTarget avatarTarget, Vector3 targetPos, Quaternion targetRot, Vector3 offset, float startnormalizedTime, float targetNormalizedTime)
     {
         if (animator.isMatchingTarget)
             return;

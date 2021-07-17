@@ -33,6 +33,8 @@ namespace Climbing
         Vector3 HandPosition;
         Vector3 LastLHandPosition;
         Vector3 LastRHandPosition;
+        float startTime = 0.0f;
+        float endTime = 0.0f;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -72,7 +74,7 @@ namespace Climbing
         {
             if (debug)
             {
-                if (targetPoint != null)
+                if (targetPoint != null && currentPoint != null)
                 {
                     Gizmos.color = Color.yellow;
                     Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
@@ -108,7 +110,6 @@ namespace Climbing
                 {
                     characterController.EnableController();
                 }
-
             }
 
             //Groud
@@ -145,42 +146,53 @@ namespace Climbing
             //Jump to Point
             if (toLedge)
             {
-                //characterController.jumpPrediction.FollowParabola(2.0f);
-                //transform.position = target - new Vector3(0, rootOffset, 0);
-
-                //if (characterController.jumpPrediction.hasArrived())
+                //Idle To Ledge
                 if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
                     characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang"))
                 {
                     if (wallFound) //Braced
-                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * BracedHangOffset, 0, 0.56f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, 0, 0.56f);
                     else //Free
-                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
 
-                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.5f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.5f);
 
                     if (characterAnimation.animator.IsInTransition(0))
                     {
                         onLedge = true;
                         toLedge = false;
                         jumping = false;
+                        LastLHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                        LastRHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
                     }
-
                 }
 
                 //Jump Ledge to Ledge 
                 if (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") && jumping == true)
                 {
+                    AvatarTarget avatarTarget;
+
+                    if (horizontalMovement > 0)
+                        avatarTarget = AvatarTarget.RightHand;
+                    else
+                        avatarTarget = AvatarTarget.LeftHand;
+
+                    avatarTarget = AvatarTarget.LeftHand;
+
                     if (wallFound) //Braced
-                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * BracedHangOffset, 0.2f, 0.49f);
+                        characterAnimation.SetMatchTarget(avatarTarget, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
                     else //Free
-                        characterAnimation.SetMatchTarget(target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+                        characterAnimation.SetMatchTarget(avatarTarget, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, startTime);
 
                     if (characterAnimation.animator.IsInTransition(0))
                     {
                         onLedge = true;
                         toLedge = false;
                         jumping = false;
+                        LastLHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                        LastRHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
                     }
                 }
             }
@@ -208,7 +220,7 @@ namespace Climbing
                 if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
                     characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
                 {
-                    characterAnimation.SetMatchTarget(HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
+                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
                 }
             }
         }
@@ -241,8 +253,6 @@ namespace Climbing
                     if (!CheckValidMovement(horizontal)) //Reached End
                     {
                         reachedEnd = true;
-                        //characterAnimation.SetMatchTarget()
-
                     }
                 }
 
@@ -267,11 +277,11 @@ namespace Climbing
                 return;
 
             Point point = null;
-
-            if(horizontalMovement < 0)
+            if (horizontalMovement <= 0)
                 point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(LastLHandPosition);
-            else if(horizontalMovement > 0)
+            else if (horizontalMovement > 0)
                 point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(LastRHandPosition);
+
 
             currentPoint = point;
 
@@ -292,19 +302,17 @@ namespace Climbing
 
                         //if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestLeft)//Left Point
                         //{
-                        //    target.x += 0.5f;
+                            //target += toPoint.target.transform.rotation * new Vector3(0.5f, 0, 0);
                         //}
                         if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestRight)//Right Point
                         {
-                            target -= toPoint.target.transform.rotation * new Vector3(0.5f,0,0);
+                            target -= toPoint.target.transform.rotation * new Vector3(0.5f, 0, 0);
                         }
-
+                        onLedge = false;
                         toLedge = true;
                         jumping = true;
 
-                        characterController.characterAnimation.LedgeToLedge(curClimbState, direction);
-
-                        //characterController.jumpPrediction.SetParabola(transform.position, target - new Vector3(0, rootOffset, 0)); //target - new Vector3(0, rootOffset, 0);
+                        characterController.characterAnimation.LedgeToLedge(curClimbState, toPoint.direction, ref startTime, ref endTime);
                     }
                 }
             }
@@ -353,7 +361,7 @@ namespace Climbing
             Vector3 origin4 = limitRFoot.transform.position + (transform.rotation * originFootIKOffset);
             origin1.y = transform.position.y + curOriginGrabOffset.y;
             origin2.y = origin1.y;
-            
+
 
             leftHandPosition = Vector3.zero;
             rightHandPosition = Vector3.zero;
@@ -441,7 +449,7 @@ namespace Climbing
             {
                 wallFound = false;
             }
-            
+
             //If movement is valid adjust player with the motion
             if (hit1.collider != null && hit2.collider != null)
             {
@@ -539,15 +547,6 @@ namespace Climbing
 
             characterController.DisableController();
             toLedge = true;
-
-           // wallFound = characterDetection.FindFootCollision(target, hit.normal);
-           //
-           // if (wallFound)
-           //     curClimbState = ClimbState.BHanging;
-           // else
-           //     curClimbState = ClimbState.FHanging;
-           //
-           // characterController.characterAnimation.HangLedge(curClimbState);
 
             return targetPos;
         }
