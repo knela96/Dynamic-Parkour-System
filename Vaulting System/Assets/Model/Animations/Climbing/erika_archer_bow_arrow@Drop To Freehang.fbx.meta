@@ -6,6 +6,15 @@ ModelImporter:
   - first:
       74: -203655887218126122
     second: Drop To Freehang
+  - first:
+      74: 9138424516690987065
+    second: Drop To Bracedhang
+  - first:
+      74: 1998019621892967549
+    second: Drop To Freehang (1)
+  - first:
+      74: 7836215865680432571
+    second: Drop To Freehang (2)
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -43,6 +52,35 @@ ModelImporter:
       wrapMode: 0
       orientationOffsetY: 0
       level: 2
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Drop To Bracedhang
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 72
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 2.3
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0

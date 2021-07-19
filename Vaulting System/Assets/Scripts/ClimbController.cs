@@ -167,7 +167,7 @@ namespace Climbing
                         targetRot = Quaternion.identity;
                     }
                 }
-                if (Input.GetKeyDown(KeyCode.C) && !characterController.characterMovement.inBoundaries)
+                if (Input.GetKey(KeyCode.C) && !characterController.characterMovement.inBoundaries)
                 {
                     characterDetection.FindDropLedgeCollision(out hit);
                     if (hit.collider)
@@ -245,7 +245,7 @@ namespace Climbing
                     if(wallFound)
                         characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * -BracedHangOffset, 0.0f, 0.45f);
                     else
-                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, Vector3.zero, 0.0f, 0.45f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, Vector3.zero, 0.0f, 0.45f);
                 }
 
                 if (matchingTarget)
