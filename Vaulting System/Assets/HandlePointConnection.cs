@@ -100,7 +100,7 @@ namespace Climbing
                 Point targetPoint = allPoints[p];
 
                 Vector3 direction = targetPoint.transform.position - from.transform.position;
-                Vector3 relativeDirection = from.transform.InverseTransformDirection(direction);
+                Vector3 relativeDirection = from.transform.InverseTransformDirection(direction.normalized);
 
                 if(IsDirectionValid(targetDirection, relativeDirection))
                 {
@@ -138,6 +138,11 @@ namespace Climbing
 
             float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.y) * Mathf.Rad2Deg;
             float angle = Mathf.Atan2(candidate.x, candidate.y) * Mathf.Rad2Deg;
+            if (targetAngle < 0)
+                targetAngle += 360;
+
+            if (angle < 0)
+                angle += 360;
 
             if (angle <= targetAngle + validAngleRange && angle >= targetAngle - validAngleRange)
             {

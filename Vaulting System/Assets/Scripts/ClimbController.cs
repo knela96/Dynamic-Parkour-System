@@ -243,9 +243,9 @@ namespace Climbing
                     matchRotation = false;
 
                     if(wallFound)
-                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * -BracedHangOffset, 0.0f, 0.45f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * -BracedHangOffset, 0.3f, 0.45f);
                     else
-                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, Vector3.zero, 0.0f, 0.45f);
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, Vector3.zero, 0.3f, 0.45f);
                 }
 
                 if (matchingTarget)
