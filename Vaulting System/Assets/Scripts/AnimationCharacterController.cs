@@ -81,63 +81,82 @@ public class AnimationCharacterController : MonoBehaviour
     public void LedgeToLedge(ClimbController.ClimbState state, Vector3 direction, ref float startTime, ref float endTime)
     {
         if (state == ClimbController.ClimbState.BHanging)
-            if(direction.x > 0)
+        {
+            if (direction.x == -1 && direction.y == 0)
             {
-                if(direction.y > 0)
-                {
-                    animator.CrossFade("Braced Hang Hop Up", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.48f;
-                }
-                else if(direction.y < 0)
-                {
-                    animator.CrossFade("Braced Hang Hop Down", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.7f;
-                }
-                else
-                {
-                    animator.CrossFade("Braced Hang Hop Right", 0.2f);
-                    startTime = 0.2f;
-                    endTime = 0.49f;
-                }
+                animator.CrossFade("Braced Hang Hop Left", 0.2f);
+                startTime = 0.2f;
+                endTime = 0.49f;
             }
-            else if(direction.x < 0)
+            else if (direction.x == 1 && direction.y == 0)
             {
-                if (direction.y > 0)
-                {
-                    animator.CrossFade("Braced Hang Hop Up", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.48f;
-                }
-                else if (direction.y < 0)
-                {
-                    animator.CrossFade("Braced Hang Hop Down", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.7f;
-                }
-                else
-                {
-                    animator.CrossFade("Braced Hang Hop Left", 0.2f);
-                    startTime = 0.2f;
-                    endTime = 0.49f;
-                }
+                animator.CrossFade("Braced Hang Hop Right", 0.2f);
+                startTime = 0.2f;
+                endTime = 0.49f;
             }
-            else if(direction.y < 0)
+            else if (direction.x == 0 && direction.y == 1 ||
+                    direction.x == -1 && direction.y == 1 ||
+                    direction.x == 1 && direction.y == 1)
             {
-                animator.CrossFade("Braced Hang Hop Down", 0.2f);
-                startTime = 0.3f;
-                endTime = 0.7f;
-            }
-            else if(direction.y > 0)
-            {
+
                 animator.CrossFade("Braced Hang Hop Up", 0.2f);
                 startTime = 0.3f;
                 endTime = 0.48f;
             }
+            else if (direction.x == 0 && direction.y == -1 ||
+                    direction.x == -1 && direction.y == -1 ||
+                    direction.x == 1 && direction.y == -1)
+            {
+
+                animator.CrossFade("Braced Hang Hop Down", 0.2f);
+                startTime = 0.3f;
+                endTime = 0.7f;
+            }
+        }
+        else if (state == ClimbController.ClimbState.FHanging)
+        {
+            if (direction.x == -1 && direction.y == 0)
+            {
+                animator.CrossFade("Free Hang Hop Left", 0.2f);
+                startTime = 0.2f;
+                endTime = 0.49f;
+            }
+            else if (direction.x == 1 && direction.y == 0)
+            {
+                animator.CrossFade("Free Hang Hop Left", 0.2f);
+                startTime = 0.2f;
+                endTime = 0.49f;
+            }
+            else if (direction.x == 0 && direction.y == 1 ||
+                    direction.x == -1 && direction.y == 1 ||
+                    direction.x == 1 && direction.y == 1)
+            {
+
+                animator.CrossFade("Free Hang Hop Left", 0.2f);
+                startTime = 0.3f;
+                endTime = 0.48f;
+            }
+            else if (direction.x == 0 && direction.y == -1 ||
+                    direction.x == -1 && direction.y == -1 ||
+                    direction.x == 1 && direction.y == -1)
+            {
+
+                animator.CrossFade("Free Hang Hop Left", 0.2f);
+                startTime = 0.3f;
+                endTime = 0.7f;
+            }
+        }
 
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
+    }
+    public void BracedClimb()
+    {
+        animator.CrossFade("Braced Hang To Crouch", 0.2f);
+    }
+    public void FreeClimb()
+    {
+        animator.CrossFade("Freehang Climb", 0.2f);
     }
 
     public void DropLedge(int state)

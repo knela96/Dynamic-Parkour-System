@@ -1,17 +1,11 @@
 fileFormatVersion: 2
-guid: d190706ea5969b84c903ac23d4ae26ef
+guid: b591153e0d2ba6148b8d5d33b5a81dc5
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Freehang Climb
-  - first:
-      74: 1227228929362816453
-    second: Freehang Climb (1)
-  - first:
-      74: 2458004136978896981
-    second: Freehang Climb (2)
+    second: Crouched To Standing
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -41,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Freehang Climb
+      name: Crouched To Standing
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 116
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -58,9 +52,9 @@ ModelImporter:
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []

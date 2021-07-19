@@ -18,6 +18,7 @@ namespace Climbing
         public float OriginFeetLength;
         public LayerMask climbLayer;
         public LayerMask WallLayer;
+        public LayerMask DismountLayer;
 
         public Vector3 LedgePosition;
         public float debugSphereSize = 0.05f;
@@ -110,6 +111,35 @@ namespace Climbing
             }
             return false;
 
+        }
+        public bool ThrowDismountRay(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
+        {
+
+            Vector3 origin1 = origin + new Vector3(0, 1.8f, 0);
+            Vector3 origin2 = origin + new Vector3(0, 0.5f, 0);
+
+            if (showDebug)
+            {
+                Debug.DrawLine(origin1, origin1 + direction * length, Color.red);
+                Debug.DrawLine(origin2, origin2 + direction * length, Color.red);
+            }
+
+            if (!Physics.Raycast(origin1, direction, out hit, length) && !Physics.Raycast(origin2, direction, out hit, length)) //Check Forward
+            {
+                Vector3 origin3 = origin + direction * 0.15f + new Vector3(0,0.5f,0);
+
+                if (showDebug)
+                {
+                    Debug.DrawLine(origin3, origin3 - Vector3.up * length, Color.cyan);
+                }
+
+                if (Physics.Raycast(origin3, -Vector3.up, out hit, length, DismountLayer))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool ThrowHandRayToLedge(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
