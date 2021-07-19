@@ -39,6 +39,7 @@ public class MovementCharacterController : MonoBehaviour
 
     public bool useProIKFeature = false;
     public bool showDebug = true;
+    public bool inBoundaries = false;
 
     MovementState currentState;
 
@@ -64,6 +65,13 @@ public class MovementCharacterController : MonoBehaviour
     void Update()
     {
         //charactercontroller.Move(Velocity.normalized * speed * Time.deltaTime);
+
+        if (!controller.dummy && controller.isGrounded)
+        {
+            EnableFeetIK();
+            lastPelvisPositionY = 0.0f;
+        }
+
         if (!controller.dummy)
         {
             ApplyInputMovement();
@@ -78,28 +86,6 @@ public class MovementCharacterController : MonoBehaviour
         {
             OnFall();
         }
-
-
-        if (!controller.dummy && controller.isGrounded)
-        {
-            EnableFeetIK();
-            lastPelvisPositionY = 0.0f;
-        }
-
-        //if (controller.inAir)
-        //{
-        //    if (controller.characterDetection.IsGrounded() && rb.velocity.y < 0)
-        //    {
-        //        OnLanded();
-        //        controller.inAir = false;
-        //    }
-        //    else
-        //    {
-        //        OnFall();
-        //    }
-        //}
-
-
     }
 
 
@@ -133,13 +119,18 @@ public class MovementCharacterController : MonoBehaviour
             velocity.Normalize();
         }
 
-        if (velocity.magnitude > 0)
+        //inBoundaries = CheckBoundaries();
+
+        if (velocity.magnitude > 0/* && inBoundaries*/)
         {
             if (controller.inSlope)
+            {
                 rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.2f * Time.deltaTime;
+            }
 
             smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
             rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
+
             controller.characterAnimation.SetAnimVelocity(rb.velocity);
         }
         else
@@ -149,6 +140,18 @@ public class MovementCharacterController : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.normalized.x * smoothSpeed, rb.velocity.y, rb.velocity.normalized.z * smoothSpeed);
             controller.characterAnimation.SetAnimVelocity(controller.characterAnimation.GetAnimVelocity().normalized * smoothSpeed);
         }
+    }
+
+    public bool CheckBoundaries()
+    {
+        Vector3 origin = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
+        Debug.DrawLine(origin, origin + Vector3.down * 1);
+        if (Physics.Raycast(origin, Vector3.down, 1))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public Vector3 GetVelocity() { return rb.velocity; }

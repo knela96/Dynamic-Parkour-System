@@ -158,6 +158,20 @@ public class AnimationCharacterController : MonoBehaviour
     {
         animator.CrossFade("Freehang Climb", 0.2f);
     }
+    public void DropToFree(int state)
+    {
+        animator.CrossFade("Drop To Freehang", 0.1f);
+        animator.SetInteger("Climb State", (int)state);
+        animator.SetBool("Hanging", true);
+        SetAnimVelocity(Vector3.forward);
+    }
+    public void DropToBraced(int state)
+    {
+        animator.CrossFade("Drop To Bracedhang", 0.1f);
+        animator.SetInteger("Climb State", (int)state);
+        animator.SetBool("Hanging", true);
+        SetAnimVelocity(Vector3.forward);
+    }
 
     public void DropLedge(int state)
     {

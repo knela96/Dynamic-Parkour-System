@@ -32,12 +32,6 @@ namespace Climbing
             collider = GetComponent<CapsuleCollider>();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-
         public bool FindLedgeCollision(out RaycastHit hit)
         {
             Vector3 rayOrigin = transform.TransformDirection(OriginLedgeRay) + transform.position;
@@ -49,6 +43,32 @@ namespace Climbing
                 if (ret)
                 {
                     return true;
+                }
+            }
+
+            //Set invalid hit
+            Physics.Raycast(Vector3.zero, Vector3.forward, out hit, 0, -1);
+            return false;
+        }
+        public bool FindDropLedgeCollision(out RaycastHit hit)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Vector3 origin = transform.position + transform.forward * 0.8f - new Vector3(0, i * 0.15f, 0);
+
+                Debug.DrawLine(origin, transform.position - new Vector3(0, i * 0.15f, 0));
+
+                if(Physics.Raycast(origin, -transform.forward, out hit, 0.8f, climbLayer))
+                {
+                    if (showDebug) //Normal
+                    {
+                        Debug.DrawLine(hit.point, hit.point + hit.normal, Color.cyan);
+                    }
+
+                    if (hit.normal == -hit.transform.forward)
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -112,7 +132,7 @@ namespace Climbing
             return false;
 
         }
-        public bool ThrowDismountRay(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
+        public bool ThrowClimbRay(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
         {
 
             Vector3 origin1 = origin + new Vector3(0, 1.8f, 0);
@@ -161,34 +181,8 @@ namespace Climbing
             return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, WallLayer);
         }
 
-        void OnDrawGizmos()
-        {
-            // Draw a yellow sphere at the transform's position
-            if (LedgePosition != Vector3.zero)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(LedgePosition, debugSphereSize);
-            }
-
-            //Draw Feet IK Rays
-            /*Color color = (foundWall == true) ? Color.green : Color.red;
-            if (PointFoot1 != Vector3.zero)
-                Debug.DrawLine(PointFoot1, PointFoot1 + PointFootFwd * OriginFeetLength, color);
-            if (PointFoot2 != Vector3.zero)
-                Debug.DrawLine(PointFoot2, PointFoot2 + PointFootFwd * OriginFeetLength, color);
-            */
-        }
-
         public bool IsGrounded(out RaycastHit hit) {
-            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.2f);
-        }
-
-        public void OnTriggerEnterEvent(Collider other)
-        {
-            if (other.tag.Equals("Ledge"))
-            {
-
-            }
+            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f);//0.2f
         }
     }
 }

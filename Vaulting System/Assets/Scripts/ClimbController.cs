@@ -35,6 +35,7 @@ namespace Climbing
         Vector3 LastRHandPosition;
         float startTime = 0.0f;
         float endTime = 0.0f;
+        float rotTime = 0.0f;
 
         public GameObject limitLHand;
         public GameObject limitRHand;
@@ -142,7 +143,7 @@ namespace Climbing
             {
                 onLedge = false;
                 RaycastHit hit;
-                if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1)) && !toLedge && !onLedge)
+                if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1)) && !toLedge && !onLedge)
                 {
                     ledgeFound = characterDetection.FindLedgeCollision(out hit);
 
@@ -164,6 +165,30 @@ namespace Climbing
                     {
                         target = Vector3.zero;
                         targetRot = Quaternion.identity;
+                    }
+                }
+                if (Input.GetKeyDown(KeyCode.C) && !characterController.characterMovement.inBoundaries)
+                {
+                    characterDetection.FindDropLedgeCollision(out hit);
+                    if (hit.collider)
+                    {
+                        target = ReachLedge(hit);
+                        targetRot = Quaternion.LookRotation(-hit.normal);
+
+                        wallFound = characterDetection.FindFootCollision(target, targetRot, hit.normal);
+
+                        transform.rotation = Quaternion.FromToRotation(transform.forward, hit.normal) * transform.rotation;//rotates towards ledge direction
+
+                        if (wallFound)
+                        {
+                            characterAnimation.DropToBraced((int)ClimbState.BHanging);
+                            curClimbState = ClimbState.BHanging;
+                        }
+                        else
+                        {
+                            characterAnimation.DropToFree((int)ClimbState.FHanging);
+                            curClimbState = ClimbState.FHanging;
+                        }
                     }
                 }
             }
@@ -190,11 +215,8 @@ namespace Climbing
                 if (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") && jumping == true)
                 {
                     matchingTarget = true;
-
-                    //if (wallFound) //Braced
-                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
-                    //else //Free
-                        //characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * FreeHangOffset, 0, 0.56f);
+                    
+                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
                 }
 
                 //Climb 
@@ -203,7 +225,7 @@ namespace Climbing
                 {
                     matchingTarget = true;
 
-                    if(curClimbState == ClimbState.BHanging)
+                    if (curClimbState == ClimbState.BHanging)
                         characterAnimation.SetMatchTarget(AvatarTarget.LeftFoot, target, targetRot, Vector3.zero, 0.70f, 1.0f);// Braced
                     else
                         characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, target, targetRot, Vector3.zero, 0.80f, 1.0f);
@@ -211,17 +233,32 @@ namespace Climbing
                     curClimbState = ClimbState.None;
                     characterAnimation.DropLedge((int)curClimbState);
 
+                }
+
+                //Dismount
+                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Drop To Freehang") ||
+                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Drop To Bracedhang"))
+                {
+                    matchingTarget = true;
                     matchRotation = false;
+
+                    if(wallFound)
+                        characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * -BracedHangOffset, 0.0f, 0.45f);
+                    else
+                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, Vector3.zero, 0.0f, 0.45f);
                 }
 
                 if (matchingTarget)
                 {
-                    if(matchRotation)
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.5f);
-
-                    if (characterAnimation.animator.IsInTransition(0))
+                    if (matchRotation)
                     {
-                        if(curClimbState == ClimbState.None)
+                        //if(characterAnimation.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.4f)
+                        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 0.5f);
+                    }
+
+                    if (characterAnimation.animator.IsInTransition(0)) //If MatchTarget animation ends, reset default values
+                    {
+                        if(curClimbState == ClimbState.None)//Enable controller if climbing animation ends
                             characterController.EnableController();
 
                         onLedge = true;
@@ -244,13 +281,13 @@ namespace Climbing
             //Only allow to jump if is braced and not transitioning from free hang
             if (Input.GetKeyDown(KeyCode.Space) && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
-                bool dismount = false;
+                bool climb = false;
                 
                 //Check if can dismount
                 if (vertical > 0)
-                    dismount = DismountFromLedge();
+                    climb = ClimbFromLedge();
 
-                if (!dismount && wallFound)
+                if (!climb && wallFound)
                     JumpToLedge(horizontal, vertical);
             }
             else //Movement Behaviour on Ledge
@@ -277,7 +314,7 @@ namespace Climbing
                     horizontal = 0; //Stops Horizontal Movement
                 }
 
-                //Solver to position Limbs + Check if need to change climb state from Braced and Free Hang
+                //Solver to position Limbs + Checks if need to change climb state from Braced and Free Hang
                 IKSolver();
 
                 //Change from Braced Hang <-----> Free Hang
@@ -287,7 +324,7 @@ namespace Climbing
             }
         }
 
-        bool DismountFromLedge()
+        bool ClimbFromLedge()
         {
             bool ret;
 
@@ -299,7 +336,7 @@ namespace Climbing
             Vector3 origin = LastLHandPosition + (LastRHandPosition - LastLHandPosition) / 2;
             origin.y = LastLHandPosition.y;
 
-            if (characterController.characterDetection.ThrowDismountRay(origin, transform.forward, IKHandRayLength, out hit))
+            if (characterController.characterDetection.ThrowClimbRay(origin, transform.forward, IKHandRayLength, out hit))
             {
                 if (curClimbState == ClimbState.BHanging)
                 {
@@ -316,13 +353,10 @@ namespace Climbing
                 targetRot = transform.rotation;
                 toLedge = true;
                 onLedge = false;
-
-                Debug.Log("CAN DISMOUNT");
                 ret = true;
             }
             else
             {
-                Debug.Log("CANNOT DISMOUNT");
                 ret = false;
             }
 
