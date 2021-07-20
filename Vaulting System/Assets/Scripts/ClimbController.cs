@@ -129,6 +129,7 @@ namespace Climbing
                     currentPoint = null;
                     curClimbState = ClimbState.None;
                     characterAnimation.DropLedge((int)curClimbState);
+                    characterController.cameraController.newOffset(false);
                 }
 
                 //Enable Controller when dismount animation ends
@@ -354,6 +355,7 @@ namespace Climbing
                 toLedge = true;
                 onLedge = false;
                 ret = true;
+                characterController.cameraController.newOffset(false);
             }
             else
             {
@@ -651,6 +653,7 @@ namespace Climbing
 
             characterController.DisableController();
             toLedge = true;
+            characterController.cameraController.newOffset(true);
 
             return targetPos;
         }

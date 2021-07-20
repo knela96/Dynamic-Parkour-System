@@ -11,6 +11,7 @@ public class ThirdPersonController : MonoBehaviour
     public AnimationCharacterController characterAnimation;
     public DetectionCharacterController characterDetection;
     public JumpPredictionController jumpPrediction;
+    public CameraController cameraController;
 
     public Transform cam;
     public Transform Transform_Mesh;
