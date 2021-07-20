@@ -157,7 +157,7 @@ namespace Climbing
             Neighbour n = new Neighbour();
             n.direction = targetDir;
             n.target = target;
-            n.type = (Vector3.Distance(from.transform.position, target.transform.position) < directThreshold) ?
+            n.type = (Vector3.Distance(from.transform.position, target.transform.position) < directThreshold && from.transform.parent == target.transform.parent) ?
                 ConnectionType.inBetween : ConnectionType.direct;
             from.neighbours.Add(n);
             UnityEditor.EditorUtility.SetDirty(from);

@@ -182,7 +182,11 @@ namespace Climbing
         }
 
         public bool IsGrounded(out RaycastHit hit) {
-            return Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f);//0.2f
+            if (showDebug)
+            {
+                Debug.DrawLine(transform.position + new Vector3(0, 0.1f, 0), transform.position + new Vector3(0, 0.1f, 0) + Vector3.down * 0.2f, Color.green);
+            }
+            return Physics.Raycast(transform.position + new Vector3(0,0.1f,0) , Vector3.down, out hit, 0.2f);//0.2f
         }
     }
 }
