@@ -16,9 +16,9 @@ namespace Climbing
         public Vector3 OriginFeetRay;
         public float OriginLedgeLength;
         public float OriginFeetLength;
+        public LayerMask ledgeLayer;
+        public LayerMask wallLayer;
         public LayerMask climbLayer;
-        public LayerMask WallLayer;
-        public LayerMask DismountLayer;
 
         public Vector3 LedgePosition;
         public float debugSphereSize = 0.05f;
@@ -58,7 +58,7 @@ namespace Climbing
 
                 Debug.DrawLine(origin, transform.position - new Vector3(0, i * 0.15f, 0));
 
-                if(Physics.Raycast(origin, -transform.forward, out hit, 0.8f, climbLayer))
+                if(Physics.Raycast(origin, -transform.forward, out hit, 0.8f, ledgeLayer))
                 {
                     if (showDebug) //Normal
                     {
@@ -86,11 +86,11 @@ namespace Climbing
             PointFootFwd = -normal;
 
             RaycastHit hit;
-            if (!Physics.Raycast(PointFoot1, -normal, out hit, OriginFeetLength, WallLayer))
+            if (!Physics.Raycast(PointFoot1, -normal, out hit, OriginFeetLength, wallLayer))
             {
                 foundWall = false;
             }
-            if (!Physics.Raycast(PointFoot2, -normal, out hit, OriginFeetLength, WallLayer))
+            if (!Physics.Raycast(PointFoot2, -normal, out hit, OriginFeetLength, wallLayer))
             {
                 foundWall = false;
             }
@@ -105,7 +105,7 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + transform.forward * OriginLedgeLength, Color.green);
             }
 
-            if (Physics.Raycast(origin, transform.forward, out hit, OriginLedgeLength, climbLayer))
+            if (Physics.Raycast(origin, transform.forward, out hit, OriginLedgeLength, ledgeLayer))
             {
                 if (showDebug) //Normal
                 {
@@ -153,7 +153,7 @@ namespace Climbing
                     Debug.DrawLine(origin3, origin3 - Vector3.up * length, Color.cyan);
                 }
 
-                if (Physics.Raycast(origin3, -Vector3.up, out hit, length, DismountLayer))
+                if (Physics.Raycast(origin3, -Vector3.up, out hit, length, climbLayer))
                 {
                     return true;
                 }
@@ -169,7 +169,7 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, climbLayer);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, ledgeLayer);
         }
         public bool ThrowFootRayToLedge(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
         {
@@ -178,7 +178,7 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, WallLayer);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, wallLayer);
         }
 
         public bool IsGrounded(out RaycastHit hit) {

@@ -277,8 +277,8 @@ namespace Climbing
                         onLedge = true;
                         toLedge = false;
                         jumping = false;
-                        LastLHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
-                        LastRHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
+                        leftHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                        rightHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
                     }
                 }
             }
@@ -343,11 +343,8 @@ namespace Climbing
 
             RaycastHit hit;
 
-            LastLHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
-            LastRHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
-
-            Vector3 origin = LastLHandPosition + (LastRHandPosition - LastLHandPosition) / 2;
-            origin.y = LastLHandPosition.y;
+            Vector3 origin = leftHandPosition + (rightHandPosition - leftHandPosition) / 2;
+            origin.y = leftHandPosition.y;
 
             if (characterController.characterDetection.ThrowClimbRay(origin, transform.forward, IKHandRayLength, out hit))
             {
@@ -388,15 +385,15 @@ namespace Climbing
             float xDistance = 0;
             
             if (horizontalMovement > 0 && reachedEnd)
-                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(LastRHandPosition);
+                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(rightHandPosition);
             else
-                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(LastLHandPosition);
+                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(leftHandPosition);
 
             currentPoint = point;
 
             if (point)
             {
-                Vector3 direction = new Vector3(horizontal, vertical, 0f).normalized;
+                Vector3 direction = new Vector3(horizontal, vertical, 0f);
 
                 Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours, ref xDistance);
 
@@ -477,7 +474,7 @@ namespace Climbing
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;
                 Vector3 relativeDirection = from.transform.InverseTransformDirection(direction);
 
-                if (pointConnection.IsDirectionValid(targetDirection, relativeDirection.normalized))
+                if (pointConnection.IsDirectionValid(targetDirection.normalized, relativeDirection.normalized))
                 {
                     float dist = Vector3.Distance(from.transform.position, targetPoint.target.transform.position);
 
@@ -571,15 +568,13 @@ namespace Climbing
                 if (translation < 0)
                 {
                     curLedge = hit1.collider.transform.parent.gameObject;
-                    LastLHandPosition = hit1.point;
                     ret = true;
                 }
             }
             if (characterController.characterDetection.ThrowHandRayToLedge(origin2, Vector3.forward, IKHandRayLength, out hit2)){
                 if (translation > 0)
                 {
-                    curLedge = hit2.collider.transform.parent.gameObject; 
-                    LastRHandPosition = hit2.point;
+                    curLedge = hit2.collider.transform.parent.gameObject;
                     ret = true;
                 }
             }
@@ -610,7 +605,7 @@ namespace Climbing
 
                 RaycastHit hit;
                 Debug.DrawLine(origin, origin + -tangent * (raylength + 0.25f), Color.cyan);
-                if (Physics.Raycast(origin, -tangent, out hit, raylength + 0.25f, characterDetection.climbLayer))
+                if (Physics.Raycast(origin, -tangent, out hit, raylength + 0.25f, characterDetection.ledgeLayer))
                 {
                     Vector3 newPos = Vector3.zero;
 

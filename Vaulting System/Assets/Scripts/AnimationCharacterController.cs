@@ -15,7 +15,6 @@ public class AnimationCharacterController : MonoBehaviour
     public float startnormalizedTime;
     public float targetNormalizedTime;
     private MatchTargetWeightMask matchTargetWeightMask = new MatchTargetWeightMask(Vector3.one, 0);
-    private bool isMatchTargeted = true;
 
     // Start is called before the first frame update
     void Start()

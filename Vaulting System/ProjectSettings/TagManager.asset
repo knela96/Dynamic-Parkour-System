@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ledge
   - Vault
+  - Deep Jump
   layers:
   - Default
   - TransparentFX

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Climbing
@@ -83,7 +84,8 @@ namespace Climbing
                                     continue;
                                 }
                             }
-                            AddNeighbour(curPoint, closest, availableDirections[d]);
+                            if(Vector3.Distance(curPoint.transform.position, closest.transform.position) >= directThreshold)
+                                AddNeighbour(curPoint, closest, availableDirections[d]);
                         }
                     }
                 
@@ -157,10 +159,11 @@ namespace Climbing
             Neighbour n = new Neighbour();
             n.direction = targetDir;
             n.target = target;
-            n.type = (Vector3.Distance(from.transform.position, target.transform.position) < directThreshold && from.transform.parent == target.transform.parent) ?
-                ConnectionType.inBetween : ConnectionType.direct;
+            n.type = ConnectionType.direct;
             from.neighbours.Add(n);
-            UnityEditor.EditorUtility.SetDirty(from);
+            #if UNITY_EDITOR
+                EditorUtility.SetDirty(from);
+            #endif
         }
 
         void RefreshAll()

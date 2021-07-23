@@ -19,6 +19,7 @@ public class ThirdPersonController : MonoBehaviour
     float turnSmoothVelocity;
     public Transform camReference;
     int counter = 0;
+    public bool moving = false;
     public bool isGrounded = false;
     public bool isJumping = false;
     public bool inSlope = false;
@@ -122,10 +123,12 @@ public class ThirdPersonController : MonoBehaviour
 
             //Move Player to camera directin
             characterAnimation.animator.SetBool("Released", false);
+            moving = true;
         }
         else
         {
             characterAnimation.animator.SetBool("Released", true);
+            moving = false;
 
             //Reset Sprint to Walk Velocity
             if (characterMovement.GetState() == MovementState.Running)
