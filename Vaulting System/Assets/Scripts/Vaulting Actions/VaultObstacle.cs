@@ -28,42 +28,46 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            RaycastHit hit;
-            Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
+            if (Input.GetKey(KeyCode.Space)){
+                RaycastHit hit;
+                Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
 
-            if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
-            {
-                if ((hit.normal == hit.collider.transform.forward || hit.normal == -hit.collider.transform.forward) == false) //If direction not the same as object don't do anything
-                    return false;
-
-                Vector3 origin2 = origin + vaultingController.transform.forward * kneeRaycastLength;
-
-                RaycastHit hit2;
-                if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
+                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
                 {
-                    if (hit.transform.tag == "Vault" && hit2.collider)
+                    if ((hit.normal == hit.collider.transform.forward || 
+                        hit.normal == -hit.collider.transform.forward) == false
+                        || hit.transform.tag != "Vault")
+                        return false;
+
+                    Vector3 origin2 = origin + vaultingController.transform.forward * kneeRaycastLength;
+
+                    RaycastHit hit2;
+                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
                     {
-                        controller.characterAnimation.animator.CrossFade("Vaulting", 0.2f);
-                        isVaulting = true;
-                        startPos = vaultingController.transform.position;
-                        startRot = vaultingController.transform.rotation;
-                        targetPos = hit2.point + (-hit.normal * (hit.transform.localScale.z + landOffset));
-                        targetRot = Quaternion.LookRotation(targetPos - startPos);
-                        vaultTime = 0;
-                        animLength = clip.length;
-                        controller.DisableController();
+                        if (hit2.collider)
+                        {
+                            controller.characterAnimation.animator.CrossFade("Vaulting", 0.2f);
+                            isVaulting = true;
+                            startPos = vaultingController.transform.position;
+                            startRot = vaultingController.transform.rotation;
+                            targetPos = hit2.point + (-hit.normal * (hit.transform.localScale.z + landOffset));
+                            targetRot = Quaternion.LookRotation(targetPos - startPos);
+                            vaultTime = 0;
+                            animLength = clip.length;
+                            controller.DisableController();
 
-                        //Calculate Hand Rest Position n Rotation
-                        Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
-                        leftHandPosition = hit.point + (-hit.normal * (hit.transform.localScale.z / 2));
-                        leftHandPosition.y = hit.transform.position.y + hit.transform.localScale.y / 2;
-                        leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
-                        leftHandRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
+                            //Calculate Hand Rest Position n Rotation
+                            Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
+                            leftHandPosition = hit.point + (-hit.normal * (hit.transform.localScale.z / 2));
+                            leftHandPosition.y = hit.transform.position.y + hit.transform.localScale.y / 2;
+                            leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
+                            leftHandRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
 
-                        return true;
+                            return true;
+                        }
                     }
                 }
-            }
+            }            
 
             return false;
         }

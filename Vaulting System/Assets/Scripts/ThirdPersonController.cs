@@ -174,6 +174,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void DisableController()
     {
+        characterAnimation.SetAnimVelocity(Vector3.zero);
         characterMovement.SetKinematic(true);
         characterMovement.SetVelocity(Vector3.zero);
         characterMovement.enableFeetIK = false;

@@ -52,8 +52,10 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKey(KeyCode.Space) && !isVaulting && !controller.dummy)
+            if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.C))&& !isVaulting && !controller.dummy)
             {
+                curAction = null;
+
                 foreach (var item in actions)
                 {
                     isVaulting = item.CheckAction();

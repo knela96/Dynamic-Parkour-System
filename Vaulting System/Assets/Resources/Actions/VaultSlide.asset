@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e05288b69d3a594e8bb40243ac996b7, type: 3}
   m_Name: VaultSlide
   m_EditorClassIdentifier: 
-  clip: {fileID: 0}
-  kneeRaycastOrigin: {x: 0, y: 0, z: 0}
-  kneeRaycastLength: 1
-  landOffset: 0.7
+  clip: {fileID: -203655887218126122, guid: fd9ef03fbfc817b40b59c912efeda582, type: 3}
+  kneeRaycastOrigin: {x: 0, y: 1.5, z: 0}
+  kneeRaycastLength: 1.5
+  landOffset: 1.2

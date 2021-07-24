@@ -9,6 +9,7 @@ public class AnimationCharacterController : MonoBehaviour
     public Animator animator;
     private ThirdPersonController controller;
     private Vector3 animVelocity;
+    public SwitchCameras switchCameras;
 
     public AvatarTarget avatarTarget;
     public Transform target;
@@ -21,6 +22,7 @@ public class AnimationCharacterController : MonoBehaviour
     {
         controller = GetComponent<ThirdPersonController>();
         animator = GetComponent<Animator>();
+        switchCameras = Camera.main.GetComponent<SwitchCameras>();
     }
 
     // Update is called once per frame
@@ -188,7 +190,6 @@ public class AnimationCharacterController : MonoBehaviour
     {
         controller.characterMovement.EnableFeetIK();
     }
-
     public void EnableController()
     {
         controller.EnableController();
@@ -219,6 +220,5 @@ public class AnimationCharacterController : MonoBehaviour
 
         animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
         animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime, true);
-
     }
 }
