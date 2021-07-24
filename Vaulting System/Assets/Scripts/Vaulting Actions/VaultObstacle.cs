@@ -12,16 +12,11 @@ namespace Climbing
         private string HandAnimVariableName;
         [Range(0, 1f)] private float handToIKPositionSpeed;
 
-        public VaultObstacle(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController)
+        public VaultObstacle(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
             ActionVaultObstacle action = (ActionVaultObstacle)_actionInfo;
 
             //Loads Action Info
-            clip = action.clip;
-            kneeRaycastOrigin = action.kneeRaycastOrigin;
-            kneeRaycastLength = action.kneeRaycastLength;
-            landOffset = action.landOffset;
-
             HandAnimVariableName = action.HandAnimVariableName;
             handToIKPositionSpeed = action.handToIKPositionSpeed;
         }
@@ -39,7 +34,7 @@ namespace Climbing
                         || hit.transform.tag != "Vault")
                         return false;
 
-                    Vector3 origin2 = origin + vaultingController.transform.forward * kneeRaycastLength;
+                    Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
                     RaycastHit hit2;
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
@@ -47,13 +42,14 @@ namespace Climbing
                         if (hit2.collider)
                         {
                             controller.characterAnimation.animator.CrossFade("Vaulting", 0.2f);
+
                             isVaulting = true;
                             startPos = vaultingController.transform.position;
                             startRot = vaultingController.transform.rotation;
-                            targetPos = hit2.point + (-hit.normal * (hit.transform.localScale.z + landOffset));
+                            targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(targetPos - startPos);
-                            vaultTime = 0;
-                            animLength = clip.length;
+                            vaultTime = startDelay; //This adds a delay to allow animation start in correct time
+                            animLength = clip.length + startDelay;
                             controller.DisableController();
 
                             //Calculate Hand Rest Position n Rotation

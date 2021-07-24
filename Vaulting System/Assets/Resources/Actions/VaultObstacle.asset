@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clip: {fileID: -203655887218126122, guid: 0c012699e8b1f064ab54e8d0c62e4436, type: 3}
   kneeRaycastOrigin: {x: 0, y: 0.5, z: 0}
-  kneeRaycastLength: 1
-  landOffset: 0.7
+  kneeRaycastLength: 0.7
+  landOffset: 1.2
+  startDelay: 0.25
   HandAnimVariableName: LHandCurve
   handToIKPositionSpeed: 0.25

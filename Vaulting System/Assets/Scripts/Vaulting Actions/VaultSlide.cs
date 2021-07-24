@@ -7,13 +7,8 @@ namespace Climbing
     public class VaultSlide : VaultAction
     {
         float dis;
-        public VaultSlide(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController)
+        public VaultSlide(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
-            //Loads Action Info
-            clip = _actionInfo.clip;
-            kneeRaycastOrigin = _actionInfo.kneeRaycastOrigin;
-            kneeRaycastLength = _actionInfo.kneeRaycastLength;
-            landOffset = _actionInfo.landOffset;
         }
 
         public override bool CheckAction()
@@ -32,8 +27,7 @@ namespace Climbing
                     if ((hit.normal == hit.collider.transform.forward ||
                         hit.normal == -hit.collider.transform.forward) == false ||
                         Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60 ||
-                        hit.transform.tag != "Slide" /*||
-                        Vector3.Distance(origin, hit.point) < 1*/)
+                        hit.transform.tag != "Slide")
                         return false;
 
                     RaycastHit hit2;
@@ -42,16 +36,17 @@ namespace Climbing
                         if (hit2.collider)
                         {
                             controller.characterAnimation.animator.CrossFade("Running Slide", 0.2f);
+                            dis = 4 / Vector3.Distance(startPos, targetPos);
+                            controller.characterAnimation.animator.SetFloat("AnimSpeed", dis);
                             controller.characterAnimation.switchCameras.SlideCam();
+
                             isVaulting = true;
                             startPos = vaultingController.transform.position;
                             startRot = vaultingController.transform.rotation;
                             targetPos = hit2.point;
-                            dis = 4 / Vector3.Distance(startPos, targetPos);
-                            controller.characterAnimation.animator.SetFloat("AnimSpeed", dis);
                             targetRot = Quaternion.LookRotation(targetPos - startPos);
-                            vaultTime = -0.25f;
-                            animLength = clip.length;
+                            vaultTime = startDelay;
+                            animLength = clip.length + startDelay;
                             controller.DisableController();
 
                             return true;

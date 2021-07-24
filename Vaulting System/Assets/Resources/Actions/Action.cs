@@ -10,4 +10,5 @@ public class Action : ScriptableObject
     public Vector3 kneeRaycastOrigin;
     public float kneeRaycastLength = 1.0f;
     public float landOffset = 0.7f;
+    public float startDelay = 0.0f;
 }

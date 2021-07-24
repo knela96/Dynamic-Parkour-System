@@ -19,14 +19,22 @@ namespace Climbing
         protected Vector3 kneeRaycastOrigin;
         protected float kneeRaycastLength;
         protected float landOffset;
+        protected float startDelay = 0f;
 
         protected VaultingController vaultingController;
 
-        public VaultAction(VaultingController _vaultingController)
+        public VaultAction(VaultingController _vaultingController, Action action)
         {
             vaultingController = _vaultingController;
             controller = vaultingController.controller;
             animator = vaultingController.animator;
+
+            //Loads Action Info
+            clip = action.clip;
+            kneeRaycastOrigin = action.kneeRaycastOrigin;
+            kneeRaycastLength = action.kneeRaycastLength;
+            landOffset = action.landOffset;
+            startDelay = Mathf.Abs(action.startDelay) * -1;
         }
 
         public abstract bool CheckAction();
@@ -35,6 +43,6 @@ namespace Climbing
 
         public abstract void DrawGizmos();
 
-        public virtual void OnAnimatorIK(int layerIndex) { }
+        public virtual void OnAnimatorIK(int layerIndex) {}
     }
 }
