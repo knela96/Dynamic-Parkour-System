@@ -18,13 +18,14 @@ namespace Climbing
 
     public class VaultingController : MonoBehaviour
     {
-        ThirdPersonController controller;
-        Animator animator;
+        [HideInInspector] public ThirdPersonController controller;
+        [HideInInspector] public Animator animator;
         public VaultActions vaultActions;
-        bool isVaulting = false;
-        List<VaultAction> actions = new List<VaultAction>();
-        VaultAction curAction;
+        private bool isVaulting = false;
         public bool debug;
+
+        private List<VaultAction> actions = new List<VaultAction>();
+        private VaultAction curAction;
 
         public void Start()
         {
@@ -34,24 +35,18 @@ namespace Climbing
             if(vaultActions.HasFlag(VaultActions.Vault_Obstacle))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultObstacle");
-                AddComponent(gameObject.AddComponent<VaultObstacle>(), actionInfo);
+                Add(new VaultObstacle(this, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Vault_Over))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultOver");
-                AddComponent(gameObject.AddComponent<VaultOver>(), actionInfo);
+                Add(new VaultOver(this, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Slide))
             {
-                //Action actionInfo = Resources.Load<Action>("Actions/Slide");
-                //AddComponent(gameObject.AddComponent<VaultSlide>(), actionInfo);
+                Action actionInfo = Resources.Load<Action>("Actions/VaultSlide");
+                Add(new VaultSlide(this, actionInfo));
             }
-        }
-
-        void AddComponent(VaultAction action, Action actionInfo)
-        {
-            action.Initialize(controller, animator, actionInfo);
-            actions.Add(action);
         }
 
         // Update is called once per frame
@@ -81,6 +76,13 @@ namespace Climbing
             }
         }
 
+        private void OnAnimatorIK(int layerIndex)
+        {
+            if (curAction != null && isVaulting)
+            {
+                curAction.OnAnimatorIK(layerIndex);
+            }
+        }
 
         private void OnDrawGizmos()
         {
@@ -88,6 +90,12 @@ namespace Climbing
             {
                 curAction.DrawGizmos();
             }
+        }
+
+        private void Add(VaultAction action)
+        {
+            if (action != null)
+                actions.Add(action);
         }
     }
 

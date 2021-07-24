@@ -6,22 +6,17 @@ namespace Climbing
 {
     public class VaultObstacle : VaultAction
     {
-        public ActionVaultObstacle action;
-
         private Vector3 leftHandPosition;
         private Quaternion leftHandRotation;
 
         private string HandAnimVariableName;
         [Range(0, 1f)] private float handToIKPositionSpeed;
-        public override void Initialize(ThirdPersonController _controller, Animator _animator, Action _actionInfo)
-        {
-            action = (ActionVaultObstacle)_actionInfo;
-            controller = _controller;
-            animator = _animator;
-        }
 
-        public override void Start()
+        public VaultObstacle(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController)
         {
+            ActionVaultObstacle action = (ActionVaultObstacle)_actionInfo;
+
+            //Loads Action Info
             clip = action.clip;
             kneeRaycastOrigin = action.kneeRaycastOrigin;
             kneeRaycastLength = action.kneeRaycastLength;
@@ -34,14 +29,14 @@ namespace Climbing
         public override bool CheckAction()
         {
             RaycastHit hit;
-            Vector3 origin = transform.position + kneeRaycastOrigin;
+            Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
 
-            if (Physics.Raycast(origin, transform.forward, out hit, kneeRaycastLength))
+            if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
             {
                 if ((hit.normal == hit.collider.transform.forward || hit.normal == -hit.collider.transform.forward) == false) //If direction not the same as object don't do anything
                     return false;
 
-                Vector3 origin2 = origin + transform.forward * kneeRaycastLength;
+                Vector3 origin2 = origin + vaultingController.transform.forward * kneeRaycastLength;
 
                 RaycastHit hit2;
                 if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
@@ -50,8 +45,8 @@ namespace Climbing
                     {
                         controller.characterAnimation.animator.CrossFade("Vaulting", 0.2f);
                         isVaulting = true;
-                        startPos = transform.position;
-                        startRot = transform.rotation;
+                        startPos = vaultingController.transform.position;
+                        startRot = vaultingController.transform.rotation;
                         targetPos = hit2.point + (-hit.normal * (hit.transform.localScale.z + landOffset));
                         targetRot = Quaternion.LookRotation(targetPos - startPos);
                         vaultTime = 0;
@@ -88,8 +83,8 @@ namespace Climbing
                 }
                 else
                 {
-                    transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                    vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
                     ret = true;
                 }
             }
@@ -97,7 +92,7 @@ namespace Climbing
             return ret;
         }
 
-        private void OnAnimatorIK(int layerIndex)
+        public override void OnAnimatorIK(int layerIndex)
         {
             if (!isVaulting)
                 return;

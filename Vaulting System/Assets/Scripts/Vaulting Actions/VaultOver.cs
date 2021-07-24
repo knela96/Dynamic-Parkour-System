@@ -6,17 +6,9 @@ namespace Climbing
 {
     public class VaultOver : VaultAction
     {
-        public Action action;
-
-        public override void Initialize(ThirdPersonController _controller, Animator _animator, Action _actionInfo)
+        public VaultOver(VaultingController _vaultingController, Action action) : base(_vaultingController)
         {
-            action = _actionInfo;
-            controller = _controller;
-            animator = _animator;
-        }
-
-        public override void Start()
-        {
+            //Loads Action Info
             clip = action.clip;
             kneeRaycastOrigin = action.kneeRaycastOrigin;
             kneeRaycastLength = action.kneeRaycastLength;
@@ -26,20 +18,20 @@ namespace Climbing
         public override bool CheckAction()
         {
             RaycastHit hit;
-            Vector3 origin = transform.position + kneeRaycastOrigin;
+            Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
 
-            if (Physics.Raycast(origin, transform.forward, out hit, kneeRaycastLength))
+            if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
             {
                 Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
-                Debug.DrawLine(origin, origin + transform.forward * kneeRaycastLength);//Forward Raycast
+                Debug.DrawLine(origin, origin + vaultingController.transform.forward * kneeRaycastLength);//Forward Raycast
                 Debug.DrawLine(hit.point, hit.point + hit.normal, Color.cyan); //Face Normal
                 Debug.DrawLine(origin2, origin2 + Vector3.down);//Down Raycast
 
                 // If direction not the same as object don't do anything
                 // or angle of movement not valid
                 if ((hit.normal == hit.collider.transform.forward || hit.normal == -hit.collider.transform.forward) == false ||
-                    Mathf.Abs(Vector3.Dot(-hit.normal,transform.forward)) < 0.60) 
+                    Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60) 
                     return false;
 
                 RaycastHit hit2;
@@ -49,8 +41,8 @@ namespace Climbing
                     {
                         controller.characterAnimation.animator.CrossFade("Deep Jump", 0.2f);
                         isVaulting = true;
-                        startPos = transform.position;
-                        startRot = transform.rotation;
+                        startPos = vaultingController.transform.position;
+                        startRot = vaultingController.transform.rotation;
                         targetPos = hit2.point;
                         targetRot = Quaternion.LookRotation(targetPos - startPos);
                         vaultTime = 0;
@@ -80,8 +72,8 @@ namespace Climbing
                 }
                 else
                 {
-                    transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                    vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
                     ret = true;
                 }
             }
