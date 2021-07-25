@@ -45,6 +45,9 @@ namespace Climbing
         bool dropping = false;
         bool reachedEnd = false;
 
+        [Range (0.1f, 1.0f)]
+        public float smallHopMaxDistance = 0.5f;
+
         GameObject curLedge;
 
         Point targetPoint = null;
@@ -420,7 +423,7 @@ namespace Climbing
 
                         direction = toPoint.direction;
 
-                        if ((xDistance < 0.5f && xDistance > -0.5f) && direction.y != 0)
+                        if ((xDistance < smallHopMaxDistance && xDistance > -smallHopMaxDistance) && direction.y != 0)
                             direction.x = 0;
 
                         wallFound = characterDetection.FindFootCollision(target, targetRot, -toPoint.target.transform.forward);
