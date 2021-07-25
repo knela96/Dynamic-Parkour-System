@@ -65,78 +65,34 @@ namespace Climbing
         {
             for(int p = 0; p < allPoints.Count; p++)
             {
-                Point curPoint = allPoints[p];
-                for(int d = 0; d < availableDirections.Length; d++)
-                {
-                    List<Point> candidatePoints = CandidatePointsOnDirection(availableDirections[d], curPoint);
-
-                    Point closest = ReturnClosest(candidatePoints, curPoint);
-
-                    if(closest != null)
-                    {
-                        if(Vector3.Distance(curPoint.transform.position, closest.transform.position) < minDistance)
-                        {
-                            ////Skip diagonal anchors
-                            if(Mathf.Abs(availableDirections[d].y) > 0 && Mathf.Abs(availableDirections[d].x) > 0 && skipDiagonals)
-                            {
-                                if(Vector3.Distance(curPoint.transform.position, closest.transform.position) > directThreshold )
-                                {
-                                    continue;
-                                }
-                            }
-                            if(Vector3.Distance(curPoint.transform.position, closest.transform.position) >= directThreshold)
-                                AddNeighbour(curPoint, closest, availableDirections[d]);
-                        }
-                    }
-                
-                }
+                Point curPoint = allPoints[p]; 
+                CandidatePointsOnDirection(curPoint);
             }
         }
 
-        List<Point> CandidatePointsOnDirection(Vector3 targetDirection, Point from)
+        void CandidatePointsOnDirection(Point from)
         {
-            List<Point> retVal = new List<Point>();
-
             for (int p = 0; p < allPoints.Count; p++)
             {
                 Point targetPoint = allPoints[p];
-
-                Vector3 direction = targetPoint.transform.position - from.transform.position;
-                Vector3 relativeDirection = from.transform.InverseTransformDirection(direction.normalized);
-
-                if(IsDirectionValid(targetDirection, relativeDirection))
+                float dis = Vector3.Distance(from.transform.position, targetPoint.transform.position);
+                if (dis < minDistance && dis > directThreshold /*&& from.transform.parent != targetPoint.transform.parent*/)
                 {
-                    retVal.Add(targetPoint);
+                    Vector3 direction = targetPoint.transform.position - from.transform.position;
+                    Vector3 relativeDirection = from.transform.InverseTransformDirection(direction);
+                    relativeDirection.z = 0;
+
+                    for (int d = 0; d < availableDirections.Length; d++)
+                    {
+                        if(IsDirectionValid(availableDirections[d], relativeDirection))
+                            AddNeighbour(from, targetPoint, availableDirections[d]);
+                    }
                 }
             }
-            return retVal;
         }
-
-        Point ReturnClosest(List<Point> l, Point from)
-        {
-            Point ret = null;
-            float minDist = Mathf.Infinity;
-
-            for(int i = 0; i < l.Count; i++)
-            {
-                float temp = Vector3.Distance(l[i].transform.position, from.transform.position);
-
-                if(temp < minDist && l[i] != from)
-                {
-                    minDist = temp;
-                    ret = l[i];
-                }
-            }
-
-            return ret;
-        }
-
         public bool IsDirectionValid(Vector3 targetDirection, Vector3 candidate)
         {
             bool ret = false;
-
-            if (targetDirection == Vector3.zero) //No Input Direction
-                return false;
 
             float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.y) * Mathf.Rad2Deg;
             float angle = Mathf.Atan2(candidate.x, candidate.y) * Mathf.Rad2Deg;
@@ -154,13 +110,34 @@ namespace Climbing
             return ret;
         }
 
-        void AddNeighbour(Point from, Point target, Vector3 targetDir)
+        public Vector2 IsDirectionAngleValid(Vector3 inputDirection, Vector3 pointDirection)
+        {
+            Vector2 angles = Vector2.zero;
+
+            if (inputDirection == Vector3.zero) //No Input Direction
+                return Vector2.zero;
+
+            //Get Angle of direction + Fix negative Atan2 negative angles
+            float inputAngle = (Mathf.Atan2(inputDirection.x, inputDirection.y) + ((inputDirection.x < 0) ? 2 * Mathf.PI : 0)) * Mathf.Rad2Deg;
+            float pointAngle = (Mathf.Atan2(pointDirection.x, pointDirection.y) + ((pointDirection.x < 0) ? 2 * Mathf.PI : 0)) * Mathf.Rad2Deg;
+
+            if ((pointAngle <= inputAngle + validAngleRange && pointAngle >= inputAngle - validAngleRange) ||
+                pointAngle <= inputAngle + validAngleRange + 360 && pointAngle >= (inputAngle - validAngleRange + 360) % 360)
+            {
+                angles = new Vector2(pointAngle, inputAngle);
+            }
+
+            return angles;
+        }
+
+        void AddNeighbour(Point from, Point target, Vector3 direction)
         {
             Neighbour n = new Neighbour();
-            n.direction = targetDir;
             n.target = target;
+            n.direction = direction;
             n.type = ConnectionType.direct;
             from.neighbours.Add(n);
+
             #if UNITY_EDITOR
                 EditorUtility.SetDirty(from);
             #endif

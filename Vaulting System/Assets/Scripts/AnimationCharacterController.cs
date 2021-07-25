@@ -83,30 +83,30 @@ public class AnimationCharacterController : MonoBehaviour
     {
         if (state == ClimbController.ClimbState.BHanging)
         {
-            if (direction.x == -1 && direction.y == 0)
+            if (direction.x == -1 && direction.y == 0 ||
+                direction.x == -1 && direction.y == 1 ||
+                direction.x == -1 && direction.y == -1)
             {
                 animator.CrossFade("Braced Hang Hop Left", 0.2f);
                 startTime = 0.2f;
                 endTime = 0.49f;
             }
-            else if (direction.x == 1 && direction.y == 0)
+            else if (direction.x == 1 && direction.y == 0 ||
+                    direction.x == 1 && direction.y == -1 ||
+                    direction.x == 1 && direction.y == 1)
             {
                 animator.CrossFade("Braced Hang Hop Right", 0.2f);
                 startTime = 0.2f;
                 endTime = 0.49f;
             }
-            else if (direction.x == 0 && direction.y == 1 ||
-                    direction.x == -1 && direction.y == 1 ||
-                    direction.x == 1 && direction.y == 1)
+            else if (direction.x == 0 && direction.y == 1)
             {
 
                 animator.CrossFade("Braced Hang Hop Up", 0.2f);
                 startTime = 0.3f;
                 endTime = 0.48f;
             }
-            else if (direction.x == 0 && direction.y == -1 ||
-                    direction.x == -1 && direction.y == -1 ||
-                    direction.x == 1 && direction.y == -1)
+            else if (direction.x == 0 && direction.y == -1)
             {
 
                 animator.CrossFade("Braced Hang Hop Down", 0.2f);

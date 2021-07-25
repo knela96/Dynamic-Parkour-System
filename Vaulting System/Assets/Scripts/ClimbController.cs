@@ -420,8 +420,8 @@ namespace Climbing
 
                         direction = toPoint.direction;
 
-                        if (xDistance > 1.0f || xDistance < -1.0f)
-                            direction.y = 0;
+                        if ((xDistance < 0.5f && xDistance > -0.5f) && direction.y != 0)
+                            direction.x = 0;
 
                         wallFound = characterDetection.FindFootCollision(target, targetRot, -toPoint.target.transform.forward);
 
@@ -459,30 +459,31 @@ namespace Climbing
         }
 
 
-        public Neighbour CandidatePointOnDirection(Vector3 targetDirection, Point from, List<Neighbour> candidatePoints, ref float xDistance)
+        public Neighbour CandidatePointOnDirection(Vector3 inputDirection, Point from, List<Neighbour> candidatePoints, ref float xDistance)
         {
             if (!from)
                 return null;
 
             Neighbour retPoint = null;
-            float minDist = pointConnection.minDistance;
+            float minDist = float.PositiveInfinity;
 
             for (int p = 0; p < candidatePoints.Count; p++)
             {
                 Neighbour targetPoint = candidatePoints[p];
 
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;
-                Vector3 relativeDirection = from.transform.InverseTransformDirection(direction);
+                Vector3 pointDirection = from.transform.InverseTransformDirection(direction);
+                Vector2 angles = pointConnection.IsDirectionAngleValid(inputDirection, pointDirection);
 
-                if (pointConnection.IsDirectionValid(targetDirection.normalized, relativeDirection.normalized))
+                if (angles != Vector2.zero)
                 {
-                    float dist = Vector3.Distance(from.transform.position, targetPoint.target.transform.position);
-
-                    if (dist < minDist)
+                    float dist = Mathf.Abs(angles.x - angles.y);
+                    if (dist <= minDist)
                     {
+                        Debug.Log(dist);
                         minDist = dist;
                         retPoint = targetPoint;
-                        xDistance = relativeDirection.x;
+                        xDistance = pointDirection.x;
                     }
                 }
             }
@@ -504,8 +505,8 @@ namespace Climbing
             origin1.y = transform.position.y + curOriginGrabOffset.y;
             origin2.y = origin1.y;
 
-            leftHandPosition = Vector3.zero;
-            rightHandPosition = Vector3.zero;
+            //leftHandPosition = Vector3.zero;
+            //rightHandPosition = Vector3.zero;
             leftFootPosition = Vector3.zero;
             rightFootPosition = Vector3.zero;
 

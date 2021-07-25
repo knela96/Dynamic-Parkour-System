@@ -13,6 +13,7 @@ namespace Climbing
         public bool showDebug = true;
 
         public Vector3 OriginLedgeRay;
+        public float numRays = 5;
         public Vector3 OriginFeetRay;
         public float OriginLedgeLength;
         public float OriginFeetLength;
@@ -36,7 +37,7 @@ namespace Climbing
         {
             Vector3 rayOrigin = transform.TransformDirection(OriginLedgeRay) + transform.position;
 
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < numRays; i++)
             {
                 bool ret = ThrowRayToLedge(rayOrigin + new Vector3(0, 0.15f * i, 0), out hit);
 
@@ -52,7 +53,7 @@ namespace Climbing
         }
         public bool FindDropLedgeCollision(out RaycastHit hit)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < numRays; i++)
             {
                 Vector3 origin = transform.position + transform.forward * 0.8f - new Vector3(0, i * 0.15f, 0);
 
