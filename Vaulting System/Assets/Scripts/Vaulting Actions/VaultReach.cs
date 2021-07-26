@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace Climbing
 {
-    public class VaultOver : VaultAction
+    public class VaultReach : VaultAction
     {
-        public VaultOver(VaultingController _vaultingController, Action action) : base(_vaultingController, action)
+        float maxHeight = 0;
+
+        public VaultReach(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
+            ActionVaultReach action = (ActionVaultReach)_actionInfo;
+
+            maxHeight = action.maxHeight;
         }
 
         public override bool CheckAction()
@@ -17,30 +22,27 @@ namespace Climbing
                 RaycastHit hit;
                 Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
 
-                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
+                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength, layer.value))
                 {
-                    // If direction not the same as object don't do anything
-                    // or angle of movement not valid
-                    if ((hit.normal == hit.collider.transform.forward ||
-                        hit.normal == -hit.collider.transform.forward) == false ||
-                        Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60 ||
-                        hit.transform.tag != tag)
+                    if (hit.collider.gameObject.tag != tag)
                         return false;
 
-                    Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
+                    Vector3 origin2 = hit.point + (-hit.normal * (landOffset)) + new Vector3(0, 2, 0);
 
                     RaycastHit hit2;
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
                     {
+                        if (hit2.point.y - vaultingController.transform.position.y > maxHeight)
+                            return false;
+
                         if (hit2.collider)
                         {
-                            controller.characterAnimation.animator.CrossFade("Deep Jump", 0.2f);
-
+                            controller.characterAnimation.animator.CrossFade("Reach", 0.1f);
                             isVaulting = true;
                             startPos = vaultingController.transform.position;
                             startRot = vaultingController.transform.rotation;
                             targetPos = hit2.point;
-                            targetRot = Quaternion.LookRotation(targetPos - startPos);
+                            targetRot = Quaternion.LookRotation(new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z));
                             vaultTime = startDelay;
                             animLength = clip.length + startDelay;
                             controller.DisableController();
@@ -59,19 +61,22 @@ namespace Climbing
             bool ret = false;
             if (isVaulting)
             {
+                ret = true;
+
                 float actualSpeed = Time.deltaTime / animLength;
                 vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
+                vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
 
-                if (vaultTime > 1)
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach"))
                 {
-                    isVaulting = false;
-                    controller.EnableController();
-                }
-                else
-                {
-                    vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
-                    ret = true;
+                    vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
+
+                    if (animator.IsInTransition(0))
+                    {
+                        controller.EnableController();
+                        isVaulting = false;
+                        ret = false;
+                    }
                 }
             }
 
@@ -80,8 +85,7 @@ namespace Climbing
 
         public override void DrawGizmos()
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(targetPos, 0.08f);
+            Gizmos.DrawSphere(targetPos, 10);
         }
     }
 }

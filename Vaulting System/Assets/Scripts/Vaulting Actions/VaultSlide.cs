@@ -27,7 +27,7 @@ namespace Climbing
                     if ((hit.normal == hit.collider.transform.forward ||
                         hit.normal == -hit.collider.transform.forward) == false ||
                         Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60 ||
-                        hit.transform.tag != "Slide")
+                        hit.transform.tag != tag)
                         return false;
 
                     RaycastHit hit2;

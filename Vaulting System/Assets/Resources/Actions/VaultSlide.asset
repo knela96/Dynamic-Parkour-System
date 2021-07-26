@@ -17,3 +17,7 @@ MonoBehaviour:
   kneeRaycastLength: 1.5
   landOffset: 1.2
   startDelay: 0.25
+  layer:
+    serializedVersion: 2
+    m_Bits: 0
+  tag: Slide

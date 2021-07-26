@@ -14,6 +14,7 @@ namespace Climbing
         Vault_Obstacle = 1 << 0,
         Vault_Over = 1 << 10,
         Slide = 1 << 2,
+        Reach = 1 << 3,
     }
 
     public class VaultingController : MonoBehaviour
@@ -46,6 +47,11 @@ namespace Climbing
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultSlide");
                 Add(new VaultSlide(this, actionInfo));
+            }
+            if (vaultActions.HasFlag(VaultActions.Slide))
+            {
+                Action actionInfo = Resources.Load<Action>("Actions/VaultReach");
+                Add(new VaultReach(this, actionInfo));
             }
         }
 

@@ -31,7 +31,7 @@ namespace Climbing
                 {
                     if ((hit.normal == hit.collider.transform.forward || 
                         hit.normal == -hit.collider.transform.forward) == false
-                        || hit.transform.tag != "Vault")
+                        || hit.transform.tag != tag)
                         return false;
 
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));

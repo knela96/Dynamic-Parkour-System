@@ -476,6 +476,7 @@ namespace Climbing
 
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;
                 Vector3 pointDirection = from.transform.InverseTransformDirection(direction);
+                pointDirection.z = 0;
 
                 //This returns the angle between input and target direction
                 float angle = Mathf.Acos(Vector3.Dot(inputDirection.normalized, pointDirection.normalized)) * Mathf.Rad2Deg;
@@ -640,7 +641,8 @@ namespace Climbing
             Vector3 targetPos = Vector3.zero;
 
             curLedge = hit.transform.parent.gameObject;
-            List<Point> points = hit.transform.parent.GetComponentInChildren<HandlePointsV2>().pointsInOrder;
+            HandlePointsV2 handle = hit.transform.parent.GetComponentInChildren<HandlePointsV2>();
+            List<Point> points = handle.pointsInOrder;
 
             float dist = float.PositiveInfinity;
             for (int i = 0; i < points.Count; i++)
@@ -655,7 +657,7 @@ namespace Climbing
                     {
                         //targetPos += hit.transform.right * 0.1f;
                     }*/
-                    if (i == points.Count - 1)//Right Point Offset to place the player on Ledge
+                    if (handle.furthestRight == points[i])//Right Point Offset to place the player on Ledge
                     {
                         targetPos -= hit.transform.right * 0.5f;
                     }
