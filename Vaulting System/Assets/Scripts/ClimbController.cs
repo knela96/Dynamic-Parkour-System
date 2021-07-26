@@ -468,7 +468,7 @@ namespace Climbing
                 return null;
 
             Neighbour retPoint = null;
-            float minDist = float.PositiveInfinity;
+            float minAngle = float.PositiveInfinity;
 
             for (int p = 0; p < candidatePoints.Count; p++)
             {
@@ -476,18 +476,16 @@ namespace Climbing
 
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;
                 Vector3 pointDirection = from.transform.InverseTransformDirection(direction);
-                Vector2 angles = pointConnection.IsDirectionAngleValid(inputDirection, pointDirection);
 
-                if (angles != Vector2.zero)
+                //This returns the angle between input and target direction
+                float angle = Mathf.Acos(Vector3.Dot(inputDirection.normalized, pointDirection.normalized)) * Mathf.Rad2Deg;
+
+                //Stores closest target with angle difference between 40 degrees
+                if (angle < minAngle && angle < 40)
                 {
-                    float dist = Mathf.Abs(angles.x - angles.y);
-                    if (dist <= minDist)
-                    {
-                        Debug.Log(dist);
-                        minDist = dist;
-                        retPoint = targetPoint;
-                        xDistance = pointDirection.x;
-                    }
+                    minAngle = angle;
+                    retPoint = targetPoint;
+                    xDistance = pointDirection.x;
                 }
             }
 
