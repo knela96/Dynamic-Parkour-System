@@ -210,7 +210,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 19336670}
-  m_LocalRotation: {x: -0.03941492, y: -0.0642149, z: 0.0041430625, w: 0.9971489}
+  m_LocalRotation: {x: -0.039414972, y: -0.06421491, z: 0.00414306, w: 0.9971489}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -377,7 +377,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44508075}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.502, y: 3.505, z: -0.28999996}
+  m_LocalPosition: {x: 4.17, y: -0.02, z: -1.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &47054554
 Transform:
   m_ObjectHideFlags: 0
@@ -539,7 +539,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68766844}
   m_LocalRotation: {x: -0.021270776, y: -0.0641289, z: 0.005310412, w: 0.9977008}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.5826178, y: -4.163305, z: -7.9117627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1706528311}
@@ -1603,7 +1603,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310059464}
   m_LocalRotation: {x: 0.05183023, y: 0.066304006, z: -0.0034488074, w: 0.9964465}
-  m_LocalPosition: {x: 1.82, y: 1.8215245, z: -11.710026}
+  m_LocalPosition: {x: 0.36, y: 5.1415243, z: -3.140026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 68766845}
@@ -2014,7 +2014,7 @@ GameObject:
   - component: {fileID: 339584573}
   m_Layer: 0
   m_Name: Cube (14)
-  m_TagString: Untagged
+  m_TagString: Reach
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2027,7 +2027,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 339584571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.56, y: -0.81, z: -20.17}
+  m_LocalPosition: {x: -4.56, y: -0.83, z: -20.17}
   m_LocalScale: {x: 4.8227134, y: 1, z: 2.1642}
   m_Children: []
   m_Father: {fileID: 183349923}
@@ -3278,7 +3278,7 @@ GameObject:
   - component: {fileID: 574570906}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Reach
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4509,7 +4509,7 @@ GameObject:
   - component: {fileID: 886569013}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Reach
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4678,7 +4678,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929263322}
-  m_LocalRotation: {x: -0.057498172, y: -0.06427947, z: 0.0029774273, w: 0.9962697}
+  m_LocalRotation: {x: -0.057498213, y: -0.064279504, z: 0.0029774264, w: 0.9962697}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5073,8 +5073,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.0059298426, y: 0.0020495774, z: -0.000012153909, w: 0.99998033}
-  m_LocalPosition: {x: 1.82, y: 1.8215245, z: -11.710026}
+  m_LocalRotation: {x: 0.005929796, y: 0.0020495513, z: -0.000012153662, w: 0.99998033}
+  m_LocalPosition: {x: 0.36, y: 5.1415243, z: -3.140026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6890,7 +6890,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1206430318}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.18, y: 0.6, z: -9.55}
+  m_LocalPosition: {x: 0.72, y: 3.92, z: -0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 142719217}
@@ -8862,7 +8862,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585646068}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.82, y: 0.1, z: -7.69}
+  m_LocalPosition: {x: 0.36, y: 3.42, z: 0.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1632943568}
@@ -8966,7 +8966,7 @@ MonoBehaviour:
   jumpForce: 5
   fallForce: 4
   enableFeetIK: 1
-  heightFromGroundRaycast: 0.88
+  heightFromGroundRaycast: -0.03
   raycastDownDistance: 0.5
   environmentLayer:
     serializedVersion: 2
@@ -8978,7 +8978,7 @@ MonoBehaviour:
   rightFootAnimVariableName: RightFootCurve
   useProIKFeature: 1
   showDebug: 0
-  inBoundaries: 0
+  limitMovement: 0
 --- !u!114 &1585646075
 MonoBehaviour:
   m_ObjectHideFlags: 0

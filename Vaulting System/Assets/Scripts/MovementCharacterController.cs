@@ -27,7 +27,7 @@ public class MovementCharacterController : MonoBehaviour
     private float lastPelvisPositionY, lastLeftFootPosition, lastRightFootPosition;
     [Header("Feet IK")]
     public bool enableFeetIK = true;
-    [Range(0, 2f)][SerializeField] private float heightFromGroundRaycast = 1.4f;
+    [SerializeField] private float heightFromGroundRaycast = -0.03f;
     [Range(0, 2f)] [SerializeField] private float raycastDownDistance = 1.5f;
     [SerializeField] private LayerMask environmentLayer;
     [SerializeField] private float pelvisOffset = 0f;
@@ -39,7 +39,7 @@ public class MovementCharacterController : MonoBehaviour
 
     public bool useProIKFeature = false;
     public bool showDebug = true;
-    public bool inBoundaries = false;
+    public bool limitMovement = false;
 
     MovementState currentState;
 
@@ -74,6 +74,13 @@ public class MovementCharacterController : MonoBehaviour
 
         if (!controller.dummy)
         {
+            limitMovement = CheckBoundaries();
+
+            if(limitMovement && Input.GetKeyDown(KeyCode.Space))
+            {
+                anim.CrossFade("Jump Down", 0.2f);
+            }
+
             ApplyInputMovement();
         }
 
@@ -119,9 +126,7 @@ public class MovementCharacterController : MonoBehaviour
             velocity.Normalize();
         }
 
-        //inBoundaries = CheckBoundaries();
-
-        if (velocity.magnitude > 0/* && inBoundaries*/)
+        if (velocity.magnitude > 0)
         {
             if (controller.inSlope)
             {
@@ -144,13 +149,48 @@ public class MovementCharacterController : MonoBehaviour
 
     public bool CheckBoundaries()
     {
-        Vector3 origin = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
-        Debug.DrawLine(origin, origin + Vector3.down * 1);
-        if (Physics.Raycast(origin, Vector3.down, 1))
-        {
-            return true;
-        }
+        Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0,0.5f, 0);
+        //Debug.DrawLine(origin, origin + Vector3.down * 1);
+        //Debug.DrawLine(origin + transform.right * 0.25f,  origin + transform.right * 0.25f + Vector3.down * 1);
+        //Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
 
+        if (!Physics.Raycast(origin, Vector3.down, 1) ||
+            !Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) ||
+            !Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1))
+        {
+            Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
+            //Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
+
+            RaycastHit hit1;
+            if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))
+            {
+                //Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
+
+                RaycastHit hit2;
+                RaycastHit hit3;
+                Physics.Raycast(origin2 + transform.right * 0.05f, -transform.forward, out hit2, 1);
+                Physics.Raycast(origin2 + transform.right * -0.05f, -transform.forward, out hit3, 1);
+
+                if (hit2.normal == Vector3.zero)
+                    hit2.normal = hit1.normal;
+
+                if (hit3.normal == Vector3.zero)
+                    hit3.normal = hit1.normal;
+
+                Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
+                float vel = Vector3.Dot(velocity, right); //We get the projection of velocity vector to the tangent
+
+
+                //if (hit1.normal != hit2.normal || hit1.normal != hit3.normal)
+                if ((vel < 0.2 && vel > -0.2) || hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
+                    vel = 0;
+
+                velocity = right * vel;
+
+                return true;
+
+            }
+        }
         return false;
     }
 
