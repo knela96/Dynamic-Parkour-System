@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Climbing/Vaulting Reach Action")]
 public class ActionVaultReach : Action
 {
+    public float midHeight;
     public float maxHeight;
 }

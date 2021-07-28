@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VaultReach
   m_EditorClassIdentifier: 
   clip: {fileID: -203655887218126122, guid: 590a8269c187e5449987b96c6ef069ea, type: 3}
-  kneeRaycastOrigin: {x: 0, y: 0.05, z: 0}
+  kneeRaycastOrigin: {x: 0, y: 0.5, z: 0}
   kneeRaycastLength: 1
   landOffset: 0.15
   startDelay: 0
@@ -21,4 +21,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   tag: Reach
-  maxHeight: 1.2
+  midHeight: 1.2
+  maxHeight: 2

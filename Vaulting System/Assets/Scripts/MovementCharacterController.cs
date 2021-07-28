@@ -21,6 +21,7 @@ public class MovementCharacterController : MonoBehaviour
     public float RunSpeed;
     public float jumpForce;
     public float fallForce;
+    float timeDrop = 0;
 
     private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
     Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -76,9 +77,11 @@ public class MovementCharacterController : MonoBehaviour
         {
             limitMovement = CheckBoundaries();
 
-            if(limitMovement && Input.GetKeyDown(KeyCode.Space))
+            //Drop if Space or moving drop direction furing 0.2s
+            if (limitMovement && (Input.GetKeyDown(KeyCode.Space) || timeDrop > 0.2f))
             {
-                anim.CrossFade("Jump Down", 0.2f);
+                anim.CrossFade("Jump Down", 0.1f);
+                timeDrop = -1;
             }
 
             ApplyInputMovement();
@@ -91,6 +94,7 @@ public class MovementCharacterController : MonoBehaviour
         }
         else
         {
+            timeDrop = 0;
             OnFall();
         }
     }
@@ -149,48 +153,72 @@ public class MovementCharacterController : MonoBehaviour
 
     public bool CheckBoundaries()
     {
+        if (timeDrop == -1)
+            return false;
+
+
+        bool ret = false;
         Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0,0.5f, 0);
         //Debug.DrawLine(origin, origin + Vector3.down * 1);
         //Debug.DrawLine(origin + transform.right * 0.25f,  origin + transform.right * 0.25f + Vector3.down * 1);
         //Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
+        if (!Physics.Raycast(origin, Vector3.down, 1))
+            ret = CheckSurfaceBoundary(origin);
+        if (!Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) && ret == false)
+            ret = CheckSurfaceBoundary(origin + transform.right * 0.25f);
+        if (!Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1) && ret == false)
+            ret = CheckSurfaceBoundary(origin + transform.right * -0.25f);
 
-        if (!Physics.Raycast(origin, Vector3.down, 1) ||
-            !Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) ||
-            !Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1))
+        if (ret == false)
+            timeDrop = 0;
+
+        return ret;
+    }
+
+    private bool CheckSurfaceBoundary(Vector3 origin)
+    {
+        Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
+        //Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
+
+        RaycastHit hit1;
+        if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))
         {
-            Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
-            //Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
+            //Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
 
-            RaycastHit hit1;
-            if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))
+            RaycastHit hit2;
+            RaycastHit hit3;
+            Physics.Raycast(origin2 + transform.right * 0.05f, -transform.forward, out hit2, 1);
+            Physics.Raycast(origin2 + transform.right * -0.05f, -transform.forward, out hit3, 1);
+
+            if (hit2.normal == Vector3.zero)
+                hit2.normal = hit1.normal;
+
+            if (hit3.normal == Vector3.zero)
+                hit3.normal = hit1.normal;
+
+            Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
+            float vel = Vector3.Dot(velocity, right); //We get the projection of velocity vector to the tangent
+
+            if (vel < 0.4 && vel > -0.4 && velocity.magnitude > 0.1f)
             {
-                //Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
-
-                RaycastHit hit2;
-                RaycastHit hit3;
-                Physics.Raycast(origin2 + transform.right * 0.05f, -transform.forward, out hit2, 1);
-                Physics.Raycast(origin2 + transform.right * -0.05f, -transform.forward, out hit3, 1);
-
-                if (hit2.normal == Vector3.zero)
-                    hit2.normal = hit1.normal;
-
-                if (hit3.normal == Vector3.zero)
-                    hit3.normal = hit1.normal;
-
-                Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
-                float vel = Vector3.Dot(velocity, right); //We get the projection of velocity vector to the tangent
-
-
-                //if (hit1.normal != hit2.normal || hit1.normal != hit3.normal)
-                if ((vel < 0.2 && vel > -0.2) || hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
-                    vel = 0;
-
-                velocity = right * vel;
-
-                return true;
-
+                //Debug.DrawLine(origin, origin + Vector3.down * 3);
+                if (Physics.Raycast(origin, Vector3.down, 3, environmentLayer.value))
+                    timeDrop += Time.deltaTime;
+                vel = 0;
             }
+            else
+            {
+                timeDrop = 0;
+            }
+
+            if (hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
+                vel = 0;
+
+            velocity = right * vel;
+
+            return true;
         }
+
         return false;
     }
 

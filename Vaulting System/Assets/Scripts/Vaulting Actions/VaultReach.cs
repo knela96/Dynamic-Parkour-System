@@ -7,12 +7,16 @@ namespace Climbing
     public class VaultReach : VaultAction
     {
         float maxHeight = 0;
+        float midHeight = 0;
+
+        float height = 0;
 
         public VaultReach(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
             ActionVaultReach action = (ActionVaultReach)_actionInfo;
 
             maxHeight = action.maxHeight;
+            midHeight = action.midHeight;
         }
 
         public override bool CheckAction()
@@ -32,12 +36,17 @@ namespace Climbing
                     RaycastHit hit2;
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
                     {
-                        if (hit2.point.y - vaultingController.transform.position.y > maxHeight)
+                        height = hit2.point.y - vaultingController.transform.position.y;
+                        if (height > maxHeight)
                             return false;
 
                         if (hit2.collider)
                         {
-                            controller.characterAnimation.animator.CrossFade("Reach", 0.1f);
+                            if(height <= 1)
+                                controller.characterAnimation.animator.CrossFade("Reach", 0.1f);
+                            else
+                                controller.characterAnimation.animator.CrossFade("Reach High", 0.1f);
+
                             isVaulting = true;
                             startPos = vaultingController.transform.position;
                             startRot = vaultingController.transform.rotation;
@@ -67,14 +76,18 @@ namespace Climbing
                 vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
                 vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
 
-                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach"))
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach") || animator.GetCurrentAnimatorStateInfo(0).IsName("Reach High"))
                 {
-                    vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
+                    if (height <= 1)
+                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
+                    else
+                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.2f);
 
                     if (animator.IsInTransition(0))
                     {
                         controller.EnableController();
                         isVaulting = false;
+                        height = 0;
                         ret = false;
                     }
                 }
