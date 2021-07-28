@@ -13,17 +13,24 @@ public class JumpPredictionController : MonoBehaviour
     public float maxTime = 2.0f;
 
     float turnSmoothVelocity;
+    ThirdPersonController controller;
 
     Vector3 origin;
     Vector3 target;
+    float distance = 0;
 
     public bool showDebug = false;
 
     bool move = false;
 
-    protected float animationTime = 0;
+    protected float actualSpeed = 0;
 
     public int accuracy = 50;
+
+    private void Start()
+    {
+        controller = GetComponent<ThirdPersonController>();
+    }
 
     void OnDrawGizmos()
     {
@@ -51,21 +58,39 @@ public class JumpPredictionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hasArrived() && Input.GetKeyDown(KeyCode.Space))
+        {
+            //FINDPOINTS
+            
+            
+            
+            
+            if(SetParabola(transform.position, GameObject.Find("Target").transform.position))
+            {
+                controller.DisableController();
+                controller.characterAnimation.animator.CrossFade("Predicted Jump", 0.1f);
+            }
+        }
+
+        if (!hasArrived())
+            FollowParabola(0.7f);
+
     }
 
-    public void FollowParabola(float speed)
+    public void FollowParabola(float length)
     {
         if (move == true)
         {
-            if (animationTime > 1.0f)
+            if (actualSpeed >= 1.0f)
             {
-                animationTime = 0.0f;
+                actualSpeed = 0.0f;
+                controller.EnableController();
                 move = false;
             }
             else
             {
-                animationTime += Time.deltaTime * speed;
-                transform.position = SampleParabola(origin, target, maxHeight, animationTime);
+                actualSpeed += Time.deltaTime / length;
+                transform.position = SampleParabola(origin, target, maxHeight, actualSpeed);
 
                 //Rotate Mesh to Movement
                 Vector3 travelDirection = target - origin;
@@ -93,7 +118,7 @@ public class JumpPredictionController : MonoBehaviour
         target = end.position;
         move = true; 
         
-        animationTime = 0.0f;
+        actualSpeed = 0.0f;
 
         return true;
     }
@@ -102,15 +127,16 @@ public class JumpPredictionController : MonoBehaviour
     {
         Vector2 a = new Vector2(start.x, start.z);
         Vector2 b = new Vector2(end.x, end.z);
+        distance = Vector2.Distance(a, b);
 
-        if (end.y - start.y > maxHeight || (Vector2.Distance(a, b) > maxDistance))
-            return false;
+       if (end.y - start.y > maxHeight || ( distance > maxDistance))
+           return false;
 
         origin = start;
         target = end;
         move = true;
 
-        animationTime = 0.0f;
+        actualSpeed = 0.0f;
 
         return true;
     }

@@ -299,7 +299,7 @@ namespace Climbing
             {
                 bool climb = false;
                 
-                //Check if can climb to ground
+                //Check if can climb on surface
                 if (vertical > 0)
                     climb = ClimbFromLedge();
 

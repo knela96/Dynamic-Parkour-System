@@ -49,8 +49,6 @@ public class MovementCharacterController : MonoBehaviour
     public event OnLandedDelegate OnLanded;
     public event OnFallDelegate OnFall;
 
-    //public CharacterController charactercontroller;
-
 
     #endregion
     // Start is called before the first frame update
@@ -65,8 +63,6 @@ public class MovementCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //charactercontroller.Move(Velocity.normalized * speed * Time.deltaTime);
-
         if (!controller.dummy && controller.isGrounded)
         {
             EnableFeetIK();
@@ -86,6 +82,8 @@ public class MovementCharacterController : MonoBehaviour
 
             ApplyInputMovement();
         }
+
+
 
         if (controller.isGrounded)
         {
@@ -159,9 +157,7 @@ public class MovementCharacterController : MonoBehaviour
 
         bool ret = false;
         Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0,0.5f, 0);
-        //Debug.DrawLine(origin, origin + Vector3.down * 1);
-        //Debug.DrawLine(origin + transform.right * 0.25f,  origin + transform.right * 0.25f + Vector3.down * 1);
-        //Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
+        
         if (!Physics.Raycast(origin, Vector3.down, 1))
             ret = CheckSurfaceBoundary(origin);
         if (!Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) && ret == false)
@@ -172,18 +168,28 @@ public class MovementCharacterController : MonoBehaviour
         if (ret == false)
             timeDrop = 0;
 
+        if (showDebug)
+        {
+            Debug.DrawLine(origin, origin + Vector3.down * 1);
+            Debug.DrawLine(origin + transform.right * 0.25f, origin + transform.right * 0.25f + Vector3.down * 1);
+            Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
+            Debug.DrawLine(origin, origin + Vector3.down * 3);
+        }
+
         return ret;
     }
 
     private bool CheckSurfaceBoundary(Vector3 origin)
     {
         Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
-        //Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
+        if (showDebug)
+            Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
 
-        RaycastHit hit1;
+            RaycastHit hit1;
         if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))
         {
-            //Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
+            if (showDebug)
+                Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
 
             RaycastHit hit2;
             RaycastHit hit3;
@@ -201,7 +207,6 @@ public class MovementCharacterController : MonoBehaviour
 
             if (vel < 0.4 && vel > -0.4 && velocity.magnitude > 0.1f)
             {
-                //Debug.DrawLine(origin, origin + Vector3.down * 3);
                 if (Physics.Raycast(origin, Vector3.down, 3, environmentLayer.value))
                     timeDrop += Time.deltaTime;
                 vel = 0;
