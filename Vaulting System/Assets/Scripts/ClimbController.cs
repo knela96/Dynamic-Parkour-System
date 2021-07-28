@@ -173,7 +173,7 @@ namespace Climbing
                         targetRot = Quaternion.identity;
                     }
                 }
-                if (Input.GetKey(KeyCode.C) && !characterController.characterMovement.limitMovement)
+                if (Input.GetKey(KeyCode.C))
                 {
                     characterDetection.FindDropLedgeCollision(out hit);
                     if (hit.collider)
