@@ -5,10 +5,12 @@ using UnityEngine;
 
 namespace Climbing
 {
+
     [System.Serializable]
     public class Point : MonoBehaviour
     {
         public List<Neighbour> neighbours = new List<Neighbour>();
+        public PointType type = PointType.Ledge;
 
         public Neighbour ReturnNeighbour(Point target)
         {
@@ -33,19 +35,18 @@ namespace Climbing
         public Point target;
         public ConnectionType type;
     }
-    [System.Serializable]
-    public class IKPositions
-    {
-        public Transform target;
-        public Transform hint;
-    }
 
     public enum ConnectionType
     {
-        inBetween,
         direct,
-        dismount,
-        fall
+        top
+    }
+
+    public enum PointType
+    {
+        Ledge = 0,
+        Pole,
+        Ground
     }
 }
 

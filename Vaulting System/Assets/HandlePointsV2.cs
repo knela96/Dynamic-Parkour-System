@@ -8,10 +8,10 @@ namespace Climbing
     public class HandlePointsV2 : MonoBehaviour
     {
         [Header("Helper Properties")]
-        public bool dismountPoint;
-        public bool fallPoint;
-        public bool HangingPoints;
         public bool singlePoint;
+
+        public PointType pointType;
+        public bool move = false;
 
         [Header("Update")]
         public bool updatePoints;
@@ -77,6 +77,7 @@ namespace Climbing
 
                 for (int i = 0; i < ps.Length; i++)
                 {
+                    ps[i].type = pointType;
                     pointsInOrder.Add(ps[i]);
                 }
                 return;
@@ -130,7 +131,9 @@ namespace Climbing
                 {
                     GameObject p = Instantiate(pointPrefab, positions[i], furthestLeft.transform.rotation) as GameObject;
                     p.transform.parent = transform;
-                    pointsInOrder.Add(p.GetComponent<Point>());
+                    Point point = p.GetComponent<Point>();
+                    point.type = pointType;
+                    pointsInOrder.Add(point);
                 }
                 else
                 {
@@ -172,6 +175,8 @@ namespace Climbing
 
             furthestLeft = leftPoint.GetComponent<Point>();
             furthestRight = rightPoint.GetComponent<Point>();
+            furthestLeft.type = pointType;
+            furthestRight.type = pointType;
         }
         void CreateIndicators_Single()
         {

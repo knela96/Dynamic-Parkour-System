@@ -38,28 +38,6 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    toTarget = jumpPrediction.SetParabola(transform, GameObject.Find("Target").transform);
-        //
-        //    if (toTarget)
-        //    {
-        //        DisableController();
-        //        characterAnimation.Jump();
-        //    }
-        //}
-
-        //if (!jumpPrediction.hasArrived() && toTarget)
-        //{
-        //    jumpPrediction.FollowParabola();
-        //}
-        //else if (jumpPrediction.hasArrived() && toTarget)
-        //{
-        //    characterAnimation.Land();
-        //    EnableController();
-        //    toTarget = false;
-        //}
-
         if (!dummy && !characterAnimation.RootMotion())
         {
             AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
@@ -101,6 +79,7 @@ public class ThirdPersonController : MonoBehaviour
         Vector3 translation = Vector3.zero;
 
         translation = GroundMovement(vertical, horizontal);
+
         characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
     }
 
@@ -114,12 +93,7 @@ public class ThirdPersonController : MonoBehaviour
 
         if (translation.magnitude > 0)
         {
-            //Get direction with camera rotation
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-
-            //Rotate Mesh to Movement
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            RotatePlayer(direction);
 
             //Move Player to camera directin
             characterAnimation.animator.SetBool("Released", false);
@@ -139,6 +113,16 @@ public class ThirdPersonController : MonoBehaviour
         }
 
         return translation;
+    }
+
+    public void RotatePlayer(Vector3 direction)
+    {
+        //Get direction with camera rotation
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+
+        //Rotate Mesh to Movement
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
     public void Jump()

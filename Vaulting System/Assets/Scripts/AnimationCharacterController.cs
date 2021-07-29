@@ -185,6 +185,11 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetFloat("Horizontal", Mathf.Lerp(animator.GetFloat("Horizontal"), value, Time.deltaTime * 15));
         animator.SetInteger("Climb State", climbstate);
     }
+    public void JumpPrediction(bool state)
+    {
+        controller.characterAnimation.animator.CrossFade("Predicted Jump", 0.1f);
+        animator.SetBool("Crouch", state);
+    }
 
     public void EnableIKSolver()
     {

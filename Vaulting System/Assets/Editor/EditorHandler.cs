@@ -28,9 +28,6 @@ namespace Climbing
                     case ConnectionType.direct:
                         Handles.color = Color.red;
                         break;
-                    case ConnectionType.inBetween:
-                        Handles.color = Color.green;
-                        break;
                 }
 
                 Handles.DrawLine(pos1, pos2);
@@ -64,9 +61,6 @@ namespace Climbing
                 {
                     case ConnectionType.direct:
                         Handles.color = Color.red;
-                        break;
-                    case ConnectionType.inBetween:
-                        Handles.color = Color.green;
                         break;
                 }
 

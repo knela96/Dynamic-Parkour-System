@@ -189,5 +189,20 @@ namespace Climbing
             }
             return Physics.Raycast(transform.position + new Vector3(0,0.1f,0) , Vector3.down, out hit, 0.2f);//0.2f
         }
+
+        public void FindAheadPoints(ref List<HandlePointsV2> list)
+        {
+            Collider[] cols = Physics.OverlapSphere(transform.position, 5, climbLayer.value);
+
+            foreach (var item in cols)
+            {
+                if (Vector3.Dot(item.transform.position, transform.position) > 0)
+                {
+                    HandlePointsV2 handle = item.GetComponentInChildren<HandlePointsV2>();
+                    if (handle)
+                        list.Add(handle);
+                }
+            }
+        }
     }
 }

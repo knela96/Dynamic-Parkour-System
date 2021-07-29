@@ -37,7 +37,6 @@ namespace Climbing
                 GetPoints();
                 CreateDirections();
                 CreateConnections();
-                FindDismountCandidates();
                 RefreshAll();
                 updateConnections = false;
             }
@@ -195,61 +194,7 @@ namespace Climbing
                 }
             }
             return ret;
-        }
-
-        void FindDismountCandidates()
-        {
-            GameObject dismountPrefab = Resources.Load("Dismount") as GameObject;
-            if(dismountPrefab == null)
-            {
-                Debug.Log("No Dismount Prefab Found");
-                return;
-            }
-            HandlePoints[] hp = GetComponentsInChildren<HandlePoints>();
-            List<Point> candidates = new List<Point>();
-
-            for(int i = 0; i < hp.Length; i++)
-            {
-                if(hp[i].dismountPoint)
-                {
-                    candidates.AddRange(hp[i].pointsInOrder);
-                }
-            }
-
-            if (candidates.Count > 0)
-            {
-                GameObject parent = new GameObject();
-                parent.name = "Dismount Points";
-                parent.transform.parent = transform;
-                parent.transform.localPosition = Vector3.zero;
-                parent.transform.position = candidates[0].transform.localPosition;
-
-                foreach(Point p in candidates)
-                {
-                    Transform worldP = p.transform.parent;
-                    GameObject dismountObject = Instantiate(dismountPrefab, worldP.position, worldP.rotation) as GameObject;
-
-                    Vector3 targetPos = worldP.position + ((worldP.forward / 1.6f) + Vector3.up * 1.2f);
-                    dismountObject.transform.position = targetPos;
-
-                    Point dismountPoint = dismountObject.GetComponentInChildren<Point>();
-
-                    Neighbour n = new Neighbour();
-                    n.direction = Vector3.up;
-                    n.target = dismountPoint;
-                    n.type = ConnectionType.dismount;
-                    p.neighbours.Add(n);
-
-                    Neighbour n2 = new Neighbour();
-                    n2.direction = -Vector3.up;
-                    n2.target = p;
-                    n2.type = ConnectionType.dismount;
-                    dismountPoint.neighbours.Add(n2);
-
-                    dismountObject.transform.parent = parent.transform;
-                }
-            }
-        }
+        }        
     }
 
     public class Connection

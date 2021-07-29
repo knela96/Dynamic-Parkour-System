@@ -41,6 +41,7 @@ public class MovementCharacterController : MonoBehaviour
     public bool useProIKFeature = false;
     public bool showDebug = true;
     public bool limitMovement = false;
+    public bool stopMotion = false;
 
     MovementState currentState;
 
@@ -80,7 +81,8 @@ public class MovementCharacterController : MonoBehaviour
                 timeDrop = -1;
             }
 
-            ApplyInputMovement();
+            if(!stopMotion)
+                ApplyInputMovement();
         }
 
 
@@ -181,9 +183,9 @@ public class MovementCharacterController : MonoBehaviour
 
     private bool CheckSurfaceBoundary(Vector3 origin)
     {
-        Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, heightFromGroundRaycast, 0);
+        Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, -0.03f, 0);
         if (showDebug)
-            Debug.DrawLine(origin2, transform.position + new Vector3(0, heightFromGroundRaycast, 0));
+            Debug.DrawLine(origin2, transform.position + new Vector3(0, -0.03f, 0));
 
             RaycastHit hit1;
         if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))

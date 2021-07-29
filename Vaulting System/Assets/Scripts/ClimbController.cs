@@ -42,7 +42,6 @@ namespace Climbing
         public GameObject limitLFoot;
         public GameObject limitRFoot;
 
-        bool dropping = false;
         bool reachedEnd = false;
 
         [Range (0.1f, 1.0f)]
@@ -60,12 +59,12 @@ namespace Climbing
         public string LFootAnimVariableName = "LeftFootCurve";
         public string RFootAnimVariableName = "RightFootCurve";
 
+        bool active = false;
         public bool debug = false;
         public enum ClimbState { None, BHanging, FHanging};
         private ClimbState curClimbState = ClimbState.None;
 
         float horizontalMovement = 0.0f;
-        float lasthorizontalMovement = 0.0f;
 
         // Start is called before the first frame update
         void Start()
@@ -118,33 +117,15 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            //On Ledge
-            if (onLedge && characterController.dummy)
-            {
-                ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
+            //ClimbUpdate();
+        }
 
-                //Dismount from Ledge
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    wallFound = false;
-                    curLedge = null;
-                    targetPoint = null;
-                    currentPoint = null;
-                    curClimbState = ClimbState.None;
-                    characterAnimation.DropLedge((int)curClimbState);
-                    characterController.cameraController.newOffset(false);
-                }
-
-                //Enable Controller when dismount animation ends
-                if (!characterAnimation.animator.GetBool("ClimbAnimations"))
-                {
-                    characterController.EnableController();
-                }
-            }
-
+        public bool ClimbCheck()
+        {
             //Groud
             if (!characterController.dummy)
             {
+                active = false;
                 onLedge = false;
                 RaycastHit hit;
                 if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1)) && !toLedge && !onLedge)
@@ -166,6 +147,7 @@ namespace Climbing
                         characterController.characterAnimation.HangLedge(curClimbState);
                         startTime = 0.0f;
                         endTime = 0.2f;
+                        active = true;
                     }
                     else
                     {
@@ -198,7 +180,37 @@ namespace Climbing
 
                         startTime = 0.3f;
                         endTime = 0.45f;
+                        active = true;
                     }
+                }
+            }
+            return active;
+        }
+
+        public bool ClimbUpdate()
+        {
+            if (!characterAnimation.animator.GetBool("ClimbAnimations") && curLedge == null)
+            {
+                active = false;
+                characterController.EnableController();
+            }
+
+            //On Ledge
+            if (onLedge && characterController.dummy)
+            {
+                ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
+
+                //Dismount from Ledge
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    wallFound = false;
+                    curLedge = null;
+                    onLedge = false;
+                    targetPoint = null;
+                    currentPoint = null;
+                    curClimbState = ClimbState.None;
+                    characterAnimation.DropLedge((int)curClimbState);
+                    characterController.cameraController.newOffset(false);
                 }
             }
 
@@ -244,7 +256,6 @@ namespace Climbing
 
                     curClimbState = ClimbState.None;
                     characterAnimation.DropLedge((int)curClimbState);
-
                 }
 
                 //Dismount
@@ -265,7 +276,7 @@ namespace Climbing
                 {
                     if (matchRotation)
                     {
-                        if(characterAnimation.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= startTime && rotTime <= 1.0f)
+                        if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= startTime && rotTime <= 1.0f)
                         {
                             rotTime += Time.deltaTime / (endTime - startTime - 0.1f);
                             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotTime);
@@ -274,17 +285,22 @@ namespace Climbing
 
                     if (characterAnimation.animator.IsInTransition(0)) //If MatchTarget animation ends, reset default values
                     {
-                        if(curClimbState == ClimbState.None)//Enable controller if climbing animation ends
-                            characterController.EnableController();
-
                         onLedge = true;
                         toLedge = false;
                         jumping = false;
                         leftHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
                         rightHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
+                        
+                        if (curClimbState == ClimbState.None)//Enable controller if climbing animation ends
+                        {
+                            active = false;
+                            onLedge = false;
+                            characterController.EnableController();
+                        }
                     }
                 }
             }
+            return active;
         }
 
         public void ClimbMovement(float vertical, float horizontal)

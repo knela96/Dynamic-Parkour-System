@@ -12,9 +12,11 @@ namespace Climbing
     {
         Nothing = 0,
         Vault_Obstacle = 1 << 0,
-        Vault_Over = 1 << 10,
+        Vault_Over = 1 << 1,
         Slide = 1 << 2,
         Reach = 1 << 3,
+        Climb_Ledge = 1 << 4,
+        Jump_Prediction = 1 << 5
     }
 
     public class VaultingController : MonoBehaviour
@@ -53,12 +55,26 @@ namespace Climbing
                 Action actionInfo = Resources.Load<Action>("Actions/VaultReach");
                 Add(new VaultReach(this, actionInfo));
             }
+            if (vaultActions.HasFlag(VaultActions.Climb_Ledge))
+            {
+                Add(new VaultClimbLedge(this));
+            }
+            if (vaultActions.HasFlag(VaultActions.Jump_Prediction))
+            {
+                Add(new VaultJumpPrediction(this));
+            }
         }
+
 
         // Update is called once per frame
         void Update()
         {
-            if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.C))&& !isVaulting && !controller.dummy)
+            if (!isVaulting)
+            {
+                curAction = null;
+            }
+
+            if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.C)) && !isVaulting)
             {
                 curAction = null;
 
@@ -77,16 +93,12 @@ namespace Climbing
             if (curAction != null && isVaulting)
             {
                 isVaulting = curAction.ExecuteAction();
-                if (!isVaulting)
-                {
-                    curAction = null;
-                }
             }
         }
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (curAction != null && isVaulting)
+            if (curAction != null)
             {
                 curAction.OnAnimatorIK(layerIndex);
             }

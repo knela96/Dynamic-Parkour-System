@@ -25,6 +25,11 @@ namespace Climbing
 
         protected VaultingController vaultingController;
 
+        public VaultAction(VaultingController _vaultingController)
+        {
+            vaultingController = _vaultingController;
+        }
+
         public VaultAction(VaultingController _vaultingController, Action action)
         {
             vaultingController = _vaultingController;
@@ -45,7 +50,7 @@ namespace Climbing
 
         public abstract bool ExecuteAction();
 
-        public abstract void DrawGizmos();
+        public virtual void DrawGizmos() {}
 
         public virtual void OnAnimatorIK(int layerIndex) {}
     }
