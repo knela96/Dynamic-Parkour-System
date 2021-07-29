@@ -79,6 +79,7 @@ namespace Climbing
                     float minRange = float.NegativeInfinity;
                     float minDist = float.PositiveInfinity;
                     Point p = null;
+                    newPoint = false;
 
                     foreach (var item in points)
                     {
@@ -86,7 +87,7 @@ namespace Climbing
                         {
                             foreach (var point in item.pointsInOrder)
                             {
-                                if (point == null || point.type == PointType.Ledge)
+                                if (point == null || point.type == PointType.Ledge || curPoint == point)
                                     continue;
 
                                 Vector3 targetDirection = point.transform.position - transform.position;
@@ -103,7 +104,8 @@ namespace Climbing
                                     minDist = targetDirection.sqrMagnitude;
                                     newPoint = true;
                                 }
-                                else if (curPoint.transform.parent != point.transform.parent && dot > 0.8 && ((dot >= minRange && targetDirection.sqrMagnitude < minDist) || targetDirection.sqrMagnitude < minDist))
+                                //else if (curPoint.transform.parent != point.transform.parent && dot > 0.8 && ((dot >= minRange && targetDirection.sqrMagnitude < minDist) || targetDirection.sqrMagnitude < minDist))
+                                else if (curPoint.transform.parent != point.transform.parent && dot > 0.8 && targetDirection.sqrMagnitude < minDist)
                                 {
                                     p = point;
                                     minRange = dot;
@@ -115,7 +117,7 @@ namespace Climbing
                         }
                     }
 
-                    if (newPoint)
+                    if (newPoint && p != null)
                     {
                         curPoint = p;
 
@@ -160,15 +162,12 @@ namespace Climbing
                 //On MidPoint
                 if (curPoint)
                 {
-                    if (curPoint.type == PointType.Pole)
-                    {
-                        Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-                        if (direction != Vector3.zero)
-                            controller.RotatePlayer(direction);
-                    }
+                    Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+                    if (direction != Vector3.zero)
+                        controller.RotatePlayer(direction);
 
                     //Delay between jumps
-                    if(delay < 0.1f)
+                    if (delay < 0.1f)
                         delay += Time.deltaTime;
                     else
                         JumpUpdate();

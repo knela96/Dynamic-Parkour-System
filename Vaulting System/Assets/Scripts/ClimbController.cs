@@ -93,7 +93,13 @@ namespace Climbing
         private void OnAnimatorIK(int layerIndex)
         {
             if (!onLedge)
+            {
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+                characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
                 return;
+            }
 
             characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             CalculateIKPositions(AvatarIKGoal.LeftHand, ref leftHandPosition);
@@ -117,6 +123,7 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
+            //ClimbCheck();
             //ClimbUpdate();
         }
 
@@ -294,7 +301,6 @@ namespace Climbing
                         if (curClimbState == ClimbState.None)//Enable controller if climbing animation ends
                         {
                             active = false;
-                            onLedge = false;
                             characterController.EnableController();
                         }
                     }

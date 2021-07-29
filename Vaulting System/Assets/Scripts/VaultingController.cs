@@ -98,7 +98,7 @@ namespace Climbing
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (curAction != null)
+            if (curAction != null && isVaulting)
             {
                 curAction.OnAnimatorIK(layerIndex);
             }

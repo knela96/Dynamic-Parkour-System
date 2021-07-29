@@ -18,7 +18,6 @@ public class ThirdPersonController : MonoBehaviour
     private float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
     public Transform camReference;
-    int counter = 0;
     public bool moving = false;
     public bool isGrounded = false;
     public bool isJumping = false;
@@ -57,9 +56,6 @@ public class ThirdPersonController : MonoBehaviour
         RaycastHit hit;
         if (characterDetection.IsGrounded(out hit))
         {
-            if (isJumping)
-                return false;
-
             if (hit.normal != Vector3.up)
             {
                 inSlope = true;
