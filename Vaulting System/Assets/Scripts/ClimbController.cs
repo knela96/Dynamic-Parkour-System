@@ -73,24 +73,21 @@ namespace Climbing
             characterAnimation = characterController.characterAnimation;
         }
 
-        private void OnDrawGizmos()
+        public void onDrawGizmos()
         {
-            if (debug)
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(target, 0.1f);
+            if (targetPoint != null && currentPoint != null)
             {
                 Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(target, 0.1f);
-                if (targetPoint != null && currentPoint != null)
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
-                }
-
-                Gizmos.DrawSphere(HandPosition, 0.1f);
+                Gizmos.DrawSphere(targetPoint.transform.position, 0.1f);
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(currentPoint.transform.position, 0.1f);
             }
+
+            Gizmos.DrawSphere(HandPosition, 0.1f);
         }
-        private void OnAnimatorIK(int layerIndex)
+        public void onAnimatorIK(int layerIndex)
         {
             if (!onLedge)
             {
@@ -118,13 +115,6 @@ namespace Climbing
                 characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
                 characterAnimation.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
             }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            //ClimbCheck();
-            //ClimbUpdate();
         }
 
         public bool ClimbCheck()

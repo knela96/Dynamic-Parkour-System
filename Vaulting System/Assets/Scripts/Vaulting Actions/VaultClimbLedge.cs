@@ -22,5 +22,15 @@ namespace Climbing
         {
             return climbController.ClimbUpdate();
         }
+
+        public override void OnAnimatorIK(int layerIndex)
+        {
+            climbController.onAnimatorIK(layerIndex);
+        }
+
+        public override void DrawGizmos()
+        {
+            climbController.onDrawGizmos();
+        }
     }
 }

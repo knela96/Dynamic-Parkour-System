@@ -157,7 +157,6 @@ namespace Climbing
             }
             else
             {
-
                 Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
                 if (direction != Vector3.zero)
                     controller.RotatePlayer(direction);
@@ -238,33 +237,7 @@ namespace Climbing
             Vector3 result = start + t * travelDirection;
             result.y += (-parabolicT * parabolicT + 1) * height;
 
-            //Vector3 travelDirection = end - start;
-            //Vector3 result = start + t * travelDirection;
-            //result.y += Mathf.Sin(t * Mathf.PI) * height;
-
             return result;
-
-            /*
-            if (Mathf.Abs(start.y - end.y) < 0.1f)
-            {
-                Vector3 travelDirection = end - start;
-                Vector3 result = start + t * travelDirection;
-                result.y += (-parabolicT * parabolicT + 1) * height;
-                return result;
-            }
-            else
-            {
-                Vector3 travelDirection = end - start;
-                //Vector3 levelDirection = end - new Vector3(start.x, end.y, start.z);
-                //Vector3 right = Vector3.Cross(travelDirection, levelDirection);
-                //Vector3 up = Vector3.Cross(right, levelDirection);
-                Vector3 up = Vector3.up;
-                //if (end.y > start.y) up = -up;
-                Vector3 result = start + t * travelDirection;
-                result += ((-parabolicT * parabolicT + 1) * height) * Vector3.up;
-                return result;
-            }
-            */
         }
 
     }
