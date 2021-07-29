@@ -79,6 +79,7 @@ namespace Climbing
                     float minRange = float.NegativeInfinity;
                     float minDist = float.PositiveInfinity;
                     Point p = null;
+                    Point fp = curPoint;
                     newPoint = false;
 
                     foreach (var item in points)
@@ -96,16 +97,15 @@ namespace Climbing
                                 Vector2 d2 = new Vector2(transform.forward.x, transform.forward.z).normalized;
                                 float dot = Vector3.Dot(d1, d2);
 
-                                if (curPoint == null)
+                                if (fp == null)//First Point
                                 {
-                                    p = point;
-                                    curPoint = p;
-                                    minRange = dot;
-                                    minDist = targetDirection.sqrMagnitude;
-                                    newPoint = true;
+                                    fp = point;
                                 }
-                                //else if (curPoint.transform.parent != point.transform.parent && dot > 0.8 && ((dot >= minRange && targetDirection.sqrMagnitude < minDist) || targetDirection.sqrMagnitude < minDist))
-                                else if (curPoint.transform.parent != point.transform.parent && dot > 0.8 && targetDirection.sqrMagnitude < minDist)
+
+                                if (fp.transform.parent == point.transform.parent)
+                                    continue;
+
+                                if (dot > 0.8 && targetDirection.sqrMagnitude < minDist)
                                 {
                                     p = point;
                                     minRange = dot;
@@ -119,10 +119,13 @@ namespace Climbing
 
                     if (newPoint && p != null)
                     {
-                        curPoint = p;
+                        if (curPoint)
+                            Debug.Log(curPoint.transform.parent.parent.name);
 
-                        if (SetParabola(transform.position, curPoint.transform.position))
+                        if (SetParabola(transform.position, p.transform.position))
                         {
+                            curPoint = p;
+
                             switch (curPoint.type)
                             {
                                 case PointType.Pole:
@@ -154,30 +157,27 @@ namespace Climbing
             }
             else
             {
-                //Has arribed to destiny
-                if (!controller.characterMovement.stopMotion)
-                    return false;
 
+                Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+                if (direction != Vector3.zero)
+                    controller.RotatePlayer(direction);
 
                 //On MidPoint
                 if (curPoint)
                 {
-                    Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-                    if (direction != Vector3.zero)
-                        controller.RotatePlayer(direction);
-
-                    //Delay between jumps
+                    //Delay between allowing new jump
                     if (delay < 0.1f)
                         delay += Time.deltaTime;
                     else
                         JumpUpdate();
 
-
-                    return true;
+                    //Has arribed to destiny
+                    if (curPoint.type != PointType.Ground)
+                        return true;
                 }
-            }
 
-            return false;
+                return false;
+            }
         }
 
         public void FollowParabola(float length)

@@ -301,6 +301,7 @@ namespace Climbing
                         if (curClimbState == ClimbState.None)//Enable controller if climbing animation ends
                         {
                             active = false;
+                            onLedge = false;
                             characterController.EnableController();
                         }
                     }
