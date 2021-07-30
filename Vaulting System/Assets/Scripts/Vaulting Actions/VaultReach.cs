@@ -28,7 +28,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && !isVaulting)
             {
                 RaycastHit hit;
                 Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
@@ -97,7 +97,8 @@ namespace Climbing
                     else
                         vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0.11f, 0.2f);
 
-                    if (animator.IsInTransition(0))
+
+                    if (animator.IsInTransition(0) && vaultTime > 0.5f)
                     {
                         controller.EnableController();
                         isVaulting = false;

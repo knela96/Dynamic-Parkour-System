@@ -12,7 +12,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && !isVaulting)
             {
                 RaycastHit hit;
                 Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;

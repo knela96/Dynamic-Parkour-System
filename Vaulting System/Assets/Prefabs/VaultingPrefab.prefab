@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532925082188}
-  m_LocalRotation: {x: -0.035692062, y: -0.06406502, z: 0.0043736366, w: 0.9972977}
+  m_LocalRotation: {x: -0.037649352, y: -0.06415534, z: 0.004253305, w: 0.99722046}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -101,8 +101,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532959275495}
-  m_LocalRotation: {x: 0.028890345, y: 0.0021832495, z: -0.00006310133, w: 0.9995802}
-  m_LocalPosition: {x: 0.006939292, y: 1.7189878, z: -2.4620214}
+  m_LocalRotation: {x: 0.026928265, y: 0.0021011971, z: -0.000056602243, w: 0.99963516}
+  m_LocalPosition: {x: 0, y: 1.8864899, z: -4.211672}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5556358533142032527}
@@ -231,7 +231,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533096778056}
-  m_LocalRotation: {x: -0.01759376, y: -0.06397514, z: 0.005535151, w: 0.9977811}
+  m_LocalRotation: {x: -0.019552127, y: -0.0640676, z: 0.0054164752, w: 0.9977394}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -974,7 +974,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358534259412728}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.36, y: 0.5, z: -1.8600006}
+  m_LocalPosition: {x: 0.36, y: 0.5, z: -1.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533204089959}
@@ -1395,9 +1395,9 @@ MonoBehaviour:
   BracedHangOffset: {x: 0, y: 0.12, z: -0.15}
   originHandIKBracedOffset: {x: 0.08, y: 1.65, z: -0.25}
   originHandIKFreeOffset: {x: 0.04, y: 2.31, z: -0.25}
-  originFootIKOffset: {x: 0, y: 0, z: -0.12}
+  originFootIKOffset: {x: 0, y: 0, z: -0.41}
   IKHandRayLength: 0.73
-  IKFootRayLength: 0.7
+  IKFootRayLength: 0.85
   distanceToLedgeBraced: 0.27
   distanceToLedgeFree: 0.07
   limitLHand: {fileID: 5418328446914608113}
