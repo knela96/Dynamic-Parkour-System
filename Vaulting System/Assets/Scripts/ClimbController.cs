@@ -286,7 +286,9 @@ namespace Climbing
                         jumping = false;
                         leftHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
                         rightHandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).position;
-                        
+                        leftFootPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftFoot).position;
+                        rightFootPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightFoot).position;
+
                         if (curClimbState == ClimbState.None)//Enable controller if climbing animation ends
                         {
                             active = false;
