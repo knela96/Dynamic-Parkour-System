@@ -61,12 +61,6 @@ namespace Climbing
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
-
         public void JumpUpdate()
         {
             if (hasArrived())
@@ -95,7 +89,7 @@ namespace Climbing
 
                                 Vector2 d1 = new Vector2(targetDirection.x, targetDirection.z).normalized;
                                 Vector2 d2 = new Vector2(transform.forward.x, transform.forward.z).normalized;
-                                float dot = Vector3.Dot(d1, d2);
+                                float dot = Vector2.Dot(d1, d2);
 
                                 if (fp == null)//First Point
                                 {
@@ -105,7 +99,7 @@ namespace Climbing
                                 if (fp.transform.parent == point.transform.parent)
                                     continue;
 
-                                if (dot > 0.8 && targetDirection.sqrMagnitude < minDist)
+                                if (dot > 0.9 && targetDirection.sqrMagnitude < minDist && minRange - dot < 0.1f )
                                 {
                                     p = point;
                                     minRange = dot;
