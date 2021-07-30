@@ -158,12 +158,14 @@ public class ThirdPersonController : MonoBehaviour
         characterMovement.SetKinematic(true);
         characterMovement.SetVelocity(Vector3.zero);
         characterMovement.enableFeetIK = false;
+        characterAnimation.animator.SetBool("Released", true);
         collider.isTrigger = true; 
         dummy = true;
     }
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
+        characterAnimation.animator.SetBool("Released", false);
         characterMovement.ApplyGravity();
         collider.isTrigger = false;
         dummy = false;
