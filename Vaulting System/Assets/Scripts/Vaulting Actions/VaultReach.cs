@@ -34,10 +34,11 @@ namespace Climbing
                     Vector3 origin2 = hit.point + (-hit.normal * (landOffset)) + new Vector3(0, 2, 0);
 
                     RaycastHit hit2;
-                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
+                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10, layer.value)) //Ground Hit
                     {
                         height = hit2.point.y - vaultingController.transform.position.y;
-                        if (height > maxHeight)
+
+                        if (hit.collider.gameObject.tag != tag || height > maxHeight || hit2.collider != hit.collider)
                             return false;
 
                         if (hit2.collider)

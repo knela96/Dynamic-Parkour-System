@@ -113,9 +113,6 @@ namespace Climbing
 
                     if (newPoint && p != null)
                     {
-                        if (curPoint)
-                            Debug.Log(curPoint.transform.parent.parent.name);
-
                         if (SetParabola(transform.position, p.transform.position))
                         {
                             curPoint = p;

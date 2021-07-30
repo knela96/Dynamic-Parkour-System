@@ -454,7 +454,7 @@ namespace Climbing
                 if (wallFound && curClimbState != ClimbState.BHanging)
                 {
                     curClimbState = ClimbState.BHanging;
-                    Vector3 offset = new Vector3(0, 0.15f, 0.0f);
+                    Vector3 offset = new Vector3(0, 0f, 0.0f);
                     HandPosition = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).position;
                     HandPosition.y = curLedge.transform.position.y + offset.y;
                 }
@@ -485,7 +485,11 @@ namespace Climbing
 
             for (int p = 0; p < candidatePoints.Count; p++)
             {
+
                 Neighbour targetPoint = candidatePoints[p];
+
+                if (candidatePoints[p].target == null)
+                    continue;
 
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;
                 Vector3 pointDirection = from.transform.InverseTransformDirection(direction);
@@ -583,14 +587,14 @@ namespace Climbing
             {
                 if (translation < 0)
                 {
-                    curLedge = hit1.collider.transform.parent.gameObject;
+                    curLedge = hit1.collider.transform.gameObject;
                     ret = true;
                 }
             }
             if (characterController.characterDetection.ThrowHandRayToLedge(origin2, Vector3.forward, IKHandRayLength, out hit2)){
                 if (translation > 0)
                 {
-                    curLedge = hit2.collider.transform.parent.gameObject;
+                    curLedge = hit2.collider.transform.gameObject;
                     ret = true;
                 }
             }
@@ -653,13 +657,16 @@ namespace Climbing
         {
             Vector3 targetPos = Vector3.zero;
 
-            curLedge = hit.transform.parent.gameObject;
-            HandlePointsV2 handle = hit.transform.parent.GetComponentInChildren<HandlePointsV2>();
+            curLedge = hit.transform.gameObject;
+            HandlePointsV2 handle = curLedge.GetComponentInChildren<HandlePointsV2>();
             List<Point> points = handle.pointsInOrder;
 
             float dist = float.PositiveInfinity;
             for (int i = 0; i < points.Count; i++)
             {
+                if (points[i] == null)
+                    continue;
+
                 float point2root = Vector3.Distance(points[i].transform.position, transform.position);
 
                 if (point2root < dist)

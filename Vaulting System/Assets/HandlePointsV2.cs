@@ -192,6 +192,9 @@ namespace Climbing
             float minDist = float.PositiveInfinity;
             for (int i = 0; i < pointsInOrder.Count; i++)
             {
+                if (pointsInOrder[i] == null)
+                    continue;
+
                 float dist = Vector3.Distance(pointsInOrder[i].transform.position, playerPos);
                 if (dist < minDist)
                 {

@@ -20,6 +20,9 @@ namespace Climbing
             
             for (int i = 0; i < t.ConnectedPoints.Count; i++)
             {
+                if (t.ConnectedPoints[i].target1 == null || t.ConnectedPoints[i].target2 == null)
+                    continue;
+
                 Vector3 pos1 = t.ConnectedPoints[i].target1.transform.position;
                 Vector3 pos2 = t.ConnectedPoints[i].target2.transform.position;
 
