@@ -10,7 +10,6 @@ namespace Climbing
         private Quaternion leftHandRotation;
 
         private string HandAnimVariableName;
-        [Range(0, 1f)] private float handToIKPositionSpeed;
 
         public VaultObstacle(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
@@ -18,7 +17,6 @@ namespace Climbing
 
             //Loads Action Info
             HandAnimVariableName = action.HandAnimVariableName;
-            handToIKPositionSpeed = action.handToIKPositionSpeed;
         }
 
         public override bool CheckAction()

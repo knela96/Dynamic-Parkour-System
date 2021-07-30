@@ -11,12 +11,19 @@ namespace Climbing
 
         float height = 0;
 
+
+        private Vector3 leftHandPosition;
+
+        private string HandAnimVariableName;
+
         public VaultReach(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
             ActionVaultReach action = (ActionVaultReach)_actionInfo;
 
             maxHeight = action.maxHeight;
             midHeight = action.midHeight;
+
+            HandAnimVariableName = action.HandAnimVariableName;
         }
 
         public override bool CheckAction()
@@ -31,7 +38,7 @@ namespace Climbing
                     if (hit.collider.gameObject.tag != tag)
                         return false;
 
-                    Vector3 origin2 = hit.point + (-hit.normal * (landOffset)) + new Vector3(0, 2, 0);
+                    Vector3 origin2 = hit.point + (-hit.normal * (landOffset)) + new Vector3(0, 5, 0);
 
                     RaycastHit hit2;
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10, layer.value)) //Ground Hit
@@ -56,6 +63,12 @@ namespace Climbing
                             vaultTime = startDelay;
                             animLength = clip.length + startDelay;
                             controller.DisableController();
+
+                            //Calculate Hand Rest Position n Rotation
+                            Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
+                            leftHandPosition = hit.point;
+                            leftHandPosition.y = hit2.point.y; 
+                            leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
 
                             return true;
                         }
@@ -82,7 +95,7 @@ namespace Climbing
                     if (height <= 1)
                         vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
                     else
-                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.2f);
+                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0.11f, 0.2f);
 
                     if (animator.IsInTransition(0))
                     {
@@ -97,9 +110,20 @@ namespace Climbing
             return ret;
         }
 
+        public override void OnAnimatorIK(int layerIndex)
+        {
+            if (height <= 1 || !isVaulting)
+                return;
+
+            float curve = animator.GetFloat(HandAnimVariableName);
+
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
+        }
+
         public override void DrawGizmos()
         {
-            Gizmos.DrawSphere(targetPos, 10);
+            Gizmos.DrawSphere(leftHandPosition, 10);
         }
     }
 }

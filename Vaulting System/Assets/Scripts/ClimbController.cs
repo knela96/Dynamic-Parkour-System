@@ -260,7 +260,6 @@ namespace Climbing
                     characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Drop To Bracedhang"))
                 {
                     matchingTarget = true;
-                    matchRotation = false;
                     rotTime = 0;
 
                     if (wallFound)
@@ -417,9 +416,9 @@ namespace Climbing
                 {
                     if (toPoint.type == ConnectionType.direct) //Jump Reachable
                     {
-                        target = toPoint.target.transform.position;
-                        targetRot = toPoint.target.transform.rotation;
                         curLedge = toPoint.target.transform.parent.parent.gameObject;
+                        target = toPoint.target.transform.position;
+                        targetRot = curLedge.transform.rotation;
                         targetPoint = toPoint.target;
 
                         //if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestLeft)//Left Point

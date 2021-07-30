@@ -7,4 +7,6 @@ public class ActionVaultReach : Action
 {
     public float midHeight;
     public float maxHeight;
+
+    public string HandAnimVariableName;
 }

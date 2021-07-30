@@ -65,7 +65,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
-        //controller.characterMovement.enableFeetIK = true;
+        controller.characterMovement.enableFeetIK = true;
     }
 
     public void HangLedge(ClimbController.ClimbState state)
@@ -101,7 +101,6 @@ public class AnimationCharacterController : MonoBehaviour
             }
             else if (direction.x == 0 && direction.y == 1)
             {
-
                 animator.CrossFade("Braced Hang Hop Up", 0.2f);
                 startTime = 0.3f;
                 endTime = 0.48f;
@@ -171,7 +170,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.CrossFade("Drop To Bracedhang", 0.1f);
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
-        SetAnimVelocity(Vector3.forward);
+        //SetAnimVelocity(Vector3.forward);
     }
 
     public void DropLedge(int state)
