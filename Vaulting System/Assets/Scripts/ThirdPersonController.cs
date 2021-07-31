@@ -3,171 +3,174 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Climbing;
-
-public class ThirdPersonController : MonoBehaviour
+namespace Climbing
 {
-    public MovementCharacterController characterMovement;
-    public AnimationCharacterController characterAnimation;
-    public DetectionCharacterController characterDetection;
-    public JumpPredictionController jumpPrediction;
-    public CameraController cameraController;
-
-    public Transform cam;
-    public Transform Transform_Mesh;
-    private float turnSmoothTime = 0.1f;
-    float turnSmoothVelocity;
-    public Transform camReference;
-    public bool moving = false;
-    public bool isGrounded = false;
-    public bool isJumping = false;
-    public bool inSlope = false;
-    public bool dummy = false;
-    bool toTarget = false;
-    Collider collider;
-
-    private void Start()
+    public class ThirdPersonController : MonoBehaviour
     {
-        //camReference = new GameObject("Camera Aux").transform;
-        characterMovement.OnLanded += characterAnimation.Land;
-        characterMovement.OnFall += characterAnimation.Fall;
-        collider = GetComponent<Collider>();
-    }
+        public InputCharacterController characterInput;
+        public MovementCharacterController characterMovement;
+        public AnimationCharacterController characterAnimation;
+        public DetectionCharacterController characterDetection;
+        public JumpPredictionController jumpPrediction;
+        public CameraController cameraController;
 
-    // Update is called once per frame
-    void Update()
-    {
-        //Player is falling
-        isGrounded = OnGround();
+        public Transform cam;
+        public Transform Transform_Mesh;
+        private float turnSmoothTime = 0.1f;
+        float turnSmoothVelocity;
+        public Transform camReference;
+        public bool moving = false;
+        public bool isGrounded = false;
+        public bool isJumping = false;
+        public bool inSlope = false;
+        public bool dummy = false;
+        bool toTarget = false;
+        Collider collider;
 
-        if (!dummy && !characterAnimation.RootMotion())
+        private void Start()
         {
-            AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
+            //camReference = new GameObject("Camera Aux").transform;
+            characterMovement.OnLanded += characterAnimation.Land;
+            characterMovement.OnFall += characterAnimation.Fall;
+            collider = GetComponent<Collider>();
+        }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKey(KeyCode.Joystick1Button10))
+        // Update is called once per frame
+        void Update()
+        {
+            //Player is falling
+            isGrounded = OnGround();
+
+            if (!dummy && !characterAnimation.RootMotion())
             {
-                ToggleRun();
+                AddMovementInput(characterInput.movement);
+
+                if (characterInput.run)
+                {
+                    ToggleRun();
+                    characterInput.run = false;
+                }
             }
         }
-    }
 
-    private bool OnGround()
-    {
-        RaycastHit hit;
-        if (characterDetection.IsGrounded(out hit))
+        private bool OnGround()
         {
-            return true;
+            RaycastHit hit;
+            if (characterDetection.IsGrounded(out hit))
+            {
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
 
-    public void AddMovementInput(float vertical, float horizontal)
-    {
-        Vector3 translation = Vector3.zero;
-
-        translation = GroundMovement(vertical, horizontal);
-
-        characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
-    }
-
-    Vector3 GroundMovement(float vertical, float horizontal)
-    {
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        camReference.eulerAngles = new Vector3(0, cam.eulerAngles.y, 0);
-        Vector3 translation = camReference.transform.forward * vertical + camReference.transform.right * horizontal;
-        translation.y = 0;
-
-        if (translation.magnitude > 0)
+        public void AddMovementInput(Vector2 direction)
         {
-            RotatePlayer(direction);
+            Vector3 translation = Vector3.zero;
 
-            //Move Player to camera directin
-            characterAnimation.animator.SetBool("Released", false);
-            moving = true;
+            translation = GroundMovement(direction);
+
+            characterMovement.SetVelocity(Vector3.ClampMagnitude(translation, 1.0f));
         }
-        else
-        {
-            characterAnimation.animator.SetBool("Released", true);
-            moving = false;
 
-            //Reset Sprint to Walk Velocity
-            if (characterMovement.GetState() == MovementState.Running)
+        Vector3 GroundMovement(Vector2 input)
+        {
+            Vector3 direction = new Vector3(input.x, 0f, input.y).normalized;
+
+            camReference.eulerAngles = new Vector3(0, cam.eulerAngles.y, 0);
+            Vector3 translation = camReference.transform.forward * input.y + camReference.transform.right * input.x;
+            translation.y = 0;
+
+            if (translation.magnitude > 0)
+            {
+                RotatePlayer(direction);
+
+                //Move Player to camera directin
+                characterAnimation.animator.SetBool("Released", false);
+                moving = true;
+            }
+            else
+            {
+                characterAnimation.animator.SetBool("Released", true);
+                moving = false;
+
+                //Reset Sprint to Walk Velocity
+                if (characterMovement.GetState() == MovementState.Running)
+                {
+                    characterMovement.SetCurrentState(MovementState.Walking);
+                    characterMovement.ResetSpeed();
+                }
+            }
+
+            return translation;
+        }
+
+        public void RotatePlayer(Vector3 direction)
+        {
+            //Get direction with camera rotation
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+
+            //Rotate Mesh to Movement
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
+
+        public void Jump()
+        {
+            if (isGrounded)
+            {
+                characterMovement.Jump();
+                characterAnimation.Jump();
+            }
+        }
+
+        public void ResetMovement()
+        {
+            characterMovement.ResetSpeed();
+            //characterAnimation.animator.applyRootMotion = true;
+        }
+
+        public void ToggleRun()
+        {
+            if (characterMovement.GetState() != MovementState.Running)
+            {
+                characterMovement.SetCurrentState(MovementState.Running);
+                //characterAnimation.SetRootMotion(true);
+                //characterMovement.ResetSpeed();
+            }
+        }
+        public void ToggleWalk()
+        {
+            if (characterMovement.GetState() != MovementState.Walking)
             {
                 characterMovement.SetCurrentState(MovementState.Walking);
                 characterMovement.ResetSpeed();
+                //characterAnimation.SetRootMotion(true);
+                //characterMovement.ResetSpeed();
             }
         }
 
-        return translation;
-    }
 
-    public void RotatePlayer(Vector3 direction)
-    {
-        //Get direction with camera rotation
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-
-        //Rotate Mesh to Movement
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-    }
-
-    public void Jump()
-    {
-        if (isGrounded)
+        public float GetCurrentVelocity()
         {
-            characterMovement.Jump();
-            characterAnimation.Jump();
+            return characterMovement.GetVelocity().magnitude;
         }
-    }
 
-    public void ResetMovement()
-    {
-        characterMovement.ResetSpeed();
-        //characterAnimation.animator.applyRootMotion = true;
-    }
-
-    public void ToggleRun()
-    {
-        if (characterMovement.GetState() != MovementState.Running)
+        public void DisableController()
         {
-            characterMovement.SetCurrentState(MovementState.Running);
-            //characterAnimation.SetRootMotion(true);
-            //characterMovement.ResetSpeed();
+            characterAnimation.SetAnimVelocity(Vector3.zero);
+            characterMovement.SetKinematic(true);
+            //characterMovement.SetVelocity(Vector3.zero);
+            characterMovement.enableFeetIK = false;
+            collider.isTrigger = true;
+            dummy = true;
         }
-    }
-    public void ToggleWalk()
-    {
-        if (characterMovement.GetState() != MovementState.Walking)
+        public void EnableController()
         {
-            characterMovement.SetCurrentState(MovementState.Walking);
-            characterMovement.ResetSpeed();
-            //characterAnimation.SetRootMotion(true);
-            //characterMovement.ResetSpeed();
+            characterMovement.SetKinematic(false);
+            characterMovement.ApplyGravity();
+            collider.isTrigger = false;
+            dummy = false;
+            toTarget = false;
         }
-    }
-
-
-    public float GetCurrentVelocity()
-    {
-        return characterMovement.GetVelocity().magnitude;
-    }
-
-    public void DisableController()
-    {
-        characterAnimation.SetAnimVelocity(Vector3.zero);
-        characterMovement.SetKinematic(true);
-        //characterMovement.SetVelocity(Vector3.zero);
-        characterMovement.enableFeetIK = false;
-        collider.isTrigger = true; 
-        dummy = true;
-    }
-    public void EnableController()
-    {
-        characterMovement.SetKinematic(false);
-        characterMovement.ApplyGravity();
-        collider.isTrigger = false;
-        dummy = false;
-        toTarget = false;
     }
 }

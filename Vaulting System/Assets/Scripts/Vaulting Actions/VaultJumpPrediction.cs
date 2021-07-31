@@ -16,6 +16,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
+            jumpController.curPoint = null;
             jumpController.JumpUpdate();
 
             return !jumpController.hasArrived();

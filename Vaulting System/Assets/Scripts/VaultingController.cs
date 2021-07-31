@@ -74,7 +74,7 @@ namespace Climbing
                 curAction = null;
             }
 
-            if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.C)) && !isVaulting)
+            if ((controller.characterInput.jump || controller.characterInput.drop) && !isVaulting)
             {
                 curAction = null;
 

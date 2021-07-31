@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532925082188}
-  m_LocalRotation: {x: -0.037649352, y: -0.06415534, z: 0.004253305, w: 0.99722046}
+  m_LocalRotation: {x: -0.035766393, y: -0.06406845, z: 0.0043690735, w: 0.9972948}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -102,7 +102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532959275495}
   m_LocalRotation: {x: 0.026928265, y: 0.0021011971, z: -0.000056602243, w: 0.99963516}
-  m_LocalPosition: {x: 0, y: 1.8864899, z: -4.211672}
+  m_LocalPosition: {x: -1.26, y: 1.9864899, z: -2.1216717}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5556358533142032527}
@@ -231,7 +231,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533096778056}
-  m_LocalRotation: {x: -0.019552127, y: -0.0640676, z: 0.0054164752, w: 0.9977394}
+  m_LocalRotation: {x: -0.017668135, y: -0.06397866, z: 0.00553065, w: 0.9977796}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -339,8 +339,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533144897770}
-  m_LocalRotation: {x: 0.21500513, y: -0.060842685, z: 0.02023608, w: 0.97450584}
-  m_LocalPosition: {x: -0.030202817, y: 1.9365273, z: 0.025164455}
+  m_LocalRotation: {x: -0.0014005266, y: -0.06395848, z: 0.006580936, w: 0.99792993}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533691288225}
@@ -1154,6 +1154,7 @@ GameObject:
   - component: {fileID: 5556358534646836591}
   - component: {fileID: 5556358534646836577}
   - component: {fileID: 5556358534646836576}
+  - component: {fileID: 7974667347261648450}
   - component: {fileID: 5556358534646836590}
   - component: {fileID: 5556358534646836588}
   - component: {fileID: 5556358534646836586}
@@ -1161,6 +1162,7 @@ GameObject:
   - component: {fileID: 5556358534646836589}
   - component: {fileID: 5556358534646836585}
   - component: {fileID: 5556358534646836584}
+  - component: {fileID: 1349728814438673078}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1233,6 +1235,20 @@ CapsuleCollider:
   m_Height: 1.7326691
   m_Direction: 1
   m_Center: {x: 0, y: 0.86576736, z: 0}
+--- !u!114 &7974667347261648450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556358534646836578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7c3ccb252414bc46a44e428b27b1c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: {x: 0, y: 0}
+  run: 0
 --- !u!114 &5556358534646836590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1245,6 +1261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3983e0cb5dfc40445bc6676bb1f9c7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterInput: {fileID: 0}
   characterMovement: {fileID: 5556358534646836588}
   characterAnimation: {fileID: 5556358534646836589}
   characterDetection: {fileID: 5556358534646836587}
@@ -1410,6 +1427,37 @@ MonoBehaviour:
   LFootAnimVariableName: LeftFootCurve
   RFootAnimVariableName: RightFootCurve
   debug: 0
+--- !u!114 &1349728814438673078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556358534646836578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 92b096a3ca2aaaf4793e33b3389b03a4,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Camera
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1001 &5556358533754312356
 PrefabInstance:
   m_ObjectHideFlags: 0

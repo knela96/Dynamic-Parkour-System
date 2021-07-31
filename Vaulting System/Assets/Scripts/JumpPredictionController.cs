@@ -65,7 +65,7 @@ namespace Climbing
         {
             if (hasArrived())
             {
-                if (Input.GetKey(KeyCode.Space) && controller.characterMovement.limitMovement)
+                if (controller.characterInput.jump && controller.characterMovement.limitMovement)
                 {
                     List<HandlePointsV2> points = new List<HandlePointsV2>();
                     controller.characterDetection.FindAheadPoints(ref points);
@@ -148,7 +148,7 @@ namespace Climbing
             }
             else
             {
-                Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+                Vector3 direction = new Vector3(controller.characterInput.movement.x, 0f, controller.characterInput.movement.y).normalized;
                 if (direction != Vector3.zero)
                     controller.RotatePlayer(direction);
 

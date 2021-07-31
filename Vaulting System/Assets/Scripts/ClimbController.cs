@@ -125,7 +125,7 @@ namespace Climbing
                 active = false;
                 onLedge = false;
                 RaycastHit hit;
-                if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button1)) && !toLedge && !onLedge)
+                if (characterController.characterInput.jump && !toLedge && !onLedge)
                 {
                     ledgeFound = characterDetection.FindLedgeCollision(out hit);
 
@@ -152,7 +152,7 @@ namespace Climbing
                         targetRot = Quaternion.identity;
                     }
                 }
-                if (Input.GetKey(KeyCode.C))
+                if (characterController.characterInput.drop)
                 {
                     characterDetection.FindDropLedgeCollision(out hit);
                     if (hit.collider)
@@ -195,10 +195,10 @@ namespace Climbing
             //On Ledge
             if (onLedge && characterController.dummy)
             {
-                ClimbMovement(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal")); //Movement on Ledge
+                ClimbMovement(characterController.characterInput.movement); //Movement on Ledge
 
                 //Dismount from Ledge
-                if (Input.GetKeyDown(KeyCode.C))
+                if (characterController.characterInput.drop)
                 {
                     wallFound = false;
                     curLedge = null;
@@ -301,7 +301,7 @@ namespace Climbing
             return active;
         }
 
-        public void ClimbMovement(float vertical, float horizontal)
+        public void ClimbMovement(Vector2 direction)
         {
             if (curClimbState == ClimbState.BHanging)
                 curOriginGrabOffset = originHandIKBracedOffset;
@@ -309,21 +309,21 @@ namespace Climbing
                 curOriginGrabOffset = originHandIKFreeOffset;
 
             //Only allow to jump if is on Hanging Movement
-            if (Input.GetKeyDown(KeyCode.Space) && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+            if (characterController.characterInput.jump && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
                 bool climb = false;
                 
                 //Check if can climb on surface
-                if (vertical > 0)
+                if (direction.y > 0)
                     climb = ClimbFromLedge();
 
                 if (!climb && wallFound)
-                    JumpToLedge(horizontal, vertical);
+                    JumpToLedge(direction.x, direction.y);
             }
             else //Movement Behaviour on Ledge
             {
                 //Detect change of input direction to allow movement again after reaching end of the ledge
-                if (((horizontal >= 0 && horizontalMovement <= 0) || (horizontal <= 0 && horizontalMovement >= 0)) ||
+                if (((direction.x >= 0 && horizontalMovement <= 0) || (direction.x <= 0 && horizontalMovement >= 0)) ||
                     !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
                 {
                     reachedEnd = false;
@@ -331,9 +331,9 @@ namespace Climbing
 
                 if (!reachedEnd)//Stops Movement on Ledge
                 {
-                    horizontalMovement = horizontal; //Stores player input direction
+                    horizontalMovement = direction.x; //Stores player input direction
 
-                    if (!CheckValidMovement(horizontal)) //Reached End
+                    if (!CheckValidMovement(direction.x)) //Reached End
                     {
                         reachedEnd = true;
                     }
@@ -341,7 +341,7 @@ namespace Climbing
 
                 if (reachedEnd)
                 {
-                    horizontal = 0; //Stops Horizontal Movement
+                    direction.x = 0; //Stops Horizontal Movement
                 }
 
                 //Solver to position Limbs + Checks if need to change climb state from Braced and Free Hang
@@ -350,7 +350,7 @@ namespace Climbing
                 //Change from Braced Hang <-----> Free Hang
                 ChangeBracedFreeHang();
 
-                characterAnimation.HangMovement(horizontal, (int)curClimbState); //Move on Ledge Animations
+                characterAnimation.HangMovement(direction.x, (int)curClimbState); //Move on Ledge Animations
             }
         }
 
@@ -601,11 +601,11 @@ namespace Climbing
             }
 
             wallFound = true;
-            if (!characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.3f, out hit3))
+            if (!characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.1f, out hit3))
             {
                 wallFound = false;
             }
-            if (!characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.3f, out hit4))
+            if (!characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.1f, out hit4))
             {
                 wallFound = false;
             }
