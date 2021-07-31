@@ -143,8 +143,8 @@ namespace Climbing
                 if (hit.normal != Vector3.up)
                 {
                     controller.inSlope = true;
-                    rb.velocity += -hit.normal * 0.2f;
-                    rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.2f * Time.deltaTime;
+                    rb.velocity += -new Vector3(hit.normal.x, 0, hit.normal.z) * 1.0f;
+                    rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.6f * Time.deltaTime;
                 }
                 else
                 {
