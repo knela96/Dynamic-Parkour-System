@@ -16,7 +16,12 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            jumpController.curPoint = null;
+            if(jumpController.curPoint != null)
+            {
+                if (jumpController.curPoint.transform.parent.parent.tag != "Pole")
+                    jumpController.curPoint = null;
+            }
+
             jumpController.JumpUpdate();
 
             return !jumpController.hasArrived();

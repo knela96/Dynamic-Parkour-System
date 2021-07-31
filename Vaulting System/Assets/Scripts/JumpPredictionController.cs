@@ -65,7 +65,7 @@ namespace Climbing
         {
             if (hasArrived())
             {
-                if (controller.characterInput.jump && controller.characterMovement.limitMovement)
+                if (controller.characterInput.jump && controller.characterMovement.limitMovement && controller.characterInput.movement != Vector2.zero)
                 {
                     List<HandlePointsV2> points = new List<HandlePointsV2>();
                     controller.characterDetection.FindAheadPoints(ref points);

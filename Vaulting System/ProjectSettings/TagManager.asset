@@ -9,6 +9,7 @@ TagManager:
   - Deep Jump
   - Slide
   - Reach
+  - Pole
   layers:
   - Default
   - TransparentFX

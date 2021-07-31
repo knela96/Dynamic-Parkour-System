@@ -138,17 +138,13 @@ namespace Climbing
                 smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
                 rb.velocity = new Vector3(velocity.x * smoothSpeed, velocity.y * smoothSpeed + rb.velocity.y, velocity.z * smoothSpeed);
 
+                //Detect Player on Irregular Surface and adjust movement to avoid slowing down
                 RaycastHit hit;
                 controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 1.0f, out hit);
                 if (hit.normal != Vector3.up)
                 {
-                    controller.inSlope = true;
                     rb.velocity += -new Vector3(hit.normal.x, 0, hit.normal.z) * 1.0f;
                     rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.6f * Time.deltaTime;
-                }
-                else
-                {
-                    controller.inSlope = false;
                 }
 
                 controller.characterAnimation.SetAnimVelocity(rb.velocity);

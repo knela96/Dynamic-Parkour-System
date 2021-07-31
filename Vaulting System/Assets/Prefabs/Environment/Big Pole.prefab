@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3176305831939288445}
   m_Layer: 10
   m_Name: Big Pole
-  m_TagString: Untagged
+  m_TagString: Pole
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

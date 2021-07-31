@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 9159527476722560074}
   m_Layer: 10
   m_Name: Pole
-  m_TagString: Untagged
+  m_TagString: Pole
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
