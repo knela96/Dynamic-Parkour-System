@@ -49,7 +49,7 @@ namespace Climbing
                 {
                     ToggleRun();
                 }
-                else
+                else if (!characterInput.run)
                 {
                     ToggleWalk();
                 }

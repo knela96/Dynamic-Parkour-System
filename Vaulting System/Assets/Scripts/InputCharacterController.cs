@@ -46,18 +46,12 @@ namespace Climbing
             controller = GetComponent<ThirdPersonController>();
         }
 
-        void LateUpdate()
-        {
-            //if (controller.dummy)
-            //{
-            //    jump = false;
-            //    drop = false;
-            //}
-        }
-
         void ToggleRun()
         {
-            run = !run;
+            if (movement.magnitude > 0.2f && run == false)
+                run = true;
+            else
+                run = false;
         }
     }
 
