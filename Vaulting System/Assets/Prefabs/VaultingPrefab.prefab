@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532925082188}
-  m_LocalRotation: {x: -0.035766393, y: -0.06406845, z: 0.0043690735, w: 0.9972948}
+  m_LocalRotation: {x: -0.037649337, y: -0.06415534, z: 0.004253306, w: 0.99722046}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -101,8 +101,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532959275495}
-  m_LocalRotation: {x: 0.026928265, y: 0.0021011971, z: -0.000056602243, w: 0.99963516}
-  m_LocalPosition: {x: -1.26, y: 1.9864899, z: -2.1216717}
+  m_LocalRotation: {x: 0.026928278, y: 0.0021011953, z: -0.000056602228, w: 0.99963516}
+  m_LocalPosition: {x: 0, y: 1.8864899, z: -4.21167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5556358533142032527}
@@ -231,7 +231,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533096778056}
-  m_LocalRotation: {x: -0.017668135, y: -0.06397866, z: 0.00553065, w: 0.9977796}
+  m_LocalRotation: {x: -0.019552115, y: -0.0640676, z: 0.0054164757, w: 0.9977394}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -340,7 +340,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533144897770}
   m_LocalRotation: {x: -0.0014005266, y: -0.06395848, z: 0.006580936, w: 0.99792993}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -7.1054274e-15, y: 0.000007588222, z: -0.0000007915454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533691288225}
@@ -482,6 +482,7 @@ GameObject:
   - component: {fileID: 5556358533377525085}
   - component: {fileID: 5556358533377525082}
   - component: {fileID: 5556358533377525083}
+  - component: {fileID: 1565225843}
   m_Layer: 0
   m_Name: FreeLookCam
   m_TagString: Untagged
@@ -497,7 +498,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533377525086}
   m_LocalRotation: {x: 0.05183023, y: 0.066304006, z: -0.0034488074, w: 0.9964465}
-  m_LocalPosition: {x: 0, y: 1.8864899, z: -4.211672}
+  m_LocalPosition: {x: 0, y: 1.8864899, z: -4.21167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533144897771}
@@ -544,7 +545,7 @@ MonoBehaviour:
   m_YAxis:
     Value: 0.35
     m_SpeedMode: 0
-    m_MaxSpeed: 1
+    m_MaxSpeed: 2
     m_AccelTime: 0.2
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
@@ -667,6 +668,21 @@ MonoBehaviour:
   _offset: {x: 0, y: 0, z: -2}
   _default: {x: 0, y: 0, z: 0}
   maxTime: 5
+--- !u!114 &1565225843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5556358533377525086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerIndex: -1
+  XYAxis: {fileID: -6122062259217429950, guid: 92b096a3ca2aaaf4793e33b3389b03a4, type: 3}
+  ZAxis: {fileID: 0}
 --- !u!1 &5556358533626337625
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,7 +990,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358534259412728}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.36, y: 0.5, z: -1.86}
+  m_LocalPosition: {x: 0.36, y: 0.5, z: -1.8600006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533204089959}
@@ -1249,6 +1265,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0}
   run: 0
+  jump: 0
+  drop: 0
 --- !u!114 &5556358534646836590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,7 +1279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3983e0cb5dfc40445bc6676bb1f9c7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterInput: {fileID: 0}
+  characterInput: {fileID: 7974667347261648450}
   characterMovement: {fileID: 5556358534646836588}
   characterAnimation: {fileID: 5556358534646836589}
   characterDetection: {fileID: 5556358534646836587}
@@ -1291,7 +1309,7 @@ MonoBehaviour:
   speed: 3
   walkSpeed: 3
   JogSpeed: 3
-  RunSpeed: 5.625
+  RunSpeed: 4.5
   jumpForce: 5
   fallForce: 4
   enableFeetIK: 1
