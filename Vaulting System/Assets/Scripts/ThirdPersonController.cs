@@ -48,7 +48,10 @@ namespace Climbing
                 if (characterInput.run)
                 {
                     ToggleRun();
-                    characterInput.run = false;
+                }
+                else
+                {
+                    ToggleWalk();
                 }
             }
         }
@@ -93,12 +96,7 @@ namespace Climbing
                 characterAnimation.animator.SetBool("Released", true);
                 moving = false;
 
-                //Reset Sprint to Walk Velocity
-                if (characterMovement.GetState() == MovementState.Running)
-                {
-                    characterMovement.SetCurrentState(MovementState.Walking);
-                    characterMovement.ResetSpeed();
-                }
+                ToggleWalk();
             }
 
             return translation;
@@ -134,8 +132,8 @@ namespace Climbing
             if (characterMovement.GetState() != MovementState.Running)
             {
                 characterMovement.SetCurrentState(MovementState.Running);
-                //characterAnimation.SetRootMotion(true);
-                //characterMovement.ResetSpeed();
+                characterMovement.speed = characterMovement.RunSpeed;
+                characterAnimation.animator.SetBool("Run", true);
             }
         }
         public void ToggleWalk()
@@ -143,9 +141,9 @@ namespace Climbing
             if (characterMovement.GetState() != MovementState.Walking)
             {
                 characterMovement.SetCurrentState(MovementState.Walking);
-                characterMovement.ResetSpeed();
-                //characterAnimation.SetRootMotion(true);
-                //characterMovement.ResetSpeed();
+                characterMovement.speed = characterMovement.walkSpeed;
+                characterAnimation.animator.SetBool("Run", false);
+                characterInput.run = false;
             }
         }
 

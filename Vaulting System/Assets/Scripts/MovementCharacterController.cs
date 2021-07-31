@@ -133,7 +133,7 @@ namespace Climbing
                 velocity.Normalize();
             }
 
-            if (velocity.magnitude > 0)
+            if (velocity.magnitude > 0.3f)
             {
                 smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
                 rb.velocity = new Vector3(velocity.x * smoothSpeed, velocity.y * smoothSpeed + rb.velocity.y, velocity.z * smoothSpeed);

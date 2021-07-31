@@ -4550,12 +4550,12 @@ PrefabInstance:
     - target: {fileID: 5556358532925082189, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.06415534
+      value: -0.0641553
       objectReference: {fileID: 0}
     - target: {fileID: 5556358532925082189, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.004253306
+      value: 0.0042533036
       objectReference: {fileID: 0}
     - target: {fileID: 5556358532959275490, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
@@ -4585,12 +4585,12 @@ PrefabInstance:
     - target: {fileID: 5556358532959275490, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0021011953
+      value: 0.0021012165
       objectReference: {fileID: 0}
     - target: {fileID: 5556358532959275490, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000056602228
+      value: -0.000056602796
       objectReference: {fileID: 0}
     - target: {fileID: 5556358533096778057, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
@@ -4717,6 +4717,26 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -4.21167
       objectReference: {fileID: 0}
+    - target: {fileID: 5556358533377525087, guid: 9e70d0b595d510742bfdf66867f64069,
+        type: 3}
+      propertyPath: m_XAxis.m_MaxSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 5556358533377525087, guid: 9e70d0b595d510742bfdf66867f64069,
+        type: 3}
+      propertyPath: m_YAxis.m_MaxSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5556358533377525087, guid: 9e70d0b595d510742bfdf66867f64069,
+        type: 3}
+      propertyPath: m_XAxis.m_SpeedMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5556358533377525087, guid: 9e70d0b595d510742bfdf66867f64069,
+        type: 3}
+      propertyPath: m_YAxis.m_SpeedMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5556358534259412729, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -4746,6 +4766,11 @@ PrefabInstance:
         type: 3}
       propertyPath: showDebug
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5556358534646836588, guid: 9e70d0b595d510742bfdf66867f64069,
+        type: 3}
+      propertyPath: RunSpeed
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 5556358534646836588, guid: 9e70d0b595d510742bfdf66867f64069,
         type: 3}

@@ -145,6 +145,7 @@ namespace Climbing
                         startTime = 0.0f;
                         endTime = 0.2f;
                         active = true;
+                        characterController.ToggleWalk();
                     }
                     else
                     {
@@ -178,6 +179,7 @@ namespace Climbing
                         startTime = 0.3f;
                         endTime = 0.45f;
                         active = true;
+                        characterController.ToggleWalk();
                     }
                 }
             }
