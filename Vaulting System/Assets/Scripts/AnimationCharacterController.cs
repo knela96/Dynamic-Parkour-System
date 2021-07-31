@@ -62,6 +62,7 @@ public class AnimationCharacterController : MonoBehaviour
 
     public void Land()
     {
+        animator.SetBool("Released", true);
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);

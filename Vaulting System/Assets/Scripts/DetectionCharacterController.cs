@@ -182,12 +182,22 @@ namespace Climbing
             return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, wallLayer);
         }
 
+        public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
+        {
+            if (showDebug)
+            {
+                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
+            }
+
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length);
+        }
+
         public bool IsGrounded(out RaycastHit hit) {
             if (showDebug)
             {
-                Debug.DrawLine(transform.position + new Vector3(0, 0.1f, 0), transform.position + new Vector3(0, 0.1f, 0) + Vector3.down * 0.2f, Color.green);
+                Debug.DrawLine(transform.position + new Vector3(0, 0.5f, 0), transform.position + new Vector3(0, 0.5f, 0) + Vector3.down * 0.8f, Color.green);
             }
-            return Physics.Raycast(transform.position + new Vector3(0,0.1f,0) , Vector3.down, out hit, 0.2f);//0.2f
+            return Physics.Raycast(transform.position + new Vector3(0,0.5f,0) , Vector3.down, out hit, 0.8f);//0.2f
         }
 
         public void FindAheadPoints(ref List<HandlePointsV2> list)

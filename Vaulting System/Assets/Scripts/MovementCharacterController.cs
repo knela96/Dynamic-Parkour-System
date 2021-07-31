@@ -132,13 +132,21 @@ public class MovementCharacterController : MonoBehaviour
 
         if (velocity.magnitude > 0)
         {
-            if (controller.inSlope)
+            smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
+            rb.velocity = new Vector3(velocity.x * smoothSpeed, velocity.y * smoothSpeed + rb.velocity.y, velocity.z * smoothSpeed);
+
+            RaycastHit hit;
+            controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 1.0f, out hit);
+            if (hit.normal != Vector3.up)
             {
+                controller.inSlope = true;
+                rb.velocity += -hit.normal * 0.2f;
                 rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.2f * Time.deltaTime;
             }
-
-            smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
-            rb.velocity = new Vector3(velocity.x * smoothSpeed, rb.velocity.y, velocity.z * smoothSpeed);
+            else
+            {
+                controller.inSlope = false;
+            }
 
             controller.characterAnimation.SetAnimVelocity(rb.velocity);
         }

@@ -42,7 +42,7 @@ namespace Climbing
                             targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(targetPos - startPos);
                             vaultTime = startDelay;
-                            animLength = clip.length + startDelay;
+                            animLength = 0.85f;
                             controller.DisableController();
 
                             return true;
@@ -56,7 +56,6 @@ namespace Climbing
 
         public override bool ExecuteAction()
         {
-            bool ret = false;
             if (isVaulting)
             {
                 float actualSpeed = Time.deltaTime / animLength;
@@ -64,18 +63,17 @@ namespace Climbing
 
                 if (vaultTime > 1)
                 {
-                    isVaulting = false;
+                    isVaulting = false; 
                     controller.EnableController();
                 }
-                else
+                else if(vaultTime >= 0)
                 {
                     vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
                     vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
-                    ret = true;
                 }
             }
 
-            return ret;
+            return isVaulting;
         }
 
         public override void DrawGizmos()

@@ -59,16 +59,15 @@ namespace Climbing
                             startPos = vaultingController.transform.position;
                             startRot = vaultingController.transform.rotation;
                             targetPos = hit2.point;
-                            targetRot = Quaternion.LookRotation(new Vector3(targetPos.x - startPos.x, 0, targetPos.z - startPos.z));
+                            targetRot = Quaternion.LookRotation(-hit.normal);
                             vaultTime = startDelay;
                             animLength = clip.length + startDelay;
                             controller.DisableController();
 
                             //Calculate Hand Rest Position n Rotation
-                            Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
-                            leftHandPosition = hit.point;
+                            Vector3 right = Vector3.Cross(hit.normal, Vector3.up);
+                            leftHandPosition = hit.point + (right * -0.5f);
                             leftHandPosition.y = hit2.point.y; 
-                            leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
 
                             return true;
                         }
@@ -100,6 +99,7 @@ namespace Climbing
 
                     if (animator.IsInTransition(0) && vaultTime > 0.5f)
                     {
+                        controller.ToggleWalk();
                         controller.EnableController();
                         isVaulting = false;
                         height = 0;

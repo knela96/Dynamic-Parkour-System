@@ -37,6 +37,9 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Player is falling
+        isGrounded = OnGround();
+
         if (!dummy && !characterAnimation.RootMotion())
         {
             AddMovementInput(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
@@ -46,9 +49,6 @@ public class ThirdPersonController : MonoBehaviour
                 ToggleRun();
             }
         }
-
-        //Player is falling
-        isGrounded = OnGround();
     }
 
     private bool OnGround()
@@ -56,17 +56,8 @@ public class ThirdPersonController : MonoBehaviour
         RaycastHit hit;
         if (characterDetection.IsGrounded(out hit))
         {
-            if (hit.normal != Vector3.up)
-            {
-                inSlope = true;
-            }
-            else
-            {
-                inSlope = false;
-            }
             return true;
         }
-
         return false;
     }
 
@@ -104,7 +95,7 @@ public class ThirdPersonController : MonoBehaviour
             if (characterMovement.GetState() == MovementState.Running)
             {
                 characterMovement.SetCurrentState(MovementState.Walking);
-                ResetMovement();
+                characterMovement.ResetSpeed();
             }
         }
 
@@ -145,6 +136,16 @@ public class ThirdPersonController : MonoBehaviour
             //characterMovement.ResetSpeed();
         }
     }
+    public void ToggleWalk()
+    {
+        if (characterMovement.GetState() != MovementState.Walking)
+        {
+            characterMovement.SetCurrentState(MovementState.Walking);
+            characterMovement.ResetSpeed();
+            //characterAnimation.SetRootMotion(true);
+            //characterMovement.ResetSpeed();
+        }
+    }
 
 
     public float GetCurrentVelocity()
@@ -156,16 +157,14 @@ public class ThirdPersonController : MonoBehaviour
     {
         characterAnimation.SetAnimVelocity(Vector3.zero);
         characterMovement.SetKinematic(true);
-        characterMovement.SetVelocity(Vector3.zero);
+        //characterMovement.SetVelocity(Vector3.zero);
         characterMovement.enableFeetIK = false;
-        characterAnimation.animator.SetBool("Released", true);
         collider.isTrigger = true; 
         dummy = true;
     }
     public void EnableController()
     {
         characterMovement.SetKinematic(false);
-        characterAnimation.animator.SetBool("Released", false);
         characterMovement.ApplyGravity();
         collider.isTrigger = false;
         dummy = false;

@@ -1404,7 +1404,7 @@ MonoBehaviour:
   limitRHand: {fileID: 6884716734290235065}
   limitLFoot: {fileID: 6614467266380392676}
   limitRFoot: {fileID: 4314689455366298590}
-  smallHopMaxDistance: 0.85
+  smallHopMaxDistance: 0.33
   LHandAnimVariableName: LHandCurve
   RHandAnimVariableName: RHandCurve
   LFootAnimVariableName: LeftFootCurve
