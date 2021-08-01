@@ -63,7 +63,7 @@ namespace Climbing
 
         public void JumpUpdate()
         {
-            if (hasArrived())
+            if (hasArrived() && controller.isGrounded)
             {
                 if (controller.characterInput.jump && controller.characterMovement.limitMovement && controller.characterInput.movement != Vector2.zero)
                 {
@@ -75,6 +75,22 @@ namespace Climbing
                     Point p = null;
                     Point fp = curPoint;
                     newPoint = false;
+
+                    if (fp == null)//First Point
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f))
+                        {
+                            HandlePointsV2 handle = hit.transform.GetComponentInChildren<HandlePointsV2>();
+                            if (handle)
+                            {
+                                if (handle.pointsInOrder[0] != null)
+                                {
+                                    fp = handle.pointsInOrder[0];
+                                }
+                            }
+                        }
+                    }
 
                     foreach (var item in points)
                     {
@@ -136,7 +152,6 @@ namespace Climbing
                     points.Clear();
                 }
             }
-
         }
 
         public bool ExecuteFollow()

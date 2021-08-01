@@ -34,7 +34,7 @@ namespace Climbing
                     {
                         if (hit2.collider)
                         {
-                            controller.characterAnimation.animator.CrossFade("Deep Jump", 0.2f);
+                            controller.characterAnimation.animator.CrossFade("Deep Jump", 0.05f);
 
                             isVaulting = true;
                             startPos = vaultingController.transform.position;

@@ -16,7 +16,7 @@ MonoBehaviour:
   kneeRaycastOrigin: {x: 0, y: 0.5, z: 0}
   kneeRaycastLength: 0.5
   landOffset: 2
-  startDelay: -0.25
+  startDelay: -0.15
   layer:
     serializedVersion: 2
     m_Bits: 0

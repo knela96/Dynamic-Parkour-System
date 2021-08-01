@@ -77,7 +77,7 @@ namespace Climbing
                 limitMovement = CheckBoundaries();
 
                 //Drop if Space or moving drop direction furing 0.2s
-                if (limitMovement && ((controller.characterInput.drop && !controller.isJumping) || timeDrop > 0.2f))
+                if (limitMovement && controller.isGrounded && ((controller.characterInput.drop && !controller.isJumping) || timeDrop > 0.2f))
                 {
                     anim.CrossFade("Jump Down", 0.1f);
                     controller.isJumping = true;
