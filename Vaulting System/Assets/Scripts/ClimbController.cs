@@ -314,13 +314,14 @@ namespace Climbing
             if (characterController.characterInput.jump && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
                 bool climb = false;
-                
-                //Check if can climb on surface
-                if (direction.y > 0)
-                    climb = ClimbFromLedge();
 
                 if (!climb && wallFound)
                     JumpToLedge(direction.x, direction.y);
+
+                //Check if can climb on surface
+                if (direction.y > 0 && onLedge)
+                    climb = ClimbFromLedge();
+
             }
             else //Movement Behaviour on Ledge
             {
