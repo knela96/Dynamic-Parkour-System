@@ -189,12 +189,6 @@ namespace Climbing
 
         private bool CheckSurfaceBoundary(Vector3 origin)
         {
-            RaycastHit hit;
-            bool allowJump = Physics.Raycast(origin, Vector3.down, out hit, 3, environmentLayer.value); //Allows automatic drop if next surface is reachable
-            
-            if (hit.point.y - transform.position.y < 0.5f)
-                return true;
-
             Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, -0.03f, 0);
             if (showDebug)
                 Debug.DrawLine(origin2, transform.position + new Vector3(0, -0.03f, 0));
@@ -219,9 +213,10 @@ namespace Climbing
                 Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
                 float vel = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
 
-                if (vel < 0.4 && vel > -0.4 && velocity.magnitude > 0.1f && hit1.normal.y <= 0.2)
+                if (vel < 0.4 && vel > -0.4 && velocity.magnitude > 0.1f && controller.isGrounded)
                 {
-                    timeDrop += Time.deltaTime;
+                    if(!Physics.Raycast(origin, transform.forward, controller.stepHeight))
+                        timeDrop += Time.deltaTime;
                     vel = 0;
                 }
                 else

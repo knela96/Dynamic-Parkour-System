@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532925082188}
-  m_LocalRotation: {x: -0.029345429, y: -0.06377024, z: 0.004761399, w: 0.9975217}
+  m_LocalRotation: {x: -0.0316478, y: -0.063877515, z: 0.0046211584, w: 0.9974451}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -101,8 +101,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532959275495}
-  m_LocalRotation: {x: 0.035250694, y: 0.002449597, z: -0.00008640395, w: 0.9993755}
-  m_LocalPosition: {x: 0.0065188594, y: 1.7291355, z: -2.2720213}
+  m_LocalRotation: {x: 0.03294367, y: 0.0023528924, z: -0.000077555225, w: 0.9994545}
+  m_LocalPosition: {x: 0.0027352571, y: 1.8204646, z: -3.1720214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5556358533142032527}
@@ -231,7 +231,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533096778056}
-  m_LocalRotation: {x: -0.011244096, y: -0.063673355, z: 0.0059174993, w: 0.9978899}
+  m_LocalRotation: {x: -0.013547488, y: -0.06378319, z: 0.0057792314, w: 0.99785507}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -339,8 +339,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358533144897770}
-  m_LocalRotation: {x: -0.0014006123, y: -0.06395849, z: 0.00658093, w: 0.99792993}
-  m_LocalPosition: {x: 2.191168e-16, y: 3.038816e-18, z: 2.913189e-17}
+  m_LocalRotation: {x: -0.001946833, y: -0.1403496, z: 0.014361254, w: 0.98999596}
+  m_LocalPosition: {x: -0.00000025271282, y: 0.000004227385, z: 0.0000014598222}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533691288225}
@@ -990,7 +990,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358534259412728}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.36, y: 0.5, z: -1.86}
+  m_LocalPosition: {x: 0.36, y: 0.49999997, z: -1.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5556358533204089959}
@@ -1286,6 +1286,7 @@ MonoBehaviour:
   cameraController: {fileID: 5556358533377525083}
   cam: {fileID: 5556358532959275490}
   Transform_Mesh: {fileID: 5374658958455714127}
+  stepHeight: 0.6
   camReference: {fileID: 5556358533377525084}
   moving: 0
   isGrounded: 0
