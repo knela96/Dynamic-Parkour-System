@@ -179,8 +179,8 @@ namespace Climbing
 
         public bool CheckBoundaries()
         {
-            if (timeDrop == -1)
-                return false;
+            //if (timeDrop == -1)
+            //    return false;
 
             bool ground = false;
             bool ret = false;
@@ -195,8 +195,8 @@ namespace Climbing
             if (!Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1) && ret == false)
                 ret = CheckSurfaceBoundary(origin + transform.right * -0.25f, ground);
 
-            if (ret == false)
-                timeDrop = 0;
+            //if (ret == false)
+            //    timeDrop = 0;
 
             if (showDebug)
             {

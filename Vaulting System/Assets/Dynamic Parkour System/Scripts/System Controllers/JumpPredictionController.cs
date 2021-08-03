@@ -183,6 +183,10 @@ namespace Climbing
                     if (curPoint.type != PointType.Ground)
                         return true;
                 }
+                else //Player is Droping
+                {
+                    controller.EnableController();
+                }
 
                 return false;
             }
