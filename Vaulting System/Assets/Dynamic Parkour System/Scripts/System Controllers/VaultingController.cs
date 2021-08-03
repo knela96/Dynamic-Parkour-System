@@ -38,30 +38,30 @@ namespace Climbing
             if(vaultActions.HasFlag(VaultActions.Vault_Obstacle))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultObstacle");
-                Add(new VaultObstacle(this, actionInfo));
+                Add(new VaultObstacle(controller, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Vault_Over))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultOver");
-                Add(new VaultOver(this, actionInfo));
+                Add(new VaultOver(controller, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Slide))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultSlide");
-                Add(new VaultSlide(this, actionInfo));
+                Add(new VaultSlide(controller, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Slide))
             {
                 Action actionInfo = Resources.Load<Action>("Actions/VaultReach");
-                Add(new VaultReach(this, actionInfo));
+                Add(new VaultReach(controller, actionInfo));
             }
             if (vaultActions.HasFlag(VaultActions.Climb_Ledge))
             {
-                Add(new VaultClimbLedge(this));
+                Add(new VaultClimbLedge(controller));
             }
             if (vaultActions.HasFlag(VaultActions.Jump_Prediction))
             {
-                Add(new VaultJumpPrediction(this));
+                Add(new VaultJumpPrediction(controller));
             }
         }
 

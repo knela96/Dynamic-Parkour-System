@@ -16,7 +16,7 @@ namespace Climbing
 
         private string HandAnimVariableName;
 
-        public VaultReach(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
+        public VaultReach(ThirdPersonController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
             ActionVaultReach action = (ActionVaultReach)_actionInfo;
 
@@ -28,12 +28,13 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (vaultingController.controller.characterInput.jump && !isVaulting)
+            if (controller.characterInput.jump && !isVaulting)
             {
                 RaycastHit hit;
-                Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
+                //Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
+                Vector3 origin = controller.transform.position + Vector3.up * controller.stepHeight;
 
-                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength, layer.value))
+                if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength, layer.value))
                 {
                     if (hit.collider.gameObject.tag != tag)
                         return false;
@@ -42,10 +43,10 @@ namespace Climbing
 
                     RaycastHit hit2;
                     RaycastHit hit3;
-                    Physics.Raycast(vaultingController.transform.position, Vector3.down, out hit3, 1);
+                    Physics.Raycast(controller.transform.position, Vector3.down, out hit3, 1);
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10, layer.value)) //Ground Hit
                     {
-                        height = hit2.point.y - vaultingController.transform.position.y;
+                        height = hit2.point.y - controller.transform.position.y;
 
                         if (hit.collider.gameObject.tag != tag || height > maxHeight || hit2.collider != hit.collider || hit3.collider == hit2.collider)
                             return false;
@@ -58,8 +59,8 @@ namespace Climbing
                                 controller.characterAnimation.animator.CrossFade("Reach High", 0.1f);
 
                             isVaulting = true;
-                            startPos = vaultingController.transform.position;
-                            startRot = vaultingController.transform.rotation;
+                            startPos = controller.transform.position;
+                            startRot = controller.transform.rotation;
                             targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(-hit.normal);
                             vaultTime = startDelay;
@@ -89,14 +90,14 @@ namespace Climbing
 
                 float actualSpeed = Time.deltaTime / animLength;
                 vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
-                vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
 
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach") || animator.GetCurrentAnimatorStateInfo(0).IsName("Reach High"))
                 {
                     if (height <= 1)
-                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
+                        controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
                     else
-                        vaultingController.controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0.11f, 0.2f);
+                        controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0.11f, 0.2f);
 
 
                     if (animator.IsInTransition(0) && vaultTime > 0.5f)

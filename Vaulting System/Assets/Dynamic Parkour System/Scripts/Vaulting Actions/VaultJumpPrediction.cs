@@ -9,9 +9,9 @@ namespace Climbing
         JumpPredictionController jumpController;
 
 
-        public VaultJumpPrediction(VaultingController _vaultingController) : base(_vaultingController)
+        public VaultJumpPrediction(ThirdPersonController _vaultingController) : base(_vaultingController)
         {
-            jumpController = vaultingController.controller.GetComponent<JumpPredictionController>();
+            jumpController = controller.GetComponent<JumpPredictionController>();
         }
 
         public override bool CheckAction()

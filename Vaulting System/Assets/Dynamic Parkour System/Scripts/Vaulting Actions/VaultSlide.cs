@@ -7,26 +7,26 @@ namespace Climbing
     public class VaultSlide : VaultAction
     {
         float dis;
-        public VaultSlide(VaultingController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
+        public VaultSlide(ThirdPersonController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
         }
 
         public override bool CheckAction()
         {
-            if (vaultingController.controller.characterInput.drop && !isVaulting)
+            if (controller.characterInput.drop && !isVaulting)
             {
                 RaycastHit hit;
-                Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
+                Vector3 origin = controller.transform.position + kneeRaycastOrigin;
 
-                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
+                if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength))
                 {
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
-                    Debug.DrawLine(origin, origin + vaultingController.transform.forward * kneeRaycastLength);//Forward Raycast
+                    Debug.DrawLine(origin, origin + controller.transform.forward * kneeRaycastLength);//Forward Raycast
 
                     if ((hit.normal == hit.collider.transform.forward ||
                         hit.normal == -hit.collider.transform.forward) == false ||
-                        Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60 ||
+                        Mathf.Abs(Vector3.Dot(-hit.normal, controller.transform.forward)) < 0.60 ||
                         hit.transform.tag != tag)
                         return false;
 
@@ -41,8 +41,8 @@ namespace Climbing
                             controller.characterAnimation.switchCameras.SlideCam();
 
                             isVaulting = true;
-                            startPos = vaultingController.transform.position;
-                            startRot = vaultingController.transform.rotation;
+                            startPos = controller.transform.position;
+                            startRot = controller.transform.rotation;
                             targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(targetPos - startPos);
                             vaultTime = startDelay;
@@ -74,8 +74,8 @@ namespace Climbing
                 }
                 else
                 {
-                    vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                    controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
                     ret = true;
                 }
             }

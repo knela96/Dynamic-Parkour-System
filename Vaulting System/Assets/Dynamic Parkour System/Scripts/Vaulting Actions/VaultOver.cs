@@ -6,24 +6,24 @@ namespace Climbing
 {
     public class VaultOver : VaultAction
     {
-        public VaultOver(VaultingController _vaultingController, Action action) : base(_vaultingController, action)
+        public VaultOver(ThirdPersonController _vaultingController, Action action) : base(_vaultingController, action)
         {
         }
 
         public override bool CheckAction()
         {
-            if (vaultingController.controller.characterInput.jump && !isVaulting)
+            if (controller.characterInput.jump && !isVaulting)
             {
                 RaycastHit hit;
-                Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
+                Vector3 origin = controller.transform.position + kneeRaycastOrigin;
 
-                if (Physics.Raycast(origin, vaultingController.transform.forward, out hit, kneeRaycastLength))
+                if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength))
                 {
                     // If direction not the same as object don't do anything
                     // or angle of movement not valid
                     if ((hit.normal == hit.collider.transform.forward ||
                         hit.normal == -hit.collider.transform.forward) == false ||
-                        Mathf.Abs(Vector3.Dot(-hit.normal, vaultingController.transform.forward)) < 0.60 ||
+                        Mathf.Abs(Vector3.Dot(-hit.normal, controller.transform.forward)) < 0.60 ||
                         hit.transform.tag != tag)
                         return false;
 
@@ -37,8 +37,8 @@ namespace Climbing
                             controller.characterAnimation.animator.CrossFade("Deep Jump", 0.05f);
 
                             isVaulting = true;
-                            startPos = vaultingController.transform.position;
-                            startRot = vaultingController.transform.rotation;
+                            startPos = controller.transform.position;
+                            startRot = controller.transform.rotation;
                             targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(targetPos - startPos);
                             vaultTime = startDelay;
@@ -68,8 +68,8 @@ namespace Climbing
                 }
                 else if(vaultTime >= 0)
                 {
-                    vaultingController.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    vaultingController.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                    controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
                 }
             }
 

@@ -8,9 +8,9 @@ namespace Climbing
     {
         ClimbController climbController;
 
-        public VaultClimbLedge(VaultingController _vaultingController) : base(_vaultingController)
+        public VaultClimbLedge(ThirdPersonController _vaultingController) : base(_vaultingController)
         {
-            climbController = vaultingController.controller.GetComponent<ClimbController>();
+            climbController = controller.GetComponent<ClimbController>();
         }
 
         public override bool CheckAction()

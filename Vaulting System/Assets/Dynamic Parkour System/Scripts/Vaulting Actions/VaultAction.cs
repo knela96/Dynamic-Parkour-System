@@ -23,18 +23,15 @@ namespace Climbing
         protected LayerMask layer;
         protected string tag;
 
-        protected VaultingController vaultingController;
-
-        public VaultAction(VaultingController _vaultingController)
+        public VaultAction(ThirdPersonController _controller)
         {
-            vaultingController = _vaultingController;
+            controller = _controller;
         }
 
-        public VaultAction(VaultingController _vaultingController, Action action)
+        public VaultAction(ThirdPersonController _controller, Action action)
         {
-            vaultingController = _vaultingController;
-            controller = vaultingController.controller;
-            animator = vaultingController.animator;
+            controller = _controller;
+            animator = controller.characterAnimation.animator;
 
             //Loads Action Info
             clip = action.clip;
