@@ -65,7 +65,7 @@ namespace Climbing
         {
             if (hasArrived() && (controller.isGrounded || curPoint != null))
             {
-                if (controller.characterInput.jump && controller.characterMovement.limitMovement && controller.characterInput.movement != Vector2.zero)
+                if (controller.characterInput.jump && controller.characterInput.movement != Vector2.zero && (controller.characterMovement.limitMovement || curPoint))
                 {
                     List<HandlePointsV2> points = new List<HandlePointsV2>();
                     controller.characterDetection.FindAheadPoints(ref points);
@@ -146,6 +146,7 @@ namespace Climbing
                             }
 
                             controller.DisableController();
+                            controller.isJumping = true;
                         }
                     }
 
@@ -170,7 +171,7 @@ namespace Climbing
                 controller.characterMovement.ResetSpeed();
 
                 //On MidPoint
-                if (curPoint)
+                if (curPoint && !controller.isJumping)
                 {
                     //Delay between allowing new jump
                     if (delay < 0.1f)
@@ -196,6 +197,7 @@ namespace Climbing
                     if (!controller.characterMovement.stopMotion)
                         controller.EnableController();
 
+                    controller.isJumping = false;
                     actualSpeed = 0.0f;
                     delay = 0;
                     move = false;

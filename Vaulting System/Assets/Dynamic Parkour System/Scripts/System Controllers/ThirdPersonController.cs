@@ -22,11 +22,11 @@ namespace Climbing
         public Transform camReference;
         public bool moving = false;
         public bool isGrounded = false;
+        public bool allowMovement = true;
         public bool onAir = false;
         public bool isJumping = false;
         public bool inSlope = false;
         public bool dummy = false;
-        bool toTarget = false;
         Collider collider;
 
         private void Start()
@@ -43,7 +43,7 @@ namespace Climbing
             //Player is falling
             isGrounded = OnGround();
 
-            if (!dummy && !characterAnimation.RootMotion())
+            if (!dummy && allowMovement)
             {
                 AddMovementInput(characterInput.movement);
 
@@ -160,18 +160,19 @@ namespace Climbing
         {
             characterAnimation.SetAnimVelocity(Vector3.zero);
             characterMovement.SetKinematic(true);
-            //characterMovement.SetVelocity(Vector3.zero);
             characterMovement.enableFeetIK = false;
             collider.isTrigger = true;
             dummy = true;
+            allowMovement = false;
         }
         public void EnableController()
         {
             characterMovement.SetKinematic(false);
             characterMovement.ApplyGravity();
+            characterMovement.stopMotion = false; ;
             collider.isTrigger = false;
-            dummy = false;
-            toTarget = false;
+            dummy = false; 
+            allowMovement = true;
         }
     }
 }

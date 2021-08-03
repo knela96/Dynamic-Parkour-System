@@ -75,6 +75,7 @@ public class AnimationCharacterController : MonoBehaviour
         else if (state == ClimbController.ClimbState.FHanging)
             animator.CrossFade("Idle To Freehang", 0.2f);
 
+        animator.SetBool("Land", false);
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
     }

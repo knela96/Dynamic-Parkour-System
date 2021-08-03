@@ -155,13 +155,7 @@ namespace Climbing
                     }
                 }
 
-                if(characterController.characterMovement.limitMovement)
-                {
-                    time += Time.deltaTime;
-                }
-
-
-                if (characterController.characterInput.drop && time > 0.25f)
+                if (characterController.characterInput.drop && characterController.isGrounded)
                 {
                     time = 0;
                     characterDetection.FindDropLedgeCollision(out hit);
@@ -197,10 +191,9 @@ namespace Climbing
 
         public bool ClimbUpdate()
         {
-            if (!characterAnimation.animator.GetBool("ClimbAnimations") && curLedge == null)
+            if (!characterController.dummy && curLedge == null)
             {
                 active = false;
-                characterController.EnableController();
             }
 
             //On Ledge
@@ -209,13 +202,14 @@ namespace Climbing
                 ClimbMovement(characterController.characterInput.movement); //Movement on Ledge
 
                 //Dismount from Ledge
-                if (characterController.characterInput.drop)
+                if (characterController.characterInput.drop && characterController.characterInput.movement == Vector2.zero)
                 {
                     wallFound = false;
                     curLedge = null;
                     onLedge = false;
                     targetPoint = null;
                     currentPoint = null;
+                    characterController.isJumping = true;
                     curClimbState = ClimbState.None;
                     characterAnimation.DropLedge((int)curClimbState);
                     characterController.cameraController.newOffset(false);
@@ -320,16 +314,24 @@ namespace Climbing
                 curOriginGrabOffset = originHandIKFreeOffset;
 
             //Only allow to jump if is on Hanging Movement
-            if (characterController.characterInput.jump && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+            if ((characterController.characterInput.jump || characterController.characterInput.drop) && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
-                bool climb = false;
+                bool drop = false;
+                if (characterController.characterInput.jump)
+                {
+                    drop = false;
+                }
+                if (characterController.characterInput.drop)
+                {
+                    drop = true;
+                }
 
-                if (!climb && wallFound)
-                    JumpToLedge(direction.x, direction.y);
+                if (wallFound)
+                    JumpToLedge(direction.x, direction.y, drop);
 
                 //Check if can climb on surface
-                if (direction.y > 0 && onLedge)
-                    climb = ClimbFromLedge();
+                if (direction.y > 0.8f && onLedge)
+                    ClimbFromLedge();
 
             }
             else //Movement Behaviour on Ledge
@@ -405,7 +407,7 @@ namespace Climbing
             return ret;
         }
 
-        void JumpToLedge(float horizontal, float vertical)
+        void JumpToLedge(float horizontal, float vertical, bool drop)
         {
             if (vertical == 0 && horizontal == 0)
                 return;
@@ -424,7 +426,7 @@ namespace Climbing
             {
                 Vector3 direction = new Vector3(horizontal, vertical, 0f);
 
-                Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours, ref xDistance);
+                Neighbour toPoint = CandidatePointOnDirection(direction, point, point.neighbours, ref xDistance, drop);
 
                 if (toPoint != null)
                 {
@@ -488,7 +490,7 @@ namespace Climbing
         }
 
 
-        public Neighbour CandidatePointOnDirection(Vector3 inputDirection, Point from, List<Neighbour> candidatePoints, ref float xDistance)
+        public Neighbour CandidatePointOnDirection(Vector3 inputDirection, Point from, List<Neighbour> candidatePoints, ref float xDistance, bool drop)
         {
             if (!from)
                 return null;
@@ -498,10 +500,15 @@ namespace Climbing
 
             for (int p = 0; p < candidatePoints.Count; p++)
             {
-
                 Neighbour targetPoint = candidatePoints[p];
 
                 if (candidatePoints[p].target == null)
+                    continue;
+
+                if (drop && targetPoint.target.transform.position.y >= from.transform.position.y)
+                    continue;
+
+                if (!drop && targetPoint.target.transform.position.y + 0.6f < from.transform.position.y)
                     continue;
 
                 Vector3 direction = targetPoint.target.transform.position - from.transform.position;

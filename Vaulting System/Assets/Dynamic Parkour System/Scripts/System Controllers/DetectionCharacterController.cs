@@ -114,7 +114,7 @@ namespace Climbing
                     //transform.rotation = Quaternion.FromToRotation(-transform.forward, hit.normal) * transform.rotation;
                 }
 
-                if(hit.normal == hit.transform.forward || hit.normal == -hit.transform.forward)
+                if (hit.normal == hit.transform.forward || hit.normal == -hit.transform.forward)
                     return true;
 
                 //Vector3 rayOrigin2 = hit.point;

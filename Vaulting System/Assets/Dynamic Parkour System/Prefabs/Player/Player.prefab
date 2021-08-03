@@ -1290,6 +1290,8 @@ MonoBehaviour:
   camReference: {fileID: 5556358533377525084}
   moving: 0
   isGrounded: 0
+  allowMovement: 1
+  onAir: 0
   isJumping: 0
   inSlope: 0
   dummy: 0
@@ -1312,6 +1314,7 @@ MonoBehaviour:
   RunSpeed: 4.5
   jumpForce: 5
   fallForce: 4
+  timeDrop: 0
   enableFeetIK: 1
   heightFromGroundRaycast: 1
   raycastDownDistance: 0.5

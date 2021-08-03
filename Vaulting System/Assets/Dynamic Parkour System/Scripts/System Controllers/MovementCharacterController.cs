@@ -31,7 +31,7 @@ namespace Climbing
         [Header("Feet IK")]
         public bool enableFeetIK = true;
         [SerializeField] private float heightFromGroundRaycast = -0.03f;
-        [Range(0, 2f)] [SerializeField] private float raycastDownDistance = 1.5f;
+        [Range(0, 2f)] [SerializeField] public float raycastDownDistance = 1.5f;
         [SerializeField] private LayerMask environmentLayer;
         [SerializeField] private float pelvisOffset = 0f;
         [Range(0, 1f)] [SerializeField] private float pelvisUpandDownSpeed = 0.25f;
@@ -66,43 +66,51 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
+            if (controller.isGrounded)
+            {
+                limitMovement = CheckBoundaries();
+
+                //Drop if Space or moving drop direction furing 0.2s
+                if (limitMovement && controller.isGrounded && !controller.isJumping && (controller.characterInput.drop || timeDrop > 0.2f))
+                {
+                    anim.CrossFade("Jump Down Slow", 0.1f);
+
+                    timeDrop = -1;
+                    controller.isJumping = true;
+                }
+            }
+
             if (!controller.dummy)
             {
                 if (controller.isGrounded)
                 {
                     EnableFeetIK();
                     lastPelvisPositionY = 0.0f;
-
-                    limitMovement = CheckBoundaries();
-
-                    //Drop if Space or moving drop direction furing 0.2s
-                    if (limitMovement && controller.isGrounded && ((controller.characterInput.drop && !controller.isJumping) || timeDrop > 0.2f))
-                    {
-                        anim.CrossFade("Jump Down", 0.1f);
-                        controller.characterAnimation.SetAnimVelocity(Vector3.forward);
-                        controller.isJumping = true;
-                        timeDrop = -1;
-                    }
                 }
 
                 if (!stopMotion)
                     ApplyInputMovement();
 
-            }
+                if (controller.isJumping)
+                {
+                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
+                    {
+                        controller.allowMovement = true;
 
-            if (controller.isJumping && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
-            {
-                if (controller.isGrounded && controller.onAir)
-                {
-                    OnLanded();
-                    controller.isJumping = false;
-                    controller.onAir = false;
-                    timeDrop = 0;
-                }
-                else
-                {
-                    controller.onAir = true;
-                    OnFall();
+                        if (controller.isGrounded && controller.onAir)
+                        {
+                            EnableFeetIK();
+                            OnLanded();
+                            controller.isJumping = false;
+                            controller.onAir = false;
+                            timeDrop = 0;
+                        }
+                        else
+                        {
+                            controller.onAir = true;
+                            OnFall();
+                        }
+                    }
                 }
             }
         }
@@ -111,6 +119,12 @@ namespace Climbing
 
         private void FixedUpdate()
         {
+            if (!controller.dummy && controller.isJumping)
+            {
+                //Grants movement while falling
+                transform.position += ((transform.forward * walkSpeed / 3) + new Vector3(0, rb.velocity.y, 0)) * Time.deltaTime;
+            }
+
             if (!enableFeetIK || controller.dummy)
                 return;
             if (anim == null)
@@ -168,26 +182,28 @@ namespace Climbing
             if (timeDrop == -1)
                 return false;
 
-
+            bool ground = false;
             bool ret = false;
             Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0);
 
+            //ground = Physics.Raycast(origin, Vector3.down, raycastDownDistance);
+
             if (!Physics.Raycast(origin, Vector3.down, 1))
-                ret = CheckSurfaceBoundary(origin);
+                ret = CheckSurfaceBoundary(origin, ground);
             if (!Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * 0.25f);
+                ret = CheckSurfaceBoundary(origin + transform.right * 0.25f, ground);
             if (!Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * -0.25f);
+                ret = CheckSurfaceBoundary(origin + transform.right * -0.25f, ground);
 
             if (ret == false)
                 timeDrop = 0;
 
             if (showDebug)
             {
+                Debug.DrawLine(origin, origin + Vector3.down * raycastDownDistance);
                 Debug.DrawLine(origin, origin + Vector3.down * 1);
                 Debug.DrawLine(origin + transform.right * 0.25f, origin + transform.right * 0.25f + Vector3.down * 1);
                 Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
-                Debug.DrawLine(origin, origin + Vector3.down * 3);
             }
 
             Debug.Log(timeDrop);
@@ -195,7 +211,7 @@ namespace Climbing
             return ret;
         }
 
-        private bool CheckSurfaceBoundary(Vector3 origin)
+        private bool CheckSurfaceBoundary(Vector3 origin, bool ground)
         {
             Vector3 origin2 = transform.position + transform.forward * 0.8f + new Vector3(0, -0.03f, 0);
             if (showDebug)
@@ -221,18 +237,18 @@ namespace Climbing
                 Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
                 float vel = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
 
-                if (vel < 0.4 && vel > -0.4 && controller.isGrounded)
-                {
-                    if(!Physics.Raycast(origin, transform.forward, controller.stepHeight))
-                    {
-                        timeDrop += Time.deltaTime;
-                    }
-                    vel = 0;
-                }
-                else
-                {
-                    timeDrop = 0;
-                }
+                //if (vel < 0.4 && vel > -0.4 && controller.isGrounded)
+                //{
+                //    if (ground)
+                //    {
+                //        timeDrop += Time.deltaTime;
+                //    }
+                //    vel = 0;
+                //}
+                //else
+                //{
+                //    timeDrop = 0;
+                //}
 
                 if (hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
                     vel = 0;
