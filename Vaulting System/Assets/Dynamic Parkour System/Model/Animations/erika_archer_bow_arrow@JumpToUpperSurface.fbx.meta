@@ -38,7 +38,7 @@ ModelImporter:
       name: JumpToUpperSurface
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 4
+      firstFrame: 12
       lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
