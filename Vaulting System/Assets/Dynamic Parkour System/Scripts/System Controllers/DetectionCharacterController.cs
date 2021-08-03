@@ -198,7 +198,7 @@ namespace Climbing
                 Debug.DrawLine(transform.position + new Vector3(0, 0.5f, 0), transform.position + new Vector3(0, 0.5f, 0) + Vector3.down * 0.8f, Color.green);
             }
             RaycastHit hit;
-            return Physics.Raycast(transform.position + new Vector3(0, 0.5f, 0), Vector3.down, out hit, 0.5f + stepHeight);//0.2f
+            return Physics.Raycast(transform.position + new Vector3(0, 0.3f, 0), Vector3.down, out hit, 0.7f);//0.2f
         }
 
         public void FindAheadPoints(ref List<HandlePointsV2> list)

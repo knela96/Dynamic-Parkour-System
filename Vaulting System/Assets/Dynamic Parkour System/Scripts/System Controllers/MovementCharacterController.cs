@@ -23,7 +23,7 @@ namespace Climbing
         public float RunSpeed;
         public float jumpForce;
         public float fallForce;
-        float timeDrop = 0;
+        public float timeDrop = 0;
 
         private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
         Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -79,6 +79,7 @@ namespace Climbing
                     if (limitMovement && controller.isGrounded && ((controller.characterInput.drop && !controller.isJumping) || timeDrop > 0.2f))
                     {
                         anim.CrossFade("Jump Down", 0.1f);
+                        controller.characterAnimation.SetAnimVelocity(Vector3.forward);
                         controller.isJumping = true;
                         timeDrop = -1;
                     }
@@ -87,17 +88,22 @@ namespace Climbing
                 if (!stopMotion)
                     ApplyInputMovement();
 
-            }            
-
-            if (controller.isGrounded)
-            {
-                OnLanded();
-                controller.isJumping = false;
             }
-            else
+
+            if (controller.isJumping && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
             {
-                timeDrop = 0;
-                OnFall();
+                if (controller.isGrounded && controller.onAir)
+                {
+                    OnLanded();
+                    controller.isJumping = false;
+                    controller.onAir = false;
+                    timeDrop = 0;
+                }
+                else
+                {
+                    controller.onAir = true;
+                    OnFall();
+                }
             }
         }
 
@@ -184,6 +190,8 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + Vector3.down * 3);
             }
 
+            Debug.Log(timeDrop);
+
             return ret;
         }
 
@@ -213,10 +221,12 @@ namespace Climbing
                 Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
                 float vel = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
 
-                if (vel < 0.4 && vel > -0.4 && velocity.magnitude > 0.1f && controller.isGrounded)
+                if (vel < 0.4 && vel > -0.4 && controller.isGrounded)
                 {
                     if(!Physics.Raycast(origin, transform.forward, controller.stepHeight))
+                    {
                         timeDrop += Time.deltaTime;
+                    }
                     vel = 0;
                 }
                 else

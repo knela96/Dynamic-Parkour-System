@@ -22,6 +22,7 @@ namespace Climbing
         public Transform camReference;
         public bool moving = false;
         public bool isGrounded = false;
+        public bool onAir = false;
         public bool isJumping = false;
         public bool inSlope = false;
         public bool dummy = false;
@@ -143,6 +144,7 @@ namespace Climbing
             {
                 characterMovement.SetCurrentState(MovementState.Walking);
                 characterMovement.speed = characterMovement.walkSpeed;
+                characterMovement.timeDrop = 0;
                 characterAnimation.animator.SetBool("Run", false);
                 characterInput.run = false;
             }

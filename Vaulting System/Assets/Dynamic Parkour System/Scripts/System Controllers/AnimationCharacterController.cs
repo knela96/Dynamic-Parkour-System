@@ -62,7 +62,6 @@ public class AnimationCharacterController : MonoBehaviour
 
     public void Land()
     {
-        animator.SetBool("Released", true);
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
@@ -171,7 +170,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.CrossFade("Drop To Bracedhang", 0.1f);
         animator.SetInteger("Climb State", (int)state);
         animator.SetBool("Hanging", true);
-        //SetAnimVelocity(Vector3.forward);
+        SetAnimVelocity(Vector3.forward);
     }
 
     public void DropLedge(int state)
