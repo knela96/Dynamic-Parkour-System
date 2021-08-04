@@ -188,12 +188,14 @@ namespace Climbing
 
             //ground = Physics.Raycast(origin, Vector3.down, raycastDownDistance);
 
+            float right = 0.25f;
+
             if (!Physics.Raycast(origin, Vector3.down, 1))
                 ret = CheckSurfaceBoundary(origin, ground);
-            if (!Physics.Raycast(origin + transform.right * 0.1f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * 0.1f, ground);
-            if (!Physics.Raycast(origin + transform.right * -0.1f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * -0.1f, ground);
+            if (!Physics.Raycast(origin + transform.right * right, Vector3.down, 1) && ret == false)
+                ret = CheckSurfaceBoundary(origin + transform.right * right, ground);
+            if (!Physics.Raycast(origin + transform.right * -right, Vector3.down, 1) && ret == false)
+                ret = CheckSurfaceBoundary(origin + transform.right * -right, ground);
 
             //if (ret == false)
             //    timeDrop = 0;
@@ -202,8 +204,8 @@ namespace Climbing
             {
                 Debug.DrawLine(origin, origin + Vector3.down * raycastDownDistance);
                 Debug.DrawLine(origin, origin + Vector3.down * 1);
-                Debug.DrawLine(origin + transform.right * 0.25f, origin + transform.right * 0.25f + Vector3.down * 1);
-                Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
+                Debug.DrawLine(origin + transform.right * right, origin + transform.right * right + Vector3.down * 1);
+                Debug.DrawLine(origin + transform.right * -right, origin + transform.right * -right + Vector3.down * 1);
             }
 
             return ret;
