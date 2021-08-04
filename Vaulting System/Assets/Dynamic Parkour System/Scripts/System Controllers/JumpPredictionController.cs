@@ -63,9 +63,9 @@ namespace Climbing
 
         public void JumpUpdate()
         {
-            if (hasArrived() && (controller.isGrounded || curPoint != null))
+            if (hasArrived() && (controller.isGrounded || curPoint != null) && controller.characterMovement.limitMovement)
             {
-                if (controller.characterInput.jump && controller.characterInput.movement != Vector2.zero && (controller.characterMovement.limitMovement || curPoint))
+                if (controller.characterInput.jump && controller.characterInput.movement != Vector2.zero)
                 {
                     List<HandlePointsV2> points = new List<HandlePointsV2>();
                     controller.characterDetection.FindAheadPoints(ref points);

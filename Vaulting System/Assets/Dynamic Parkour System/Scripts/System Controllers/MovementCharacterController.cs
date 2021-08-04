@@ -190,10 +190,10 @@ namespace Climbing
 
             if (!Physics.Raycast(origin, Vector3.down, 1))
                 ret = CheckSurfaceBoundary(origin, ground);
-            if (!Physics.Raycast(origin + transform.right * 0.25f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * 0.25f, ground);
-            if (!Physics.Raycast(origin + transform.right * -0.25f, Vector3.down, 1) && ret == false)
-                ret = CheckSurfaceBoundary(origin + transform.right * -0.25f, ground);
+            if (!Physics.Raycast(origin + transform.right * 0.1f, Vector3.down, 1) && ret == false)
+                ret = CheckSurfaceBoundary(origin + transform.right * 0.1f, ground);
+            if (!Physics.Raycast(origin + transform.right * -0.1f, Vector3.down, 1) && ret == false)
+                ret = CheckSurfaceBoundary(origin + transform.right * -0.1f, ground);
 
             //if (ret == false)
             //    timeDrop = 0;
