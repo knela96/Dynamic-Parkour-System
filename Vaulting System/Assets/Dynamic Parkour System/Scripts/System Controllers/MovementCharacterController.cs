@@ -98,28 +98,19 @@ namespace Climbing
                 {
                     controller.allowMovement = true;
 
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow"))
+                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall"))
                     {
                         controller.onAir = true;
                         OnFall();
                     }
-                    else
+                    else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
                     {
-                        if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
-                        {
-                            EnableFeetIK();
-                            OnLanded();
-                            controller.isJumping = false;
-                            controller.onAir = false;
-                            timeDrop = 0;
-                        }
-                        else
-                        {
-                            controller.onAir = true;
-                            OnFall();
-                        }
+                        EnableFeetIK();
+                        OnLanded();
+                        controller.isJumping = false;
+                        controller.onAir = false;
+                        timeDrop = 0;
                     }
-                    
                 }
             }
         }
