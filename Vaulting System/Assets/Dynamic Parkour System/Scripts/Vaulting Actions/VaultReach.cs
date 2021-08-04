@@ -63,7 +63,7 @@ namespace Climbing
                             startRot = controller.transform.rotation;
                             targetPos = hit2.point;
                             targetRot = Quaternion.LookRotation(-hit.normal);
-                            vaultTime = startDelay;
+                            vaultTime = 0;
                             animLength = clip.length + startDelay;
                             controller.DisableController();
 
@@ -95,9 +95,9 @@ namespace Climbing
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach") || animator.GetCurrentAnimatorStateInfo(0).IsName("Reach High"))
                 {
                     if (height <= 1)
-                        controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0, 0.5f);
+                        controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 1.0f);
                     else
-                        controller.characterAnimation.SetMatchTarget(AvatarTarget.RightFoot, targetPos, targetRot, Vector3.zero, 0.11f, 0.2f);
+                        controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 0.25f);
 
 
                     if (animator.IsInTransition(0) && vaultTime > 0.5f)

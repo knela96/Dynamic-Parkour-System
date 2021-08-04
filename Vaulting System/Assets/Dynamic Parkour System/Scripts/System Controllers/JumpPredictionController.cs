@@ -168,7 +168,7 @@ namespace Climbing
                 if (direction != Vector3.zero)
                     controller.RotatePlayer(direction);
 
-                controller.characterMovement.ResetSpeed();
+                //controller.characterMovement.ResetSpeed();
 
                 //On MidPoint
                 if (curPoint && !controller.isJumping)

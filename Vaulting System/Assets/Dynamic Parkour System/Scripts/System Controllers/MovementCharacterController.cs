@@ -71,9 +71,12 @@ namespace Climbing
                 limitMovement = CheckBoundaries();
 
                 //Drop if Space or moving drop direction furing 0.2s
-                if (limitMovement && controller.isGrounded && !controller.isJumping && (controller.characterInput.drop || timeDrop > 0.2f))
+                if (limitMovement && controller.isGrounded && !controller.isJumping && !controller.onAir && (controller.characterInput.drop || timeDrop > 0.2f))
                 {
                     anim.CrossFade("Jump Down Slow", 0.1f);
+                    //anim.CrossFade("Small Jump", 0.1f);
+
+                    Debug.Log("ENTER");
 
                     timeDrop = -1;
                     controller.isJumping = true;
@@ -88,16 +91,21 @@ namespace Climbing
                     lastPelvisPositionY = 0.0f;
                 }
 
-                if (!stopMotion)
+                //if (!stopMotion)
                     ApplyInputMovement();
 
                 if (controller.isJumping)
                 {
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
-                    {
-                        controller.allowMovement = true;
+                    controller.allowMovement = true;
 
-                        if (controller.isGrounded && controller.onAir)
+                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow"))
+                    {
+                        controller.onAir = true;
+                        OnFall();
+                    }
+                    else
+                    {
+                        if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
                         {
                             EnableFeetIK();
                             OnLanded();
@@ -111,6 +119,7 @@ namespace Climbing
                             OnFall();
                         }
                     }
+                    
                 }
             }
         }
@@ -122,7 +131,7 @@ namespace Climbing
             if (!controller.dummy && controller.isJumping)
             {
                 //Grants movement while falling
-                transform.position += ((transform.forward * walkSpeed / 3) + new Vector3(0, rb.velocity.y, 0)) * Time.deltaTime;
+                transform.position += (transform.forward * walkSpeed) * Time.deltaTime;
             }
 
             if (!enableFeetIK || controller.dummy)
@@ -141,12 +150,6 @@ namespace Climbing
         #region Movement
         public void ApplyInputMovement()
         {
-            //Apply fall multiplier
-            if (rb.velocity.y <= 0)
-            {
-                rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.deltaTime;
-            }
-
             if (GetState() == MovementState.Running)
             {
                 velocity.Normalize();
@@ -174,6 +177,12 @@ namespace Climbing
                 smoothSpeed = Mathf.SmoothStep(smoothSpeed, 0, Time.deltaTime * 20);
                 rb.velocity = new Vector3(rb.velocity.normalized.x * smoothSpeed, rb.velocity.y, rb.velocity.normalized.z * smoothSpeed);
                 controller.characterAnimation.SetAnimVelocity(controller.characterAnimation.GetAnimVelocity().normalized * smoothSpeed);
+            }
+
+            //Apply fall multiplier
+            if (rb.velocity.y <= 0)
+            {
+                rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.deltaTime;
             }
         }
 
@@ -206,8 +215,6 @@ namespace Climbing
                 Debug.DrawLine(origin + transform.right * -0.25f, origin + transform.right * -0.25f + Vector3.down * 1);
             }
 
-            Debug.Log(timeDrop);
-
             return ret;
         }
 
@@ -237,14 +244,14 @@ namespace Climbing
                 Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
                 float vel = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
 
-                //if (vel < 0.4 && vel > -0.4 && controller.isGrounded)
-                //{
-                //    if (ground)
-                //    {
-                //        timeDrop += Time.deltaTime;
-                //    }
-                //    vel = 0;
-                //}
+                if (vel < 0.4 && vel > -0.4)
+                {
+                    //if (ground)
+                    //{
+                    //    timeDrop += Time.deltaTime;
+                    //}
+                    vel = 0;
+                }
                 //else
                 //{
                 //    timeDrop = 0;
@@ -252,6 +259,12 @@ namespace Climbing
 
                 if (hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
                     vel = 0;
+
+                if (vel < -0.7)
+                    vel = -0.7f;
+                else if (vel > 0.7)
+                    vel = 0.7f;
+
 
                 velocity = right * vel;
 

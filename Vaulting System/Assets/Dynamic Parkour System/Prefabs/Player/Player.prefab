@@ -1313,7 +1313,7 @@ MonoBehaviour:
   JogSpeed: 3
   RunSpeed: 4.5
   jumpForce: 5
-  fallForce: 4
+  fallForce: 2.5
   timeDrop: 0
   enableFeetIK: 1
   heightFromGroundRaycast: 1

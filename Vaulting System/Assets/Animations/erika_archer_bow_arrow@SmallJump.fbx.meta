@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: afb9afd163a35af48ac298932912b8b0
+guid: 6863dbdfb0ca0fc4d933fc404800da50
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Jump From Wall
+    second: SmallJump
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -35,38 +35,30 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jump From Wall
+      name: SmallJump
       takeName: mixamo.com
       internalID: 0
-      firstFrame: 0
-      lastFrame: 38
+      firstFrame: 13
+      lastFrame: 34
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0.3
+      level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.8871905
-        functionName: EnableController
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 3983e0cb5dfc40445bc6676bb1f9c7b4,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

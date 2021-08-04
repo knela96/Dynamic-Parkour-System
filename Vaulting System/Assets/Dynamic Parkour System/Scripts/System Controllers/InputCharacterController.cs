@@ -32,13 +32,15 @@ namespace Climbing
             controls.Player.Movement.canceled += ctx => movement = ctx.ReadValue<Vector2>();
 
             //Press
-            controls.Player.Run.performed += ctx => ToggleRun();
+            //controls.Player.Run.performed += ctx => ToggleRun();
 
             //Hold
             controls.Player.Jump.performed += ctx => jump = ctx.ReadValueAsButton();
             controls.Player.Jump.canceled += ctx => jump = ctx.ReadValueAsButton();
             controls.Player.Drop.performed += ctx => drop = ctx.ReadValueAsButton();
             controls.Player.Drop.canceled += ctx => drop = ctx.ReadValueAsButton();
+            controls.Player.Run.performed += ctx => run = ctx.ReadValueAsButton();
+            controls.Player.Run.canceled += ctx => run = ctx.ReadValueAsButton();
         }
 
         private void Start()

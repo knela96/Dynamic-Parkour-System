@@ -47,7 +47,7 @@ namespace Climbing
             {
                 AddMovementInput(characterInput.movement);
 
-                if (characterInput.run)
+                if (characterInput.run && characterInput.movement.magnitude > 0.5f)
                 {
                     ToggleRun();
                 }
@@ -146,7 +146,7 @@ namespace Climbing
                 characterMovement.speed = characterMovement.walkSpeed;
                 characterMovement.timeDrop = 0;
                 characterAnimation.animator.SetBool("Run", false);
-                characterInput.run = false;
+                //characterInput.run = false;
             }
         }
 
@@ -158,7 +158,7 @@ namespace Climbing
 
         public void DisableController()
         {
-            characterAnimation.SetAnimVelocity(Vector3.zero);
+            //characterAnimation.SetAnimVelocity(Vector3.zero);
             characterMovement.SetKinematic(true);
             characterMovement.enableFeetIK = false;
             collider.isTrigger = true;
@@ -169,7 +169,7 @@ namespace Climbing
         {
             characterMovement.SetKinematic(false);
             characterMovement.ApplyGravity();
-            characterMovement.stopMotion = false; ;
+            characterMovement.stopMotion = false;
             collider.isTrigger = false;
             dummy = false; 
             allowMovement = true;
