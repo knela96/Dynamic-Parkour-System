@@ -27,14 +27,14 @@ namespace Climbing
         public bool isJumping = false;
         public bool inSlope = false;
         public bool dummy = false;
-        Collider collider;
+        public CapsuleCollider collider;
 
         private void Start()
         {
             //camReference = new GameObject("Camera Aux").transform;
             characterMovement.OnLanded += characterAnimation.Land;
             characterMovement.OnFall += characterAnimation.Fall;
-            collider = GetComponent<Collider>();
+            collider = GetComponent<CapsuleCollider>();
         }
 
         // Update is called once per frame

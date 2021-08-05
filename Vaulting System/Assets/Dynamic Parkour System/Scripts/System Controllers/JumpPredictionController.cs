@@ -159,9 +159,8 @@ namespace Climbing
                         RaycastHit hit;
                         if(Physics.Raycast(transform.position, transform.forward, out hit, 3, controller.characterDetection.climbLayer))
                         {
-                            end = hit.point;
+                            end = hit.point + hit.normal * (controller.collider.radius * 2);
                         }
-
 
                         //Compute new Jump Point in case of not finding one
                         SetParabola(transform.position, end);
