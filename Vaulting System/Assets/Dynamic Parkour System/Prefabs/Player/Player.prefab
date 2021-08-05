@@ -1287,6 +1287,7 @@ MonoBehaviour:
   cam: {fileID: 5556358532959275490}
   Transform_Mesh: {fileID: 5374658958455714127}
   stepHeight: 0.6
+  stepVelocity: 0.08
   camReference: {fileID: 5556358533377525084}
   moving: 0
   isGrounded: 0
@@ -1295,6 +1296,7 @@ MonoBehaviour:
   isJumping: 0
   inSlope: 0
   dummy: 0
+  collider: {fileID: 0}
 --- !u!114 &5556358534646836588
 MonoBehaviour:
   m_ObjectHideFlags: 0
