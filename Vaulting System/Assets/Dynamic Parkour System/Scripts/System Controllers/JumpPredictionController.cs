@@ -63,7 +63,7 @@ namespace Climbing
 
         public void JumpUpdate()
         {
-            if (hasArrived() && (controller.isGrounded || curPoint != null) && controller.characterMovement.limitMovement)
+            if (hasArrived() && !controller.isJumping && ((controller.isGrounded && curPoint == null) || curPoint != null) && controller.characterMovement.limitMovement)
             {
                 if (controller.characterInput.jump && controller.characterInput.movement != Vector2.zero)
                 {
@@ -127,9 +127,11 @@ namespace Climbing
                         }
                     }
 
+                    bool target = false;
                     if (newPoint && p != null)
                     {
-                        if (SetParabola(transform.position, p.transform.position))
+                        target = SetParabola(transform.position, p.transform.position);
+                        if (target)
                         {
                             curPoint = p;
 
@@ -149,6 +151,27 @@ namespace Climbing
                             controller.isJumping = true;
                         }
                     }
+                    
+                    if(!target)
+                    {
+                        Vector3 end = transform.position + transform.forward * 3;
+
+                        RaycastHit hit;
+                        if(Physics.Raycast(transform.position, transform.forward, out hit, 3, controller.characterDetection.climbLayer))
+                        {
+                            end = hit.point;
+                        }
+
+
+                        //Compute new Jump Point in case of not finding one
+                        SetParabola(transform.position, end);
+                        controller.characterAnimation.JumpPrediction(false);
+                        curPoint = null;
+                        controller.characterMovement.stopMotion = true;
+                        controller.characterMovement.Fall();
+                        controller.DisableController();
+                        controller.isJumping = true;
+                    }
 
                     points.Clear();
                 }
@@ -164,24 +187,28 @@ namespace Climbing
             }
             else
             {
-                Vector3 direction = new Vector3(controller.characterInput.movement.x, 0f, controller.characterInput.movement.y).normalized;
-                if (direction != Vector3.zero)
-                    controller.RotatePlayer(direction);
-
-                //controller.characterMovement.ResetSpeed();
-
-                //On MidPoint
-                if (curPoint && !controller.isJumping)
+                if (curPoint)
                 {
-                    //Delay between allowing new jump
-                    if (delay < 0.1f)
-                        delay += Time.deltaTime;
-                    else
-                        JumpUpdate();
+                    if (curPoint.type == PointType.Pole)
+                    {
+                        Vector3 direction = new Vector3(controller.characterInput.movement.x, 0f, controller.characterInput.movement.y).normalized;
+                        if (direction != Vector3.zero)
+                            controller.RotatePlayer(direction);
 
-                    //Has arribed to destiny
-                    if (curPoint.type != PointType.Ground)
-                        return true;
+                        controller.characterMovement.ResetSpeed();
+
+                        //On MidPoint
+                        if (curPoint && !controller.isJumping)
+                        {
+                            //Delay between allowing new jump
+                            if (delay < 0.1f)
+                                delay += Time.deltaTime;
+                            else
+                                JumpUpdate();
+
+                            return true;
+                        }
+                    }
                 }
                 else //Player is Droping
                 {
@@ -196,7 +223,7 @@ namespace Climbing
         {
             if (move == true)
             {
-                if (actualSpeed >= 1.0f)
+                if (actualSpeed >= 1.0f && curPoint != null)
                 {
                     if (!controller.characterMovement.stopMotion)
                         controller.EnableController();
@@ -206,9 +233,21 @@ namespace Climbing
                     delay = 0;
                     move = false;
                 }
+                else if (actualSpeed >= 0.7f && curPoint == null) //
+                {
+                    controller.EnableController();
+                    actualSpeed = 0.0f;
+                    delay = 0;
+                    move = false;
+                }
                 else
                 {
                     actualSpeed += Time.deltaTime / length;
+                    if (actualSpeed > 1)
+                    {
+                        Debug.Log("jump");
+                        actualSpeed = 1;
+                    }
                     transform.position = SampleParabola(origin, target, maxHeight, actualSpeed);
 
                     //Rotate Mesh to Movement

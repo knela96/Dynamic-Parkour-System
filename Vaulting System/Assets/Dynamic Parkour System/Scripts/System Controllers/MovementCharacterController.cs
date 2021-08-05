@@ -91,7 +91,7 @@ namespace Climbing
                     lastPelvisPositionY = 0.0f;
                 }
 
-                //if (!stopMotion)
+                if (!stopMotion)
                     ApplyInputMovement();
 
                 if (controller.isJumping)
@@ -100,8 +100,7 @@ namespace Climbing
 
                     if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall"))
                     {
-                        controller.onAir = true;
-                        OnFall();
+                        Fall();
                     }
                     else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
                     {
@@ -115,7 +114,11 @@ namespace Climbing
             }
         }
 
-
+        public void Fall()
+        {
+            controller.onAir = true;
+            OnFall();
+        }
 
         private void FixedUpdate()
         {
