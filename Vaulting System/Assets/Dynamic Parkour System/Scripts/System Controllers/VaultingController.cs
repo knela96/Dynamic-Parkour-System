@@ -92,7 +92,15 @@ namespace Climbing
 
             if (curAction != null && isVaulting)
             {
-                isVaulting = curAction.ExecuteAction();
+                isVaulting = curAction.Update();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (curAction != null && isVaulting)
+            {
+                isVaulting = curAction.FixedUpdate();
             }
         }
 

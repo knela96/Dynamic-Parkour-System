@@ -28,7 +28,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (controller.characterInput.jump && !isVaulting)
+            if (controller.characterInput.jump && !isVaulting && !controller.isJumping && controller.isGrounded)
             {
                 RaycastHit hit;
                 //Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
@@ -81,7 +81,7 @@ namespace Climbing
             return false;
         }
 
-        public override bool ExecuteAction()
+        public override bool Update()
         {
             bool ret = false;
             if (isVaulting)
@@ -98,7 +98,6 @@ namespace Climbing
                         controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 1.0f);
                     else
                         controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 0.25f);
-
 
                     if (animator.IsInTransition(0) && vaultTime > 0.5f)
                     {

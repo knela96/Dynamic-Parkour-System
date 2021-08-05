@@ -35,7 +35,7 @@ namespace Climbing
                     {
                         if (hit2.collider)
                         {
-                            controller.characterAnimation.animator.CrossFade("Running Slide", 0.2f);
+                            controller.characterAnimation.animator.CrossFade("Running Slide", 0.05f);
                             dis = 4 / Vector3.Distance(startPos, targetPos);
                             controller.characterAnimation.animator.SetFloat("AnimSpeed", dis);
                             controller.characterAnimation.switchCameras.SlideCam();
@@ -57,7 +57,7 @@ namespace Climbing
 
             return false;
         }
-        public override bool ExecuteAction()
+        public override bool Update()
         {
             bool ret = false;
             if (isVaulting)

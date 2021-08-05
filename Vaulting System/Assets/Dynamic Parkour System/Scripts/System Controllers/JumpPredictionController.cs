@@ -61,7 +61,7 @@ namespace Climbing
             }
         }
 
-        public void JumpUpdate()
+        public void CheckJump()
         {
             if (hasArrived() && !controller.isJumping && ((controller.isGrounded && curPoint == null) || curPoint != null) && controller.characterMovement.limitMovement)
             {
@@ -177,85 +177,77 @@ namespace Climbing
             }
         }
 
-        public bool ExecuteFollow()
+        public bool isMidPoint()
         {
-            if (!hasArrived())
+            if (curPoint == null || controller.characterInput.drop) //Player is Droping
             {
-                FollowParabola(0.7f);
-                return true;
+                curPoint = null;
+                controller.EnableController();
             }
-            else
+            else if (curPoint)
             {
-                if (curPoint == null || controller.characterInput.drop) //Player is Droping
+                if (curPoint.type == PointType.Pole)
                 {
-                    curPoint = null;
-                    controller.EnableController();
-                }
-                else if (curPoint)
-                {
-                    if (curPoint.type == PointType.Pole)
+                    Vector3 direction = new Vector3(controller.characterInput.movement.x, 0f, controller.characterInput.movement.y).normalized;
+                    if (direction != Vector3.zero)
+                        controller.RotatePlayer(direction);
+
+                    controller.characterMovement.ResetSpeed();
+
+                    //On MidPoint
+                    if (curPoint && !controller.isJumping)
                     {
-                        Vector3 direction = new Vector3(controller.characterInput.movement.x, 0f, controller.characterInput.movement.y).normalized;
-                        if (direction != Vector3.zero)
-                            controller.RotatePlayer(direction);
+                        //Delay between allowing new jump
+                        if (delay < 0.1f)
+                            delay += Time.deltaTime;
+                        else
+                            CheckJump();
 
-                        controller.characterMovement.ResetSpeed();
-
-                        //On MidPoint
-                        if (curPoint && !controller.isJumping)
-                        {
-                            //Delay between allowing new jump
-                            if (delay < 0.1f)
-                                delay += Time.deltaTime;
-                            else
-                                JumpUpdate();
-
-                            return true;
-                        }
+                        return true;
                     }
                 }
-
-                return false;
             }
+
+            return false;
         }
 
         public void FollowParabola(float length)
         {
             if (move == true)
             {
-                if (actualSpeed >= 1.0f && curPoint != null)
+                actualSpeed += Time.deltaTime / length;
+                if (actualSpeed > 1)
                 {
-                    if (!controller.characterMovement.stopMotion)
-                        controller.EnableController();
-
-                    controller.isJumping = false;
-                    actualSpeed = 0.0f;
-                    delay = 0;
-                    move = false;
+                    actualSpeed = 1;
                 }
-                else if (actualSpeed >= 0.7f && curPoint == null) //
-                {
+                controller.characterMovement.rb.position = SampleParabola(origin, target, maxHeight, actualSpeed);
+
+                //Rotate Mesh to Movement
+                Vector3 travelDirection = target - origin;
+                float targetAngle = Mathf.Atan2(travelDirection.x, travelDirection.z) * Mathf.Rad2Deg;
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+                controller.characterMovement.rb.rotation = Quaternion.Euler(0f, angle, 0f);
+            }
+        }
+
+        public void hasEndedJump()
+        {
+            if (actualSpeed >= 1.0f && curPoint != null)
+            {
+                if (!controller.characterMovement.stopMotion)
                     controller.EnableController();
-                    actualSpeed = 0.0f;
-                    delay = 0;
-                    move = false;
-                }
-                else
-                {
-                    actualSpeed += Time.deltaTime / length;
-                    if (actualSpeed > 1)
-                    {
-                        Debug.Log("jump");
-                        actualSpeed = 1;
-                    }
-                    transform.position = SampleParabola(origin, target, maxHeight, actualSpeed);
 
-                    //Rotate Mesh to Movement
-                    Vector3 travelDirection = target - origin;
-                    float targetAngle = Mathf.Atan2(travelDirection.x, travelDirection.z) * Mathf.Rad2Deg;
-                    float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
-                    transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                }
+                controller.isJumping = false;
+                actualSpeed = 0.0f;
+                delay = 0;
+                move = false;
+            }
+            else if (actualSpeed >= 0.7f && curPoint == null) //
+            {
+                controller.EnableController();
+                actualSpeed = 0.0f;
+                delay = 0;
+                move = false;
             }
         }
 

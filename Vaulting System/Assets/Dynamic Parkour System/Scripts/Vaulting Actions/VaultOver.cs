@@ -54,7 +54,7 @@ namespace Climbing
             return false;
         }
 
-        public override bool ExecuteAction()
+        public override bool Update()
         {
             if (isVaulting)
             {

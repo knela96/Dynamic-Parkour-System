@@ -45,7 +45,9 @@ namespace Climbing
 
         public abstract bool CheckAction();
 
-        public abstract bool ExecuteAction();
+        public virtual bool Update() { return true; }
+
+        public virtual bool FixedUpdate() { return true; }
 
         public virtual void DrawGizmos() {}
 

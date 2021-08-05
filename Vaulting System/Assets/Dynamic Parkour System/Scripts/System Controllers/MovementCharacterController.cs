@@ -121,18 +121,16 @@ namespace Climbing
             if (!controller.dummy)
             {
                 if (!stopMotion)
+                {
                     ApplyInputMovement();
-
-                AutoStep();
+                }
             }
 
             if (!controller.dummy && controller.isJumping)
             {
                 //Grants movement while falling
-                transform.position += (transform.forward * walkSpeed) * Time.deltaTime;
+                rb.position += (transform.forward * walkSpeed) * Time.deltaTime;
             }
-
-
 
             //IKs
             if (!enableFeetIK || controller.dummy)
@@ -174,6 +172,8 @@ namespace Climbing
                 {
                     controller.inSlope = false;
                 }
+
+                AutoStep();
 
                 controller.characterAnimation.SetAnimVelocity(rb.velocity);
             }

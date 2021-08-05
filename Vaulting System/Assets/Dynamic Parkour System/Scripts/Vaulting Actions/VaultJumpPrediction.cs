@@ -22,14 +22,36 @@ namespace Climbing
                     jumpController.curPoint = null;
             }
 
-            jumpController.JumpUpdate();
+            jumpController.CheckJump();
 
             return !jumpController.hasArrived();
         }
 
-        public override bool ExecuteAction()
+        public override bool FixedUpdate()
         {
-            return jumpController.ExecuteFollow();
+            if (!jumpController.hasArrived())
+            {
+                jumpController.FollowParabola(0.7f);
+            }
+
+            return true;
+        }
+
+        public override bool Update()
+        {
+            bool ret = false;
+
+            jumpController.hasEndedJump();
+
+            if (!jumpController.hasArrived())
+                ret = true;
+
+            if (jumpController.hasArrived())
+            {
+                ret = jumpController.isMidPoint();
+            }
+
+            return ret;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Climbing
             return climbController.ClimbCheck();
         }
 
-        public override bool ExecuteAction()
+        public override bool Update()
         {
             return climbController.ClimbUpdate();
         }
