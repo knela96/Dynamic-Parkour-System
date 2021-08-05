@@ -18,6 +18,7 @@ namespace Climbing
         public Transform Transform_Mesh;
         private float turnSmoothTime = 0.1f;
         [Range (0, 10.0f)] public float stepHeight = 0.8f;
+        public float stepVelocity = 0.2f;
         float turnSmoothVelocity;
         public Transform camReference;
         public bool moving = false;

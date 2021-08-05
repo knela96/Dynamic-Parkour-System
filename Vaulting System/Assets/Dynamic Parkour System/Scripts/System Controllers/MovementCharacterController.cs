@@ -68,16 +68,10 @@ namespace Climbing
         {
             if (controller.isGrounded)
             {
-                limitMovement = CheckBoundaries();
-
                 //Drop if Space or moving drop direction furing 0.2s
                 if (limitMovement && controller.isGrounded && !controller.isJumping && !controller.onAir && (controller.characterInput.drop || timeDrop > 0.2f))
                 {
                     anim.CrossFade("Jump Down Slow", 0.1f);
-                    //anim.CrossFade("Small Jump", 0.1f);
-
-                    Debug.Log("ENTER");
-
                     timeDrop = -1;
                     controller.isJumping = true;
                 }
@@ -90,9 +84,6 @@ namespace Climbing
                     EnableFeetIK();
                     lastPelvisPositionY = 0.0f;
                 }
-
-                if (!stopMotion)
-                    ApplyInputMovement();
 
                 if (controller.isJumping)
                 {
@@ -122,12 +113,28 @@ namespace Climbing
 
         private void FixedUpdate()
         {
+            if (controller.isGrounded)
+            {
+                limitMovement = CheckBoundaries();
+            }
+
+            if (!controller.dummy)
+            {
+                if (!stopMotion)
+                    ApplyInputMovement();
+
+                AutoStep();
+            }
+
             if (!controller.dummy && controller.isJumping)
             {
                 //Grants movement while falling
                 transform.position += (transform.forward * walkSpeed) * Time.deltaTime;
             }
 
+
+
+            //IKs
             if (!enableFeetIK || controller.dummy)
                 return;
             if (anim == null)
@@ -159,8 +166,13 @@ namespace Climbing
                 controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 1.0f, out hit);
                 if (hit.normal != Vector3.up)
                 {
+                    controller.inSlope = true;
                     rb.velocity += -new Vector3(hit.normal.x, 0, hit.normal.z) * 1.0f;
                     rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.6f * Time.deltaTime;
+                }
+                else
+                {
+                    controller.inSlope = false;
                 }
 
                 controller.characterAnimation.SetAnimVelocity(rb.velocity);
@@ -315,7 +327,6 @@ namespace Climbing
 
         #region Foot IK
 
-
         private void OnAnimatorIK(int layerIndex)
         {
             if (!enableFeetIK || controller.dummy)
@@ -415,16 +426,10 @@ namespace Climbing
 
         #endregion
 
-
-        #region Climb
-
         public void SetKinematic(bool active)
         {
             rb.isKinematic = active;
         }
-
-
-        #endregion
 
         public void EnableFeetIK()
         {
@@ -435,6 +440,43 @@ namespace Climbing
         {
             rb.velocity += Vector3.up * -0.300f;
         }
+
+
+        #region Auto Step
+        private void AutoStep()
+        {
+            if (controller.inSlope)
+                return;
+
+            Vector3 offset = new Vector3(0, 0.01f, 0);
+            RaycastHit hit;
+            if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, Vector3.forward, controller.collider.radius + 0.1f, out hit))
+            {
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), Vector3.forward, controller.collider.radius + 0.2f, out hit))
+                {
+                    rb.position += new Vector3(0, controller.stepVelocity, 0);
+                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                }
+            }
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(-1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
+            {
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(-1.5f,0,1), controller.collider.radius + 0.2f, out hit))
+                {
+                    rb.position += new Vector3(0, controller.stepVelocity, 0);
+                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                }
+            }
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
+            {
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(1.5f, 0, 1), controller.collider.radius + 0.2f, out hit))
+                {
+                    rb.position += new Vector3(0, controller.stepVelocity, 0);
+                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                }
+            }
+        }
+
+        #endregion 
     }
 
 }
