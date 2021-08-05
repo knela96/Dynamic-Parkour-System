@@ -186,7 +186,12 @@ namespace Climbing
             }
             else
             {
-                if (curPoint)
+                if (curPoint == null || controller.characterInput.drop) //Player is Droping
+                {
+                    curPoint = null;
+                    controller.EnableController();
+                }
+                else if (curPoint)
                 {
                     if (curPoint.type == PointType.Pole)
                     {
@@ -208,10 +213,6 @@ namespace Climbing
                             return true;
                         }
                     }
-                }
-                else //Player is Droping
-                {
-                    controller.EnableController();
                 }
 
                 return false;
