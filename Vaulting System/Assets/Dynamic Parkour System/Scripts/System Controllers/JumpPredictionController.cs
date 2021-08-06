@@ -235,7 +235,7 @@ namespace Climbing
         {
             if (move == true)
             {
-                actualSpeed += Time.deltaTime / length;
+                actualSpeed += Time.fixedDeltaTime / length;
                 if (actualSpeed > 1)
                 {
                     actualSpeed = 1;

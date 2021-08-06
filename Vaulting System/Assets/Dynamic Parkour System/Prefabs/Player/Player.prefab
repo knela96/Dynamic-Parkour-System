@@ -651,7 +651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Offset: {x: 0, y: 0, z: 0}
-  m_ApplyAfter: 1
+  m_ApplyAfter: 0
   m_PreserveComposition: 0
 --- !u!114 &5556358533377525083
 MonoBehaviour:
@@ -1295,6 +1295,7 @@ MonoBehaviour:
   onAir: 0
   isJumping: 0
   inSlope: 0
+  isVaulting: 0
   dummy: 0
   collider: {fileID: 0}
 --- !u!114 &5556358534646836588

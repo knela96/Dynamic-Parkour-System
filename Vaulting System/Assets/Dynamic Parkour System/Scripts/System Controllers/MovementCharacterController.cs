@@ -66,17 +66,25 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            if (controller.isGrounded && !controller.isVaulting && !controller.isJumping)
+            if (controller.isVaulting)
+                return;
+
+            if (controller.isGrounded && !controller.isJumping)
             {
                 if (limitMovement && velLimit == 0 && timeDrop != -1)
                 {
                     timeDrop += Time.deltaTime;
 
-                    //Checks if can below surface is too low and denies drop
+                    //Checks if below surface is too low and denies drop
                     if(timeDrop > 0.15f)
                     {
                         Vector3 origin = transform.position + transform.forward * 0.5f;
-                        if(!Physics.Raycast(origin, Vector3.down, 1.5f))
+                        RaycastHit hit;
+                        if (!Physics.Raycast(origin, Vector3.down, out hit, 1.5f, controller.characterDetection.wallLayer.value))
+                        {
+                            timeDrop = 0;
+                        }
+                        else if(hit.point.y - transform.position.y <= controller.stepHeight)
                         {
                             timeDrop = 0;
                         }
@@ -88,7 +96,7 @@ namespace Climbing
                 }
 
                 //Drop if drop input or moving drop direction during 0.2s
-                if (limitMovement && (controller.characterInput.drop || timeDrop > 0.15f))
+                if (limitMovement && (controller.characterInput.drop || timeDrop > 0.15f) && controller.characterInput.movement != Vector2.zero)
                 {
                     anim.CrossFade("Jump Down Slow", 0.1f);
                     timeDrop = -1;
@@ -96,7 +104,7 @@ namespace Climbing
                 }
             }
 
-            if (controller.isJumping && !controller.isVaulting)
+            if (controller.isJumping)
             {
                 controller.allowMovement = true;
 
@@ -135,10 +143,10 @@ namespace Climbing
                 }
             }
 
-            if (!controller.dummy && controller.isJumping)
+            if (!controller.dummy && controller.isJumping && controller.characterInput.movement != Vector2.zero)
             {
                 //Grants movement while falling
-                rb.position += (transform.forward * walkSpeed) * Time.deltaTime;
+                rb.position += (transform.forward * walkSpeed) * Time.fixedDeltaTime;
             }
 
             //IKs
@@ -165,7 +173,7 @@ namespace Climbing
 
             if (velocity.magnitude > 0.3f)
             {
-                smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.deltaTime * 2);
+                smoothSpeed = Mathf.Lerp(smoothSpeed, speed, Time.fixedDeltaTime * 2);
                 rb.velocity = new Vector3(velocity.x * smoothSpeed, velocity.y * smoothSpeed + rb.velocity.y, velocity.z * smoothSpeed);
 
                 //Detect Player on Irregular Surface and adjust movement to avoid slowing down
@@ -175,7 +183,7 @@ namespace Climbing
                 {
                     controller.inSlope = true;
                     rb.velocity += -new Vector3(hit.normal.x, 0, hit.normal.z) * 1.0f;
-                    rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.6f * Time.deltaTime;
+                    rb.velocity = rb.velocity + Vector3.up * Physics.gravity.y * 1.6f * Time.fixedDeltaTime;
                 }
                 else
                 {
@@ -189,7 +197,7 @@ namespace Climbing
             else
             {
                 //Lerp down with current velocity of the rigidbody
-                smoothSpeed = Mathf.SmoothStep(smoothSpeed, 0, Time.deltaTime * 20);
+                smoothSpeed = Mathf.SmoothStep(smoothSpeed, 0, Time.fixedDeltaTime * 20);
                 rb.velocity = new Vector3(rb.velocity.normalized.x * smoothSpeed, rb.velocity.y, rb.velocity.normalized.z * smoothSpeed);
                 controller.characterAnimation.SetAnimVelocity(controller.characterAnimation.GetAnimVelocity().normalized * smoothSpeed);
             }
@@ -197,7 +205,7 @@ namespace Climbing
             //Apply fall multiplier
             if (rb.velocity.y <= 0)
             {
-                rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.deltaTime;
+                rb.velocity += Vector3.up * Physics.gravity.y * (fallForce - 1) * Time.fixedDeltaTime;
             }
         }
 

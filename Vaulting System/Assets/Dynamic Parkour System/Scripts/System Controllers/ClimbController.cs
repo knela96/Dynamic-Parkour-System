@@ -279,7 +279,7 @@ namespace Climbing
                     {
                         if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= startTime && rotTime <= 1.0f)
                         {
-                            rotTime += Time.deltaTime / (endTime - startTime - 0.1f);
+                            rotTime += Time.deltaTime / 0.15f;
                             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotTime);
                         }
                     }
@@ -312,6 +312,37 @@ namespace Climbing
             else if (curClimbState == ClimbState.FHanging)
                 curOriginGrabOffset = originHandIKFreeOffset;
 
+            //Detect change of input direction to allow movement again after reaching end of the ledge
+            if (((direction.x >= 0 && horizontalMovement <= 0) || (direction.x <= 0 && horizontalMovement >= 0)) ||
+                !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+            {
+                reachedEnd = false;
+            }
+
+            if (!reachedEnd)//Stops Movement on Ledge
+            {
+                horizontalMovement = direction.x; //Stores player input direction
+
+                if (!CheckValidMovement(direction.x)) //Reached End
+                {
+                    reachedEnd = true;
+                }
+            }
+
+            if (reachedEnd)
+            {
+                direction.x = 0; //Stops Horizontal Movement
+            }
+
+            //Solver to position Limbs + Checks if need to change climb state from Braced and Free Hang
+            IKSolver();
+
+            //Change from Braced Hang <-----> Free Hang
+            ChangeBracedFreeHang();
+
+            characterAnimation.HangMovement(direction.x, (int)curClimbState); //Move on Ledge Animations
+
+
             //Only allow to jump if is on Hanging Movement
             if ((characterController.characterInput.jump || characterController.characterInput.drop) && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
             {
@@ -326,44 +357,12 @@ namespace Climbing
                 }
 
                 if (wallFound)
-                    JumpToLedge(direction.x, direction.y, drop);
+                    JumpToLedge(characterController.characterInput.movement.x, characterController.characterInput.movement.y, drop);
 
                 //Check if can climb on surface
                 if (direction.y > 0.8f && onLedge)
                     ClimbFromLedge();
 
-            }
-            else //Movement Behaviour on Ledge
-            {
-                //Detect change of input direction to allow movement again after reaching end of the ledge
-                if (((direction.x >= 0 && horizontalMovement <= 0) || (direction.x <= 0 && horizontalMovement >= 0)) ||
-                    !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
-                {
-                    reachedEnd = false;
-                }
-
-                if (!reachedEnd)//Stops Movement on Ledge
-                {
-                    horizontalMovement = direction.x; //Stores player input direction
-
-                    if (!CheckValidMovement(direction.x)) //Reached End
-                    {
-                        reachedEnd = true;
-                    }
-                }
-
-                if (reachedEnd)
-                {
-                    direction.x = 0; //Stops Horizontal Movement
-                }
-
-                //Solver to position Limbs + Checks if need to change climb state from Braced and Free Hang
-                IKSolver();
-
-                //Change from Braced Hang <-----> Free Hang
-                ChangeBracedFreeHang();
-
-                characterAnimation.HangMovement(direction.x, (int)curClimbState); //Move on Ledge Animations
             }
         }
 
