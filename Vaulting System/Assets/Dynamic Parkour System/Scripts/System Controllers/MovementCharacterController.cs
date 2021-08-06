@@ -24,6 +24,7 @@ namespace Climbing
         public float jumpForce;
         public float fallForce;
         public float timeDrop = 0;
+        private float velLimit = 0;
 
         private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
         Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -52,7 +53,6 @@ namespace Climbing
         public event OnLandedDelegate OnLanded;
         public event OnFallDelegate OnFall;
 
-
         #endregion
         // Start is called before the first frame update
         void Start()
@@ -66,10 +66,29 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            if (controller.isGrounded)
+            if (controller.isGrounded && !controller.isVaulting && !controller.isJumping)
             {
-                //Drop if Space or moving drop direction furing 0.2s
-                if (limitMovement && controller.isGrounded && !controller.isJumping && !controller.onAir && (controller.characterInput.drop || timeDrop > 0.2f))
+                if (limitMovement && velLimit == 0 && timeDrop != -1)
+                {
+                    timeDrop += Time.deltaTime;
+
+                    //Checks if can below surface is too low and denies drop
+                    if(timeDrop > 0.15f)
+                    {
+                        Vector3 origin = transform.position + transform.forward * 0.5f;
+                        if(!Physics.Raycast(origin, Vector3.down, 1.5f))
+                        {
+                            timeDrop = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    timeDrop = 0;
+                }
+
+                //Drop if drop input or moving drop direction during 0.2s
+                if (limitMovement && (controller.characterInput.drop || timeDrop > 0.15f))
                 {
                     anim.CrossFade("Jump Down Slow", 0.1f);
                     timeDrop = -1;
@@ -77,11 +96,11 @@ namespace Climbing
                 }
             }
 
-            if (controller.isJumping)
+            if (controller.isJumping && !controller.isVaulting)
             {
                 controller.allowMovement = true;
 
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall"))
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall") || anim.GetCurrentAnimatorStateInfo(0).IsName("Freehang Drop"))
                 {
                     Fall();
                 }
@@ -187,10 +206,10 @@ namespace Climbing
             //if (timeDrop == -1)
             //    return false;
 
-            bool ground = false;
             bool ret = false;
-            Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0);
 
+            bool ground = false;
+            Vector3 origin = transform.position + transform.forward * 0.5f + new Vector3(0, 0.5f, 0);
             //ground = Physics.Raycast(origin, Vector3.down, raycastDownDistance);
 
             float right = 0.25f;
@@ -240,31 +259,22 @@ namespace Climbing
                     hit3.normal = hit1.normal;
 
                 Vector3 right = Vector3.Cross(Vector3.up, hit1.normal); //Get tangent of current surface (Right Vector)
-                float vel = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
+                velLimit = Vector3.Dot(velocity.normalized, right); //We get the projection of velocity vector to the tangent
 
-                if (vel < 0.4 && vel > -0.4)
+                if (velLimit < 0.4 && velLimit > -0.4)
                 {
-                    //if (ground)
-                    //{
-                    //    timeDrop += Time.deltaTime;
-                    //}
-                    vel = 0;
+                    velLimit = 0;
                 }
-                //else
-                //{
-                //    timeDrop = 0;
-                //}
 
                 if (hit1.normal != hit2.normal || hit1.normal != hit3.normal) //These normal checks are used to detect corners and avoid problems
-                    vel = 0;
+                    velLimit = 0;
 
-                if (vel < -0.7)
-                    vel = -0.7f;
-                else if (vel > 0.7)
-                    vel = 0.7f;
+                if (velLimit < -0.7)
+                    velLimit = -0.7f;
+                else if (velLimit > 0.7)
+                    velLimit = 0.7f;
 
-
-                velocity = right * vel;
+                velocity = right * velLimit;
 
                 return true;
             }
@@ -422,6 +432,13 @@ namespace Climbing
         }
 
         public void EnableFeetIK()
+        {
+            enableFeetIK = true;
+            lastPelvisPositionY = 0;
+            leftFootIKPosition = Vector3.zero;
+            rightFootIKPosition = Vector3.zero;
+        }
+        public void DisableFeetIK()
         {
             enableFeetIK = true;
             lastPelvisPositionY = 0;

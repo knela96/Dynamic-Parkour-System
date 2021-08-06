@@ -24,7 +24,6 @@ namespace Climbing
         [HideInInspector] public ThirdPersonController controller;
         [HideInInspector] public Animator animator;
         public VaultActions vaultActions;
-        private bool isVaulting = false;
         public bool debug;
 
         private List<VaultAction> actions = new List<VaultAction>();
@@ -69,20 +68,20 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            if (!isVaulting)
+            if (!controller.isVaulting)
             {
                 curAction = null;
             }
 
-            if ((controller.characterInput.jump || controller.characterInput.drop) && !isVaulting)
+            if ((controller.characterInput.jump || controller.characterInput.drop) && !controller.isVaulting)
             {
                 curAction = null;
 
                 foreach (var item in actions)
                 {
-                    isVaulting = item.CheckAction();
+                    controller.isVaulting = item.CheckAction();
 
-                    if (isVaulting)
+                    if (controller.isVaulting)
                     {
                         curAction = item;
                         break;
@@ -90,17 +89,17 @@ namespace Climbing
                 }
             }
 
-            if (curAction != null && isVaulting)
+            if (curAction != null && controller.isVaulting)
             {
-                isVaulting = curAction.Update();
+                controller.isVaulting = curAction.Update();
             }
         }
 
         private void FixedUpdate()
         {
-            if (curAction != null && isVaulting)
+            if (curAction != null && controller.isVaulting)
             {
-                isVaulting = curAction.FixedUpdate();
+                controller.isVaulting = curAction.FixedUpdate();
             }
         }
 

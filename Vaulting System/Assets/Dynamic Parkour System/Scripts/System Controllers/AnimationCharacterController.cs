@@ -50,14 +50,14 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", true);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", false);
-        controller.characterMovement.enableFeetIK = false;
+        controller.characterMovement.DisableFeetIK();
     }
     public void Fall()
     {
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", true);
         animator.SetBool("Land", false);
-        controller.characterMovement.enableFeetIK = false;
+        controller.characterMovement.DisableFeetIK();
     }
 
     public void Land()
@@ -65,7 +65,7 @@ public class AnimationCharacterController : MonoBehaviour
         animator.SetBool("Jump", false);
         animator.SetBool("onAir", false);
         animator.SetBool("Land", true);
-        controller.characterMovement.enableFeetIK = true;
+        controller.characterMovement.EnableFeetIK();
     }
 
     public void HangLedge(ClimbController.ClimbState state)

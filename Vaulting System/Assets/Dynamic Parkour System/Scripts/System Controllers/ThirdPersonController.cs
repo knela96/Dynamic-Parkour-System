@@ -27,6 +27,7 @@ namespace Climbing
         public bool onAir = false;
         public bool isJumping = false;
         public bool inSlope = false;
+        public bool isVaulting = false;
         public bool dummy = false;
         public CapsuleCollider collider;
 
