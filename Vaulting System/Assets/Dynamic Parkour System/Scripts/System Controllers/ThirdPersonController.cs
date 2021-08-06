@@ -169,6 +169,7 @@ namespace Climbing
         public void EnableController()
         {
             characterMovement.SetKinematic(false);
+            characterMovement.EnableFeetIK();
             characterMovement.ApplyGravity();
             characterMovement.stopMotion = false;
             collider.isTrigger = false;

@@ -8,7 +8,7 @@ namespace Climbing
     public class InputCharacterController : MonoBehaviour
     {
         ThirdPersonController controller;
-        public PlayerControls controls;
+        public PlayerControls controls = null;
 
         public Vector2 movement;
         public bool run;
@@ -17,12 +17,14 @@ namespace Climbing
 
         private void OnEnable()
         {
-            controls.Enable();
+            if(controls != null)
+                controls.Enable();
         }
 
         private void OnDisable()
         {
-            controls.Disable();
+            if (controls != null)
+                controls.Disable();
         }
 
         void Awake()
@@ -46,6 +48,15 @@ namespace Climbing
         private void Start()
         {
             controller = GetComponent<ThirdPersonController>();
+        }
+        private void Update()
+        {
+            //if (jump)
+            //    Time.timeScale += 0.1f;
+            //else if (drop)
+            //    Time.timeScale -= 0.1f;
+            //else if (run)
+            //    Time.timeScale = 1.0f;
         }
 
         void ToggleRun()

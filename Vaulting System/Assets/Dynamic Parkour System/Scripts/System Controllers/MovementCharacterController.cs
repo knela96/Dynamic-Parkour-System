@@ -79,12 +79,6 @@ namespace Climbing
 
             if (!controller.dummy)
             {
-                if (controller.isGrounded)
-                {
-                    EnableFeetIK();
-                    lastPelvisPositionY = 0.0f;
-                }
-
                 if (controller.isJumping)
                 {
                     controller.allowMovement = true;
@@ -95,7 +89,6 @@ namespace Climbing
                     }
                     else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
                     {
-                        EnableFeetIK();
                         OnLanded();
                         controller.isJumping = false;
                         controller.onAir = false;
@@ -434,6 +427,9 @@ namespace Climbing
         public void EnableFeetIK()
         {
             enableFeetIK = true;
+            lastPelvisPositionY = 0;
+            leftFootIKPosition = Vector3.zero;
+            rightFootIKPosition = Vector3.zero;
         }
 
         public void ApplyGravity()
@@ -454,8 +450,8 @@ namespace Climbing
             {
                 if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), Vector3.forward, controller.collider.radius + 0.2f, out hit))
                 {
-                    rb.position += new Vector3(0, controller.stepVelocity, 0);
-                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                    //rb.position += new Vector3(0, controller.stepVelocity, 0);
+                    rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
                 }
             }
             else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(-1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
@@ -463,7 +459,7 @@ namespace Climbing
                 if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(-1.5f,0,1), controller.collider.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
-                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                    rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
                 }
             }
             else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
@@ -471,7 +467,7 @@ namespace Climbing
                 if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(1.5f, 0, 1), controller.collider.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
-                    //rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
+                    rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
                 }
             }
         }
