@@ -356,12 +356,13 @@ namespace Climbing
                     drop = true;
                 }
 
-                if (wallFound)
-                    JumpToLedge(characterController.characterInput.movement.x, characterController.characterInput.movement.y, drop);
-
+                bool climbing = false;
                 //Check if can climb on surface
-                if (direction.y > 0.8f && onLedge)
-                    ClimbFromLedge();
+                if (direction.y > 0.8f && direction.x < 0.3 && direction.x > -0.3 && onLedge)
+                    climbing = ClimbFromLedge();
+
+                if (wallFound && !climbing)
+                    JumpToLedge(characterController.characterInput.movement.x, characterController.characterInput.movement.y, drop);
 
             }
         }
@@ -517,7 +518,7 @@ namespace Climbing
                 float angle = Mathf.Acos(Vector3.Dot(inputDirection.normalized, pointDirection.normalized)) * Mathf.Rad2Deg;
 
                 //Stores closest target with angle difference between 40 degrees
-                if (angle < minAngle && angle < 40)
+                if (angle < minAngle/* && angle < 40*/)
                 {
                     minAngle = angle;
                     retPoint = targetPoint;

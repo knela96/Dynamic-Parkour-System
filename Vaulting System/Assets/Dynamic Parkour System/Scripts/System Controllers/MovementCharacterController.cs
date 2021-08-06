@@ -114,10 +114,7 @@ namespace Climbing
                 }
                 else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
                 {
-                    OnLanded();
-                    controller.isJumping = false;
-                    controller.onAir = false;
-                    timeDrop = 0;
+                    Landed();
                 }
             }
         }
@@ -126,6 +123,14 @@ namespace Climbing
         {
             controller.onAir = true;
             OnFall();
+        }
+
+        public void Landed()
+        {
+            OnLanded();
+            controller.isJumping = false;
+            controller.onAir = false;
+            timeDrop = 0;
         }
 
         private void FixedUpdate()
