@@ -79,11 +79,18 @@ namespace Climbing
 
                 foreach (var item in actions)
                 {
-                    controller.isVaulting = item.CheckAction();
-
-                    if (controller.isVaulting)
+                    if (!controller.isVaulting)
                     {
-                        curAction = item;
+                        controller.isVaulting = item.CheckAction();
+
+                        if (controller.isVaulting)
+                        {
+                            curAction = item;
+                            break;
+                        }
+                    }
+                    else
+                    {
                         break;
                     }
                 }

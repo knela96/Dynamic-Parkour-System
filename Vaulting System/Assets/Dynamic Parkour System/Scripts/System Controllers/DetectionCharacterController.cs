@@ -20,6 +20,7 @@ namespace Climbing
         public LayerMask ledgeLayer;
         public LayerMask wallLayer;
         public LayerMask climbLayer;
+        public LayerMask environmentLayer;
 
         public Vector3 LedgePosition;
         public float debugSphereSize = 0.05f;

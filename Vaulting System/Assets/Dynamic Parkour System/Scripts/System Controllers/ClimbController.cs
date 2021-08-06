@@ -199,6 +199,8 @@ namespace Climbing
             //On Ledge
             if (onLedge && characterController.dummy)
             {
+                characterController.isJumping = false;
+
                 ClimbMovement(characterController.characterInput.movement); //Movement on Ledge
 
                 //Dismount from Ledge

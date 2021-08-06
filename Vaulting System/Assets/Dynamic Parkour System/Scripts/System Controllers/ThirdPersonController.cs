@@ -29,14 +29,14 @@ namespace Climbing
         public bool inSlope = false;
         public bool isVaulting = false;
         public bool dummy = false;
-        public CapsuleCollider collider;
+        public CapsuleCollider collider1;
+        public CapsuleCollider collider2;
 
         private void Start()
         {
             //camReference = new GameObject("Camera Aux").transform;
             characterMovement.OnLanded += characterAnimation.Land;
             characterMovement.OnFall += characterAnimation.Fall;
-            collider = GetComponent<CapsuleCollider>();
         }
 
         // Update is called once per frame
@@ -171,7 +171,6 @@ namespace Climbing
             //characterAnimation.SetAnimVelocity(Vector3.zero);
             characterMovement.SetKinematic(true);
             characterMovement.enableFeetIK = false;
-            collider.isTrigger = true;
             dummy = true;
             allowMovement = false;
         }
@@ -181,7 +180,6 @@ namespace Climbing
             characterMovement.EnableFeetIK();
             characterMovement.ApplyGravity();
             characterMovement.stopMotion = false;
-            collider.isTrigger = false;
             dummy = false; 
             allowMovement = true;
         }

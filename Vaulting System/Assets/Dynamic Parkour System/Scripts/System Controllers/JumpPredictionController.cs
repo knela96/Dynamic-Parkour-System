@@ -176,7 +176,7 @@ namespace Climbing
 
                             if(dist.sqrMagnitude >= 2)
                             {   
-                                end = hit.point + hit.normal * (controller.collider.radius * 2);
+                                end = hit.point + hit.normal * (controller.collider2.radius * 2);
                             }
                             else
                             {

@@ -69,7 +69,7 @@ namespace Climbing
             if (controller.isVaulting)
                 return;
 
-            if (controller.isGrounded && !controller.isJumping)
+            if (controller.isGrounded && !controller.isJumping && !controller.dummy)
             {
                 if (limitMovement && velLimit == 0 && timeDrop != -1)
                 {
@@ -80,11 +80,7 @@ namespace Climbing
                     {
                         Vector3 origin = transform.position + transform.forward * 0.5f;
                         RaycastHit hit;
-                        if (!Physics.Raycast(origin, Vector3.down, out hit, 1.5f, controller.characterDetection.wallLayer.value))
-                        {
-                            timeDrop = 0;
-                        }
-                        else if(hit.point.y - transform.position.y <= controller.stepHeight)
+                        if (!Physics.Raycast(origin, Vector3.down, out hit, 1.5f, controller.characterDetection.environmentLayer.value))
                         {
                             timeDrop = 0;
                         }
@@ -108,11 +104,11 @@ namespace Climbing
             {
                 controller.allowMovement = true;
 
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall") || anim.GetCurrentAnimatorStateInfo(0).IsName("Freehang Drop"))
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall") || anim.GetCurrentAnimatorStateInfo(0).IsName("Freehang Drop") || !controller.isGrounded)
                 {
                     Fall();
                 }
-                else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
+                else if (controller.isGrounded && controller.onAir)
                 {
                     Landed();
                 }
@@ -473,25 +469,25 @@ namespace Climbing
 
             Vector3 offset = new Vector3(0, 0.01f, 0);
             RaycastHit hit;
-            if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, Vector3.forward, controller.collider.radius + 0.1f, out hit))
+            if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, Vector3.forward, controller.collider2.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), Vector3.forward, controller.collider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), Vector3.forward, controller.collider2.radius + 0.2f, out hit))
                 {
                     //rb.position += new Vector3(0, controller.stepVelocity, 0);
                     rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
                 }
             }
-            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(-1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(-1.5f, 0, 1), controller.collider2.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(-1.5f,0,1), controller.collider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(-1.5f,0,1), controller.collider2.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
                     rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
                 }
             }
-            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(1.5f, 0, 1), controller.collider.radius + 0.1f, out hit))
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(1.5f, 0, 1), controller.collider2.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(1.5f, 0, 1), controller.collider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(1.5f, 0, 1), controller.collider2.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
                     rb.position += new Vector3(0, controller.stepVelocity, 0) + transform.forward * controller.stepVelocity;
