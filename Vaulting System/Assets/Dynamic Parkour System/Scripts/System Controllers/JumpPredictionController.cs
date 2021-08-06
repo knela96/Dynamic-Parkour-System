@@ -84,9 +84,13 @@ namespace Climbing
                             HandlePointsV2 handle = hit.transform.GetComponentInChildren<HandlePointsV2>();
                             if (handle)
                             {
-                                if (handle.pointsInOrder[0] != null)
+                                for (int i = 0; i < handle.pointsInOrder.Count; i++)
                                 {
-                                    fp = handle.pointsInOrder[0];
+                                    if (handle.pointsInOrder[i] != null)
+                                    {
+                                        fp = handle.pointsInOrder[i];
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -154,22 +158,38 @@ namespace Climbing
                     
                     if(!target)
                     {
-                        Vector3 end = transform.position + transform.forward * 3;
+                        Vector3 end = transform.position + transform.forward * 4;
 
                         RaycastHit hit;
-                        if(Physics.Raycast(transform.position, transform.forward, out hit, 3, controller.characterDetection.climbLayer))
+                        if(Physics.Raycast(transform.position, transform.forward, out hit, 4, controller.characterDetection.climbLayer))
                         {
-                            end = hit.point + hit.normal * (controller.collider.radius * 2);
-                        }
+                            Vector3 temp = hit.point;
+                            temp.y = transform.position.y;
+                            Vector3 dist = temp - transform.position;
 
-                        //Compute new Jump Point in case of not finding one
-                        SetParabola(transform.position, end);
-                        controller.characterAnimation.JumpPrediction(false);
-                        curPoint = null;
-                        controller.characterMovement.stopMotion = true;
-                        controller.characterMovement.Fall();
-                        controller.DisableController();
-                        controller.isJumping = true;
+                            if(dist.sqrMagnitude >= 2)
+                            {   
+                                end = hit.point + hit.normal * (controller.collider.radius * 2);
+                            }
+                            else
+                            {
+                                end = Vector3.zero;
+                            }
+                        }
+                        
+                        if(end != Vector3.zero)
+                        {
+                            //Compute new Jump Point in case of not finding one
+                            if(SetParabola(transform.position, end))
+                            {
+                                controller.characterAnimation.JumpPrediction(false);
+                                curPoint = null;
+                                controller.characterMovement.stopMotion = true;
+                                controller.characterMovement.Fall();
+                                controller.DisableController();
+                                controller.isJumping = true;
+                            }
+                        }
                     }
 
                     points.Clear();

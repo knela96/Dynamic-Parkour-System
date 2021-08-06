@@ -298,7 +298,6 @@ namespace Climbing
                         {
                             active = false;
                             onLedge = false;
-                            characterController.EnableController();
                         }
                     }
                 }
@@ -662,8 +661,6 @@ namespace Climbing
                     newPos = (hit.point + hit.normal * raylength);
 
                     transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
-
-                    Debug.Log("Touching");
                 }
             }
 

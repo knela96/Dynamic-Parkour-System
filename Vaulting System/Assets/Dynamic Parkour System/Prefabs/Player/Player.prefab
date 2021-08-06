@@ -1318,8 +1318,8 @@ MonoBehaviour:
   fallForce: 2.5
   timeDrop: 0
   enableFeetIK: 1
-  heightFromGroundRaycast: 1
-  raycastDownDistance: 0.5
+  heightFromGroundRaycast: 0.7
+  raycastDownDistance: 0.7
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1281

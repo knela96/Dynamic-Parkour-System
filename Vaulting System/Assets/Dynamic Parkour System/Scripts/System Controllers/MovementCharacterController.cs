@@ -77,23 +77,20 @@ namespace Climbing
                 }
             }
 
-            if (!controller.dummy)
+            if (controller.isJumping)
             {
-                if (controller.isJumping)
-                {
-                    controller.allowMovement = true;
+                controller.allowMovement = true;
 
-                    if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall"))
-                    {
-                        Fall();
-                    }
-                    else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
-                    {
-                        OnLanded();
-                        controller.isJumping = false;
-                        controller.onAir = false;
-                        timeDrop = 0;
-                    }
+                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall"))
+                {
+                    Fall();
+                }
+                else if (controller.isGrounded && controller.onAir && anim.GetCurrentAnimatorStateInfo(0).IsName("Fall Idle"))
+                {
+                    OnLanded();
+                    controller.isJumping = false;
+                    controller.onAir = false;
+                    timeDrop = 0;
                 }
             }
         }
