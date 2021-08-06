@@ -107,9 +107,10 @@ namespace Climbing
 
                                 Vector3 targetDirection = point.transform.position - transform.position;
 
-                                Vector2 d1 = new Vector2(targetDirection.x, targetDirection.z).normalized;
-                                Vector2 d2 = new Vector2(transform.forward.x, transform.forward.z).normalized;
-                                float dot = Vector2.Dot(d1, d2);
+                                Vector3 d1 = new Vector3(targetDirection.x, 0, targetDirection.z);
+                                Vector3 d2 = controller.camReference.transform.forward * controller.characterInput.movement.y + controller.camReference.transform.right * controller.characterInput.movement.x;
+
+                                float dot = Vector3.Dot(d1.normalized, d2.normalized);
 
                                 if (fp == null)//First Point
                                 {
@@ -158,10 +159,11 @@ namespace Climbing
                     
                     if(!target)
                     {
-                        Vector3 end = transform.position + transform.forward * 4;
+                        Vector3 dir = controller.camReference.transform.forward * controller.characterInput.movement.y + controller.camReference.transform.right * controller.characterInput.movement.x;
+                        Vector3 end = transform.position + dir * 4;
 
                         RaycastHit hit;
-                        if(Physics.Raycast(transform.position, transform.forward, out hit, 4, controller.characterDetection.climbLayer))
+                        if(Physics.Raycast(transform.position, dir, out hit, 4, controller.characterDetection.climbLayer))
                         {
                             Vector3 temp = hit.point;
                             temp.y = transform.position.y;
