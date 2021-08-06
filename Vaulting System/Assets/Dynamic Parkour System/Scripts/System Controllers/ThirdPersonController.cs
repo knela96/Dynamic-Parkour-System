@@ -115,6 +115,14 @@ namespace Climbing
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
+        public Quaternion RotateToCameraDirection(Vector3 direction)
+        {
+            //Get direction with camera rotation
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+
+            //Rotate Mesh to Movement
+            return Quaternion.Euler(0f, targetAngle, 0f);
+        }
 
         public void Jump()
         {

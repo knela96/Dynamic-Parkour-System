@@ -76,6 +76,13 @@ namespace Climbing
                     Point fp = curPoint;
                     newPoint = false;
 
+                    //Gets direction relative to the input and the camera
+                    Vector3 mov = new Vector3(controller.characterInput.movement.x, 0, controller.characterInput.movement.y);
+                    Vector3 inputDir = controller.RotateToCameraDirection(mov) * Vector3.forward;
+
+                    if (showDebug)
+                        Debug.DrawLine(transform.position, transform.position + inputDir);
+
                     if (fp == null)//First Point
                     {
                         RaycastHit hit;
@@ -108,9 +115,8 @@ namespace Climbing
                                 Vector3 targetDirection = point.transform.position - transform.position;
 
                                 Vector3 d1 = new Vector3(targetDirection.x, 0, targetDirection.z);
-                                Vector3 d2 = controller.camReference.transform.forward * controller.characterInput.movement.y + controller.camReference.transform.right * controller.characterInput.movement.x;
 
-                                float dot = Vector3.Dot(d1.normalized, d2.normalized);
+                                float dot = Vector3.Dot(d1.normalized, inputDir.normalized);
 
                                 if (fp == null)//First Point
                                 {
@@ -159,11 +165,10 @@ namespace Climbing
                     
                     if(!target)
                     {
-                        Vector3 dir = controller.camReference.transform.forward * controller.characterInput.movement.y + controller.camReference.transform.right * controller.characterInput.movement.x;
-                        Vector3 end = transform.position + dir * 4;
+                        Vector3 end = transform.position + inputDir * 4;
 
                         RaycastHit hit;
-                        if(Physics.Raycast(transform.position, dir, out hit, 4, controller.characterDetection.climbLayer))
+                        if(Physics.Raycast(transform.position, inputDir, out hit, 4, controller.characterDetection.climbLayer))
                         {
                             Vector3 temp = hit.point;
                             temp.y = transform.position.y;
