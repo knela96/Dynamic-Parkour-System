@@ -50,6 +50,9 @@ namespace Climbing
             characterAnimation = GetComponent<AnimationCharacterController>();
             characterDetection = GetComponent<DetectionCharacterController>();
             vaultingController = GetComponent<VaultingController>();
+
+            if (cameraController == null)
+                Debug.LogError("Attach the Camera Controller located in the Free Look Camera");
         }
 
         private void Start()
