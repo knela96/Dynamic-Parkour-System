@@ -23,12 +23,13 @@ namespace Climbing
         private float endTime = 0.0f;
         private float rotTime = 0.0f;
         private float horizontalMovement = 0.0f;
-        private float smallHopMaxDistance = 0.35f;
+        private float smallHopMaxDistance = 0.35f; 
+        private float distanceToLedgeBraced = 0.3f;
+        private float distanceToLedgeFree = 0.1f;
 
         private ThirdPersonController characterController;
         private DetectionCharacterController characterDetection;
         private AnimationCharacterController characterAnimation;
-
         private GameObject curLedge;
         private Point targetPoint = null;
         private Point currentPoint = null;
@@ -46,9 +47,6 @@ namespace Climbing
         [SerializeField] private Vector3 originFootIKOffset;
         [SerializeField] private float IKHandRayLength = 0.5f;
         [SerializeField] private float IKFootRayLength = 0.5f;
-        [SerializeField] private float distanceToLedgeBraced = 0.3f;
-        [SerializeField] private float distanceToLedgeFree = 0.1f;
-
         [SerializeField] private GameObject LHand;
         [SerializeField] private GameObject RHand;
         [SerializeField] private GameObject LFoot;
