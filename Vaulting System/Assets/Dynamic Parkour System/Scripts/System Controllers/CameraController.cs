@@ -39,7 +39,6 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Adds Offset to the camera while being on Climbing or inGround
     /// </summary>
-    /// <param name="offset">Active State</param>
     public void newOffset(bool offset)
     {
         if (offset)

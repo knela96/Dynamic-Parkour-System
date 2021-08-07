@@ -112,24 +112,11 @@ namespace Climbing
                 if (showDebug) //Normal
                 {
                     Debug.DrawLine(hit.point, hit.point + hit.normal, Color.cyan);
-                    //transform.rotation = Quaternion.FromToRotation(-transform.forward, hit.normal) * transform.rotation;
                 }
 
                 if (hit.normal == hit.transform.forward || hit.normal == -hit.transform.forward)
                     return true;
 
-                //Vector3 rayOrigin2 = hit.point;
-                //rayOrigin2.y += 1.0f;
-                //
-                //if (Physics.Raycast(rayOrigin2, Vector3.down, out hit, OriginLedgeLength, climbLayer))
-                //{
-                //    if (showDebug)
-                //    {
-                //        Debug.DrawLine(rayOrigin2, rayOrigin2 + Vector3.down * (rayOrigin2.y - hit.point.y), Color.green);
-                //    }
-                //
-                //    return true;
-                //}
             }
             return false;
 
