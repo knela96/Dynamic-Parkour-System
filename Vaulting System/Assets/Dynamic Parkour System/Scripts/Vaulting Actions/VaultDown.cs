@@ -16,6 +16,7 @@ namespace Climbing
         {
             if (controller.isGrounded && !controller.isJumping && !controller.dummy)
             {
+                //Checks if Player is in limit of a surface to Drop
                 if (controller.characterMovement.limitMovement && controller.characterMovement.velLimit == 0 && timeDrop != -1 && !controller.isVaulting)
                 {
                     timeDrop += Time.deltaTime;

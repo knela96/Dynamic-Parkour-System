@@ -19,6 +19,7 @@ namespace Climbing
             if (controller.isVaulting)
                 return false;
 
+            //Ensures that curPoint is Pole type
             if (jumpController.curPoint != null)
             {
                 if (jumpController.curPoint.transform.parent.parent.tag != "Pole")

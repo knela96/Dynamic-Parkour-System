@@ -22,10 +22,11 @@ namespace Climbing
 
     public class VaultingController : MonoBehaviour
     {
+        public bool debug;
+        public VaultActions vaultActions;
+
         [HideInInspector] public ThirdPersonController controller;
         [HideInInspector] public Animator animator;
-        public VaultActions vaultActions;
-        public bool debug;
 
         private List<VaultAction> actions = new List<VaultAction>();
         private VaultAction curAction;
@@ -35,6 +36,7 @@ namespace Climbing
             controller = GetComponent<ThirdPersonController>();
             animator = GetComponent<Animator>();
 
+            //Loads all Valt Actions Values
             if(vaultActions.HasFlag(VaultActions.Vault_Obstacle))
             {
                 Action actionInfo = Resources.Load<Action>("ActionsConfig/VaultObstacle");
@@ -69,8 +71,6 @@ namespace Climbing
             }
         }
 
-
-        // Update is called once per frame
         void Update()
         {
             if (!controller.isVaulting)
@@ -78,6 +78,7 @@ namespace Climbing
                 curAction = null;
             }
 
+            //Check if vaulting action can be performed
             foreach (var item in actions)
             {
                 if (item.CheckAction())
@@ -88,6 +89,7 @@ namespace Climbing
                 }
             }
 
+            //Update logic of current vaulting Action
             if (curAction != null && controller.isVaulting)
             {
                 if (!curAction.Update())
@@ -98,6 +100,7 @@ namespace Climbing
 
         private void FixedUpdate()
         {
+            //Fixed Update logic of current vaulting Action
             if (curAction != null && controller.isVaulting)
             {
                 if(!curAction.FixedUpdate())

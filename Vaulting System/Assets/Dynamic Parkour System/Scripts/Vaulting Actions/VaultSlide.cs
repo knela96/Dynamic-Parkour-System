@@ -11,6 +11,10 @@ namespace Climbing
         {
         }
 
+        
+        /// <summary>
+        /// Checks if Player can Slide the Obstacle
+        /// </summary>
         public override bool CheckAction()
         {
             if (controller.characterInput.drop && !controller.isVaulting)
@@ -18,12 +22,13 @@ namespace Climbing
                 RaycastHit hit;
                 Vector3 origin = controller.transform.position + kneeRaycastOrigin;
 
+                //Finds Obstacle
                 if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength))
                 {
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
-                    Debug.DrawLine(origin, origin + controller.transform.forward * kneeRaycastLength);//Forward Raycast
-
+                    // If direction not the same as object don't do anything
+                    // or angle of movement not valid
                     if ((hit.normal == hit.collider.transform.forward ||
                         hit.normal == -hit.collider.transform.forward) == false ||
                         Mathf.Abs(Vector3.Dot(-hit.normal, controller.transform.forward)) < 0.60 ||
@@ -31,6 +36,7 @@ namespace Climbing
                         return false;
 
                     RaycastHit hit2;
+                    //Get ending position
                     if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
                     {
                         if (hit2.collider)
@@ -56,6 +62,10 @@ namespace Climbing
 
             return false;
         }
+
+        /// <summary>
+        /// Executes Vaulting Animation
+        /// </summary>
         public override bool Update()
         {
             bool ret = false;

@@ -19,6 +19,9 @@ namespace Climbing
             HandAnimVariableName = action.HandAnimVariableName;
         }
 
+        /// <summary>
+        /// Checks if can Vault the Fence Obstacle
+        /// </summary>
         public override bool CheckAction()
         {
             if (controller.characterInput.jump && !controller.isVaulting)
@@ -26,8 +29,11 @@ namespace Climbing
                 RaycastHit hit;
                 Vector3 origin = controller.transform.position + kneeRaycastOrigin;
 
+                //Checks if Vault obstacle in front
                 if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength))
                 {
+                    // If direction not the same as object don't do anything
+                    // or angle of movement not valid
                     if ((hit.normal == hit.collider.transform.forward || 
                         hit.normal == -hit.collider.transform.forward) == false
                         || hit.transform.tag != tag)
@@ -36,7 +42,8 @@ namespace Climbing
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
                     RaycastHit hit2;
-                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10)) //Ground Hit
+                    //Get landing position
+                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10))
                     {
                         if (hit2.collider)
                         {
@@ -66,6 +73,9 @@ namespace Climbing
             return false;
         }
 
+        /// <summary>
+        /// Executes Vaulting Animation
+        /// </summary>
         public override bool Update()
         {
             if (controller.isVaulting)

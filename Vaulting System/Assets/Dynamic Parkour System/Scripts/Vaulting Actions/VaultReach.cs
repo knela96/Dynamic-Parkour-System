@@ -28,12 +28,12 @@ namespace Climbing
 
         public override bool CheckAction()
         {
+            //Checks if the front obstacle tall enough to climb
             if (controller.characterInput.jump && !controller.isVaulting && !controller.isJumping && controller.isGrounded)
             {
-                RaycastHit hit;
-                //Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
                 Vector3 origin = controller.transform.position + Vector3.up * controller.stepHeight;
 
+                RaycastHit hit;
                 if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength, layer.value))
                 {
                     if (hit.collider.gameObject.tag != tag)
@@ -48,11 +48,13 @@ namespace Climbing
                     {
                         height = hit2.point.y - controller.transform.position.y;
 
+                        //Avoids Climbing the same Obstacle like a Slope
                         if (hit.collider.gameObject.tag != tag || height > maxHeight || hit2.collider != hit.collider || hit3.collider == hit2.collider)
                             return false;
 
                         if (hit2.collider)
                         {
+                            //Depending on the height of Obstacle Execute one animation or another
                             if(height <= 1)
                                 controller.characterAnimation.animator.CrossFade("Reach", 0.1f);
                             else
@@ -80,6 +82,9 @@ namespace Climbing
             return false;
         }
 
+        /// <summary>
+        /// Executes Vaulting Animation
+        /// </summary>
         public override bool Update()
         {
             bool ret = false;
@@ -98,6 +103,7 @@ namespace Climbing
                     else
                         controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 0.25f);
 
+                    //Animation Ended, set values to Normal
                     if (animator.animator.IsInTransition(0) && vaultTime > 0.5f)
                     {
                         controller.ToggleWalk();

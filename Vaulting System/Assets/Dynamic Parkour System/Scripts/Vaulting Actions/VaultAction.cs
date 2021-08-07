@@ -33,7 +33,7 @@ namespace Climbing
             controller = _controller;
             animator = controller.characterAnimation;
 
-            //Loads Action Info
+            //Loads Action Info from Scriptable Object
             clip = action.clip;
             kneeRaycastOrigin = action.kneeRaycastOrigin;
             kneeRaycastLength = action.kneeRaycastLength;
