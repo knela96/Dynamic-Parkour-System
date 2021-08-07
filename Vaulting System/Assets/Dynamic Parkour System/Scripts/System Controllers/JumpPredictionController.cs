@@ -7,31 +7,23 @@ namespace Climbing
 {
     public class JumpPredictionController : MonoBehaviour
     {
-        [SerializeField]
-        public float maxHeight = 1.5f;
-        [SerializeField]
-        public float maxDistance = 5.0f;
-        [SerializeField]
-        public float maxTime = 2.0f;
-
-        float turnSmoothVelocity;
-        ThirdPersonController controller;
-
-        Vector3 origin;
-        Vector3 target;
-        float distance = 0;
-        float delay = 0;
-
         public bool showDebug = false;
 
-        bool move = false;
-        bool newPoint = false;
+        [SerializeField] private float maxHeight = 1.5f;
+        [SerializeField] private float maxDistance = 5.0f;
 
-        protected float actualSpeed = 0;
+        private float turnSmoothVelocity;
+        private ThirdPersonController controller;
+        private Vector3 origin;
+        private Vector3 target;
+        private float distance = 0;
+        private float delay = 0;
+        private bool move = false;
+        private bool newPoint = false;
+        private float actualSpeed = 0;
+        private int accuracy = 50;
 
-        public int accuracy = 50;
-
-        public Point curPoint = null;
+        [HideInInspector] public Point curPoint = null;
 
         private void Start()
         {
@@ -61,6 +53,9 @@ namespace Climbing
             }
         }
 
+        /// <summary>
+        /// Finds a Target Point to jump on
+        /// </summary>
         public void CheckJump()
         {
             if (hasArrived() && !controller.isJumping && ((controller.isGrounded && curPoint == null) || curPoint != null) && controller.characterMovement.limitMovement)
@@ -83,7 +78,8 @@ namespace Climbing
                     if (showDebug)
                         Debug.DrawLine(transform.position, transform.position + inputDir);
 
-                    if (fp == null)//First Point
+                    //Get below point for reference as first point
+                    if (fp == null)
                     {
                         RaycastHit hit;
                         if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f))
@@ -103,6 +99,7 @@ namespace Climbing
                         }
                     }
 
+                    //Find Possible Landing Points relative to player direction Input
                     foreach (var item in points)
                     {
                         if (item.pointType != PointType.Ledge)
@@ -138,6 +135,8 @@ namespace Climbing
                     }
 
                     bool target = false;
+
+                    //Creates a new Jump to Landing Point
                     if (newPoint && p != null)
                     {
                         target = SetParabola(transform.position, p.transform.position);
@@ -162,8 +161,9 @@ namespace Climbing
                             controller.characterAnimation.animator.SetBool("PredictedJump", true);
                         }
                     }
-                    
-                    if(!target)
+
+                    //Creates a new Jump in case of not finding a Landing Point
+                    if (!target)
                     {
                         Vector3 end = transform.position + inputDir * 4;
 
@@ -184,7 +184,6 @@ namespace Climbing
                             }
                         }
 
-                        //Compute new Jump Point in case of not finding one
                         if (end != Vector3.zero)
                         {
                             if(SetParabola(transform.position, end))
@@ -203,6 +202,10 @@ namespace Climbing
             }
         }
 
+        /// <summary>
+        /// While being on a pole check for next point to land
+        /// </summary>
+        /// <returns></returns>
         public bool isMidPoint()
         {
             if (curPoint == null || controller.characterInput.drop) //Player is Droping
@@ -220,7 +223,7 @@ namespace Climbing
 
                     controller.characterMovement.ResetSpeed();
 
-                    //On MidPoint
+                    //Check near points while OnPole
                     if (curPoint && !controller.isJumping)
                     {
                         //Delay between allowing new jump
@@ -237,6 +240,9 @@ namespace Climbing
             return false;
         }
 
+        /// <summary>
+        /// Moves the player through the previously created curve
+        /// </summary>
         public void FollowParabola(float length)
         {
             if (move == true)
@@ -256,6 +262,9 @@ namespace Climbing
             }
         }
 
+        /// <summary>
+        /// Checks if the jump has been completed
+        /// </summary>
         public void hasEndedJump()
         {
             if (actualSpeed >= 1.0f && curPoint != null)
@@ -283,6 +292,9 @@ namespace Climbing
             return !move;
         }
 
+        /// <summary>
+        /// Checks if the startPos, endPos and maxHeight is valid to make the jump
+        /// </summary>
         public bool SetParabola(Vector3 start, Vector3 end)
         {
             Vector2 a = new Vector2(start.x, start.z);
@@ -302,6 +314,9 @@ namespace Climbing
             return true;
         }
 
+        /// <summary>
+        /// Creates a curve depending on the starting point, ending point and maxHeight
+        /// </summary>
         Vector3 SampleParabola(Vector3 start, Vector3 end, float height, float t)
         {
             float parabolicT = t * 2 - 1;
