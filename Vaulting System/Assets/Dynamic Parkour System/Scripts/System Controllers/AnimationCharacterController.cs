@@ -11,15 +11,10 @@ namespace Climbing
         private ThirdPersonController controller;
         private Vector3 animVelocity;
         public SwitchCameras switchCameras;
-
-        public AvatarTarget avatarTarget;
-        public Transform target;
-        public float startnormalizedTime;
-        public float targetNormalizedTime;
-        private MatchTargetWeightMask matchTargetWeightMask = new MatchTargetWeightMask(Vector3.one, 0);
         public AnimatorStateInfo animState;
 
-        // Start is called before the first frame update
+        private MatchTargetWeightMask matchTargetWeightMask = new MatchTargetWeightMask(Vector3.one, 0);
+
         void Start()
         {
             controller = GetComponent<ThirdPersonController>();
@@ -27,7 +22,6 @@ namespace Climbing
             switchCameras = Camera.main.GetComponent<SwitchCameras>();
         }
 
-        // Update is called once per frame
         void Update()
         {
             animator.SetFloat("Velocity", animVelocity.magnitude);
@@ -196,20 +190,7 @@ namespace Climbing
         {
             controller.EnableController();
         }
-        public void SetMatchTarget(Vector3 targetPos, Quaternion targetRot, Vector3 offset)
-        {
-            if (animator.isMatchingTarget)
-                return;
 
-            float normalizeTime = Mathf.Repeat(animState.normalizedTime, 1f);
-
-            if (normalizeTime > targetNormalizedTime)
-                return;
-
-            animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
-            animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime);
-
-        }
         public void SetMatchTarget(AvatarTarget avatarTarget, Vector3 targetPos, Quaternion targetRot, Vector3 offset, float startnormalizedTime, float targetNormalizedTime)
         {
             if (animator.isMatchingTarget)

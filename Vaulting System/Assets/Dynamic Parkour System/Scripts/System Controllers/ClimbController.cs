@@ -7,71 +7,67 @@ namespace Climbing
 {
     public class ClimbController : MonoBehaviour
     {
-        bool ledgeFound = false;
-        bool wallFound = false;
-        public bool onLedge = false;
-        public bool toLedge = false;
-        bool jumping = false;
+        public bool debug = false;
 
-        public DetectionCharacterController characterDetection;
-        public ThirdPersonController characterController;
-        public HandlePointConnection pointConnection;
+        private bool active = false;
+        private bool ledgeFound = false;
+        private bool wallFound = false;
+        private bool reachedEnd = false;
+        private bool onLedge = false;
+        private bool toLedge = false;
+        private bool jumping = false;
+
+        private float startTime = 0.0f;
+        private float endTime = 0.0f;
+        private float rotTime = 0.0f;
+        private float horizontalMovement = 0.0f;
+
+        private ThirdPersonController characterController;
+        private DetectionCharacterController characterDetection;
         private AnimationCharacterController characterAnimation;
-        public float rootOffset;
-        Vector3 target = Vector3.zero;
-        Quaternion targetRot = Quaternion.identity;
+        private HandlePointConnection pointConnection;
+
+        private Vector3 target = Vector3.zero;
+        private Quaternion targetRot = Quaternion.identity;
+        private Vector3 curOriginGrabOffset = Vector3.zero;
+        private Vector3 HandPosition = Vector3.zero;
+        private Vector3 leftHandPosition, rightHandPosition, leftFootPosition, rightFootPosition = Vector3.zero;
+
         public Vector3 FreeHangOffset;
         public Vector3 BracedHangOffset;
         public Vector3 originHandIKBracedOffset;
         public Vector3 originHandIKFreeOffset;
-        private Vector3 curOriginGrabOffset;
         public Vector3 originFootIKOffset;
         public float IKHandRayLength = 0.5f;
         public float IKFootRayLength = 0.5f;
         public float distanceToLedgeBraced = 0.40f;
         public float distanceToLedgeFree = 0.25f;
-        Vector3 HandPosition;
-        Vector3 LastLHandPosition;
-        Vector3 LastRHandPosition;
-        float startTime = 0.0f;
-        float endTime = 0.0f;
-        float rotTime = 0.0f;
+        [Range(0.1f, 1.0f)] public float smallHopMaxDistance = 0.33f;
 
-        public GameObject limitLHand;
-        public GameObject limitRHand;
-        public GameObject limitLFoot;
-        public GameObject limitRFoot;
+        [SerializeField] private GameObject LHand;
+        [SerializeField] private GameObject RHand;
+        [SerializeField] private GameObject LFoot;
+        [SerializeField] private GameObject RFoot;
 
-        bool reachedEnd = false;
-        float time = 0;
-
-        [Range (0.1f, 1.0f)]
-        public float smallHopMaxDistance = 0.5f;
-
-        GameObject curLedge;
-
-        Point targetPoint = null;
-        Point currentPoint = null;
-
-        Vector3 leftHandPosition, rightHandPosition, leftFootPosition, rightFootPosition = Vector3.zero;
+        private GameObject curLedge;
+        private Point targetPoint = null;
+        private Point currentPoint = null;
 
         public string LHandAnimVariableName = "LHandCurve";
         public string RHandAnimVariableName = "RHandCurve";
         public string LFootAnimVariableName = "LeftFootCurve";
         public string RFootAnimVariableName = "RightFootCurve";
-
-        bool active = false;
-        public bool debug = false;
         public enum ClimbState { None, BHanging, FHanging};
         private ClimbState curClimbState = ClimbState.None;
 
-        float horizontalMovement = 0.0f;
 
         // Start is called before the first frame update
         void Start()
         {
             curLedge = null;
+            characterController = GetComponent<ThirdPersonController>();
             characterAnimation = characterController.characterAnimation;
+            characterDetection = characterController.characterDetection;
         }
 
         public void onDrawGizmos()
@@ -157,7 +153,6 @@ namespace Climbing
 
                 if (characterController.characterInput.drop && characterController.isGrounded)
                 {
-                    time = 0;
                     characterDetection.FindDropLedgeCollision(out hit);
                     if (hit.collider)
                     {
@@ -490,7 +485,6 @@ namespace Climbing
             }
         }
 
-
         public Neighbour CandidatePointOnDirection(Vector3 inputDirection, Point from, List<Neighbour> candidatePoints, ref float xDistance, bool drop)
         {
             if (!from)
@@ -538,10 +532,10 @@ namespace Climbing
             RaycastHit hit3;
             RaycastHit hit4;
 
-            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * new Vector3(-curOriginGrabOffset.x, curOriginGrabOffset.y, curOriginGrabOffset.z));
-            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * new Vector3(curOriginGrabOffset.x, curOriginGrabOffset.y, curOriginGrabOffset.z));
-            Vector3 origin3 = limitLFoot.transform.position + (transform.rotation * originFootIKOffset);
-            Vector3 origin4 = limitRFoot.transform.position + (transform.rotation * originFootIKOffset);
+            Vector3 origin1 = LHand.transform.position + (transform.rotation * new Vector3(-curOriginGrabOffset.x, curOriginGrabOffset.y, curOriginGrabOffset.z));
+            Vector3 origin2 = RHand.transform.position + (transform.rotation * new Vector3(curOriginGrabOffset.x, curOriginGrabOffset.y, curOriginGrabOffset.z));
+            Vector3 origin3 = LFoot.transform.position + (transform.rotation * originFootIKOffset);
+            Vector3 origin4 = RFoot.transform.position + (transform.rotation * originFootIKOffset);
             origin1.y = transform.position.y + curOriginGrabOffset.y;
             origin2.y = origin1.y;
 
@@ -584,8 +578,8 @@ namespace Climbing
             RaycastHit hit3;
             RaycastHit hit4;
 
-            Vector3 origin1 = limitLHand.transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.18f,0,0)));
-            Vector3 origin2 = limitRHand.transform.position + (transform.rotation * (curOriginGrabOffset));
+            Vector3 origin1 = LHand.transform.position + (transform.rotation * (curOriginGrabOffset + new Vector3(-0.18f,0,0)));
+            Vector3 origin2 = RHand.transform.position + (transform.rotation * (curOriginGrabOffset));
             origin1.y = transform.position.y + curOriginGrabOffset.y - 0.05f;
             origin2.y = origin1.y;
 

@@ -8,23 +8,24 @@ public class CameraController : MonoBehaviour
 
     public Vector3 _offset;
     public Vector3 _default;
-    Vector3 _target;
-    Vector3 _current;
+    private Vector3 _target;
+    private Vector3 _current;
 
     public float maxTime = 2.0f;
-    float curTime = 0.0f;
+    private float curTime = 0.0f;
 
-    bool anim = false;
+    private bool anim = false;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         cameraOffset = GetComponent<CinemachineCameraOffset>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
+        //Lerps Camera Position to the new offset
         if (anim)
         {
             curTime += Time.deltaTime / maxTime;
@@ -33,9 +34,12 @@ public class CameraController : MonoBehaviour
 
         if (curTime >= 1.0f)
             anim = false;
-            
     }
 
+    /// <summary>
+    /// Adds Offset to the camera while being on Climbing or inGround
+    /// </summary>
+    /// <param name="offset">Active State</param>
     public void newOffset(bool offset)
     {
         if (offset)

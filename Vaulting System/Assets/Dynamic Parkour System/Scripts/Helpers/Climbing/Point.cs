@@ -5,6 +5,26 @@ using UnityEngine;
 
 namespace Climbing
 {
+    [System.Serializable]
+    public class Neighbour
+    {
+        public Vector3 direction;
+        public Point target;
+        public ConnectionType type;
+    }
+
+    public enum ConnectionType
+    {
+        direct,
+        top
+    }
+
+    public enum PointType
+    {
+        Ledge = 0,
+        Pole,
+        Ground
+    }
 
     [System.Serializable]
     public class Point : MonoBehaviour
@@ -26,27 +46,6 @@ namespace Climbing
             }
             return retVal;
         }
-    }
-
-    [System.Serializable]
-    public class Neighbour
-    {
-        public Vector3 direction;
-        public Point target;
-        public ConnectionType type;
-    }
-
-    public enum ConnectionType
-    {
-        direct,
-        top
-    }
-
-    public enum PointType
-    {
-        Ledge = 0,
-        Pole,
-        Ground
     }
 }
 

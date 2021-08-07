@@ -1334,6 +1334,7 @@ MonoBehaviour:
   jumpForce: 5
   fallForce: 2.5
   timeDrop: 0
+  velLimit: 0
   enableFeetIK: 1
   heightFromGroundRaycast: 0.7
   raycastDownDistance: 0.7
@@ -1349,6 +1350,7 @@ MonoBehaviour:
   showDebug: 0
   limitMovement: 0
   stopMotion: 0
+  currentState: 0
 --- !u!114 &5556358534646836586
 MonoBehaviour:
   m_ObjectHideFlags: 0

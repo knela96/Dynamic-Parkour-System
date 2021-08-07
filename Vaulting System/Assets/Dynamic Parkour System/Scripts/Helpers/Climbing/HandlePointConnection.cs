@@ -18,6 +18,7 @@ namespace Climbing
         Vector3[] availableDirections = new Vector3[8];
         public float validAngleRange = 22.5f;
 
+        //Directions to Connect Climb Points
         void CreateDirections()
         {
             availableDirections[0] = new Vector3(1, 0, 0);
@@ -53,6 +54,7 @@ namespace Climbing
             }
         }
 
+        //Get all Child Points
         void GetPoints()
         {
             allPoints.Clear();
@@ -69,6 +71,7 @@ namespace Climbing
             }
         }
 
+        //Connects all points near with all neighbours on all directions
         void CandidatePointsOnDirection(Point from)
         {
             for (int p = 0; p < allPoints.Count; p++)
@@ -89,6 +92,7 @@ namespace Climbing
                 }
             }
         }
+
         public bool IsDirectionValid(Vector3 targetDirection, Vector3 candidate)
         {
             bool ret = false;
@@ -129,6 +133,7 @@ namespace Climbing
             return angles;
         }
 
+        //Creates 1 connection between a point with another
         void AddNeighbour(Point from, Point target, Vector3 direction)
         {
             Neighbour n = new Neighbour();

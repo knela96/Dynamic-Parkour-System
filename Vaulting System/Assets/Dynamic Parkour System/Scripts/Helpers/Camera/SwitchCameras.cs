@@ -29,6 +29,7 @@ public class SwitchCameras : MonoBehaviour
         FreeLookCam();
     }
 
+    //Switches To FreeLook Cam
     public void FreeLookCam()
     {
         if (curCam != CameraType.Freelook)
@@ -38,6 +39,7 @@ public class SwitchCameras : MonoBehaviour
         }
     }
 
+    //Switches To Slide Cam
     public void SlideCam()
     {
         if(curCam != CameraType.Slide)
