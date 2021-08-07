@@ -622,16 +622,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1793
   m_IgnoreTag: Player
   m_TransparentLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_MinimumDistanceFromTarget: 0.01
+  m_MinimumDistanceFromTarget: 0.3
   m_AvoidObstacles: 1
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.39
+  m_CameraRadius: 0.69
   m_Strategy: 0
   m_MaximumEffort: 4
   m_SmoothingTime: 0.1
@@ -1297,7 +1297,6 @@ MonoBehaviour:
   characterMovement: {fileID: 5556358534646836588}
   characterAnimation: {fileID: 5556358534646836589}
   characterDetection: {fileID: 5556358534646836587}
-  cameraController: {fileID: 5556358533377525083}
   vaultingController: {fileID: 0}
   isGrounded: 0
   allowMovement: 1
@@ -1306,6 +1305,7 @@ MonoBehaviour:
   inSlope: 0
   isVaulting: 0
   dummy: 0
+  cameraController: {fileID: 5556358533377525083}
   mainCamera: {fileID: 5556358532959275490}
   freeCamera: {fileID: 5556358533377525084}
   stepHeight: 0.6
