@@ -165,7 +165,8 @@ namespace Climbing
                     {
                         //Find Target Point
                         target = ReachLedge(hit);
-                        targetRot = Quaternion.LookRotation(-hit.normal);
+                        targetRot = Quaternion.LookRotation(-hit.normal); 
+                        transform.rotation = Quaternion.FromToRotation(transform.forward, hit.normal) * transform.rotation;//rotates towards ledge direction
 
                         //Check if Ledge is a Braced or FreeHand Point
                         wallFound = characterDetection.FindFootCollision(target, targetRot, hit.normal);
