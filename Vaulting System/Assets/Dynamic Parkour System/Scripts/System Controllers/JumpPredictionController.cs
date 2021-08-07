@@ -133,7 +133,6 @@ namespace Climbing
                                     minDist = targetDirection.sqrMagnitude;
                                     newPoint = true;
                                 }
-
                             }
                         }
                     }
@@ -160,6 +159,7 @@ namespace Climbing
 
                             controller.DisableController();
                             controller.isJumping = true;
+                            controller.characterAnimation.animator.SetBool("PredictedJump", true);
                         }
                     }
                     
@@ -183,16 +183,15 @@ namespace Climbing
                                 end = Vector3.zero;
                             }
                         }
-                        
-                        if(end != Vector3.zero)
+
+                        //Compute new Jump Point in case of not finding one
+                        if (end != Vector3.zero)
                         {
-                            //Compute new Jump Point in case of not finding one
                             if(SetParabola(transform.position, end))
                             {
                                 controller.characterAnimation.JumpPrediction(false);
                                 curPoint = null;
                                 controller.characterMovement.stopMotion = true;
-                                controller.characterMovement.Fall();
                                 controller.DisableController();
                                 controller.isJumping = true;
                             }
@@ -264,6 +263,7 @@ namespace Climbing
                 if (!controller.characterMovement.stopMotion)
                     controller.EnableController();
 
+                controller.characterAnimation.animator.SetBool("PredictedJump", false);
                 controller.isJumping = false;
                 actualSpeed = 0.0f;
                 delay = 0;

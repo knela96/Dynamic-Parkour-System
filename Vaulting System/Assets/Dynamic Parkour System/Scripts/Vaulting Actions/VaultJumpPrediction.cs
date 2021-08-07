@@ -16,7 +16,10 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if(jumpController.curPoint != null)
+            if (controller.isVaulting)
+                return false;
+
+            if (jumpController.curPoint != null)
             {
                 if (jumpController.curPoint.transform.parent.parent.tag != "Pole")
                     jumpController.curPoint = null;

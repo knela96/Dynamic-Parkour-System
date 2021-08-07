@@ -199,7 +199,7 @@ namespace Climbing
             //On Ledge
             if (onLedge && characterController.dummy)
             {
-                characterController.isJumping = false;
+                //characterController.isJumping = false;
 
                 ClimbMovement(characterController.characterInput.movement); //Movement on Ledge
 
@@ -225,8 +225,8 @@ namespace Climbing
                 bool matchRotation = true;
 
                 //Idle To Ledge
-                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Braced Hang") ||
-                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle To Freehang"))
+                if (characterAnimation.animState.IsName("Idle To Braced Hang") ||
+                    characterAnimation.animState.IsName("Idle To Freehang"))
                 {
                     matchingTarget = true;
                     rotTime = 0;
@@ -238,7 +238,7 @@ namespace Climbing
                 }
 
                 //Jump Ledge to Ledge 
-                if (!characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement") && jumping == true)
+                if (!characterAnimation.animState.IsName("Hanging Movement") && jumping == true)
                 {
                     matchingTarget = true;
                     rotTime = 0;
@@ -247,8 +247,8 @@ namespace Climbing
                 }
 
                 //Climb 
-                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced Hang To Crouch") ||
-                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Freehang Climb"))
+                if (characterAnimation.animState.IsName("Braced Hang To Crouch") ||
+                    characterAnimation.animState.IsName("Freehang Climb"))
                 {
                     matchingTarget = true;
                     rotTime = 0;
@@ -263,8 +263,8 @@ namespace Climbing
                 }
 
                 //Dismount
-                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Drop To Freehang") ||
-                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Drop To Bracedhang"))
+                if (characterAnimation.animState.IsName("Drop To Freehang") ||
+                    characterAnimation.animState.IsName("Drop To Bracedhang"))
                 {
                     matchingTarget = true;
                     rotTime = 0;
@@ -279,7 +279,7 @@ namespace Climbing
                 {
                     if (matchRotation)
                     {
-                        if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= startTime && rotTime <= 1.0f)
+                        if (characterAnimation.animState.normalizedTime >= startTime && rotTime <= 1.0f)
                         {
                             rotTime += Time.deltaTime / 0.15f;
                             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotTime);
@@ -316,7 +316,7 @@ namespace Climbing
 
             //Detect change of input direction to allow movement again after reaching end of the ledge
             if (((direction.x >= 0 && horizontalMovement <= 0) || (direction.x <= 0 && horizontalMovement >= 0)) ||
-                !characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+                !characterAnimation.animState.IsName("Hanging Movement"))
             {
                 reachedEnd = false;
             }
@@ -346,7 +346,7 @@ namespace Climbing
 
 
             //Only allow to jump if is on Hanging Movement
-            if ((characterController.characterInput.jump || characterController.characterInput.drop) && characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Hanging Movement"))
+            if ((characterController.characterInput.jump || characterController.characterInput.drop) && characterAnimation.animState.IsName("Hanging Movement"))
             {
                 bool drop = false;
                 if (characterController.characterInput.jump)
@@ -482,8 +482,8 @@ namespace Climbing
                     HandPosition.y = curLedge.transform.position.y;
                 }
 
-                if (characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Free Hang To Braced") ||
-                    characterAnimation.animator.GetCurrentAnimatorStateInfo(0).IsName("Braced To FreeHang"))
+                if (characterAnimation.animState.IsName("Free Hang To Braced") ||
+                    characterAnimation.animState.IsName("Braced To FreeHang"))
                 {
                     characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, HandPosition, transform.rotation, Vector3.zero, 0.0f, 0.001f);
                 }

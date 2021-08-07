@@ -21,7 +21,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (controller.characterInput.jump && !isVaulting)
+            if (controller.characterInput.jump && !controller.isVaulting)
             {
                 RaycastHit hit;
                 Vector3 origin = controller.transform.position + kneeRaycastOrigin;
@@ -42,7 +42,6 @@ namespace Climbing
                         {
                             controller.characterAnimation.animator.CrossFade("Vaulting", 0.2f);
 
-                            isVaulting = true;
                             startPos = controller.transform.position;
                             startRot = controller.transform.rotation;
                             targetPos = hit2.point;
@@ -55,7 +54,7 @@ namespace Climbing
                             Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
                             leftHandPosition = hit.point + (-hit.normal * (hit.transform.localScale.z / 2));
                             leftHandPosition.y = hit.transform.position.y + hit.transform.localScale.y / 2;
-                            leftHandPosition.x += left.x * animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
+                            leftHandPosition.x += left.x * animator.animator.GetBoneTransform(HumanBodyBones.LeftHand).localPosition.x;
                             leftHandRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
 
                             return true;
@@ -69,38 +68,39 @@ namespace Climbing
 
         public override bool Update()
         {
-            bool ret = false;
-            if (isVaulting)
+            if (controller.isVaulting)
             {
                 float actualSpeed = Time.deltaTime / animLength;
-                vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
+                vaultTime += actualSpeed * animator.animState.speed;
 
                 if (vaultTime > 1)
                 {
-                    isVaulting = false;
                     controller.EnableController();
                 }
                 else
                 {
-                    controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
-                    ret = true;
+                    if (vaultTime >= 0)
+                    {
+                        controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                        controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    }
+                    return true;
                 }
             }
 
-            return ret;
+            return false;
         }
 
         public override void OnAnimatorIK(int layerIndex)
         {
-            if (!isVaulting)
+            if (!controller.isVaulting)
                 return;
 
-            float curve = animator.GetFloat(HandAnimVariableName);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, curve);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandRotation);
+            float curve = animator.animator.GetFloat(HandAnimVariableName);
+            animator.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
+            animator.animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
+            animator.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, curve);
+            animator.animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandRotation);
         }
 
         public override void DrawGizmos()

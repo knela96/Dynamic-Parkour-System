@@ -24,7 +24,7 @@ namespace Climbing
         public float jumpForce;
         public float fallForce;
         public float timeDrop = 0;
-        private float velLimit = 0;
+        public float velLimit = 0;
 
         private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
         Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -46,7 +46,7 @@ namespace Climbing
         public bool limitMovement = false;
         public bool stopMotion = false;
 
-        MovementState currentState;
+        public MovementState currentState;
 
         public delegate void OnLandedDelegate();
         public delegate void OnFallDelegate();
@@ -66,45 +66,11 @@ namespace Climbing
         // Update is called once per frame
         void Update()
         {
-            if (controller.isVaulting)
-                return;
-
-            if (controller.isGrounded && !controller.isJumping && !controller.dummy)
-            {
-                if (limitMovement && velLimit == 0 && timeDrop != -1)
-                {
-                    timeDrop += Time.deltaTime;
-
-                    //Checks if below surface is too low and denies drop
-                    if(timeDrop > 0.15f)
-                    {
-                        Vector3 origin = transform.position + transform.forward * 0.5f;
-                        RaycastHit hit;
-                        if (!Physics.Raycast(origin, Vector3.down, out hit, 1.5f, controller.characterDetection.environmentLayer.value))
-                        {
-                            timeDrop = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    timeDrop = 0;
-                }
-
-                //Drop if drop input or moving drop direction during 0.2s
-                if (limitMovement && (controller.characterInput.drop || timeDrop > 0.15f) && controller.characterInput.movement != Vector2.zero)
-                {
-                    anim.CrossFade("Jump Down Slow", 0.1f);
-                    timeDrop = -1;
-                    controller.isJumping = true;
-                }
-            }
-
             if (controller.isJumping)
             {
                 controller.allowMovement = true;
 
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Jump Down Slow") || anim.GetCurrentAnimatorStateInfo(0).IsName("Jump From Wall") || anim.GetCurrentAnimatorStateInfo(0).IsName("Freehang Drop") || !controller.isGrounded)
+                if (!controller.isGrounded)
                 {
                     Fall();
                 }
@@ -138,15 +104,15 @@ namespace Climbing
 
             if (!controller.dummy)
             {
-                if (!stopMotion)
+                if (!stopMotion && !controller.characterAnimation.animState.IsName("Fall"))
                 {
                     ApplyInputMovement();
                 }
             }
 
-            if (!controller.dummy && controller.isJumping && controller.characterInput.movement != Vector2.zero)
+            //Grants movement while falling
+            if (!controller.dummy && controller.isJumping && controller.characterInput.movement != Vector2.zero && !controller.isVaulting)
             {
-                //Grants movement while falling
                 rb.position += (transform.forward * walkSpeed) * Time.fixedDeltaTime;
             }
 
@@ -323,13 +289,29 @@ namespace Climbing
             return currentState;
         }
 
-        public void Jump()
+        public void SetKinematic(bool active)
         {
-            if (controller.isGrounded)
-            {
-                rb.velocity = Vector3.up * jumpForce;
-                controller.isJumping = true;
-            }
+            rb.isKinematic = active;
+        }
+
+        public void EnableFeetIK()
+        {
+            enableFeetIK = true;
+            lastPelvisPositionY = 0;
+            leftFootIKPosition = Vector3.zero;
+            rightFootIKPosition = Vector3.zero;
+        }
+        public void DisableFeetIK()
+        {
+            enableFeetIK = true;
+            lastPelvisPositionY = 0;
+            leftFootIKPosition = Vector3.zero;
+            rightFootIKPosition = Vector3.zero;
+        }
+
+        public void ApplyGravity()
+        {
+            rb.velocity += Vector3.up * -0.300f;
         }
 
         #endregion
@@ -434,32 +416,6 @@ namespace Climbing
         }
 
         #endregion
-
-        public void SetKinematic(bool active)
-        {
-            rb.isKinematic = active;
-        }
-
-        public void EnableFeetIK()
-        {
-            enableFeetIK = true;
-            lastPelvisPositionY = 0;
-            leftFootIKPosition = Vector3.zero;
-            rightFootIKPosition = Vector3.zero;
-        }
-        public void DisableFeetIK()
-        {
-            enableFeetIK = true;
-            lastPelvisPositionY = 0;
-            leftFootIKPosition = Vector3.zero;
-            rightFootIKPosition = Vector3.zero;
-        }
-
-        public void ApplyGravity()
-        {
-            rb.velocity += Vector3.up * -0.300f;
-        }
-
 
         #region Auto Step
         private void AutoStep()

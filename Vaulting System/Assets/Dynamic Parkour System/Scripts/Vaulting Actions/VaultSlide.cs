@@ -13,7 +13,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (controller.characterInput.drop && !isVaulting)
+            if (controller.characterInput.drop && !controller.isVaulting)
             {
                 RaycastHit hit;
                 Vector3 origin = controller.transform.position + kneeRaycastOrigin;
@@ -40,7 +40,6 @@ namespace Climbing
                             controller.characterAnimation.animator.SetFloat("AnimSpeed", dis);
                             controller.characterAnimation.switchCameras.SlideCam();
 
-                            isVaulting = true;
                             startPos = controller.transform.position;
                             startRot = controller.transform.rotation;
                             targetPos = hit2.point;
@@ -60,16 +59,15 @@ namespace Climbing
         public override bool Update()
         {
             bool ret = false;
-            if (isVaulting)
+            if (controller.isVaulting)
             {
                 float actualSpeed = Time.deltaTime / animLength;
-                vaultTime += actualSpeed * (animator.GetCurrentAnimatorStateInfo(0).speed + dis);
+                vaultTime += actualSpeed * (animator.animState.speed + dis);
 
                 if (vaultTime > 1)
                 {
                     controller.characterAnimation.animator.SetFloat("AnimSpeed",1);
                     controller.characterAnimation.switchCameras.FreeLookCam();
-                    isVaulting = false;
                     controller.EnableController();
                 }
                 else

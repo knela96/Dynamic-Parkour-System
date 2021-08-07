@@ -16,7 +16,8 @@ namespace Climbing
         Slide = 1 << 2,
         Reach = 1 << 3,
         Climb_Ledge = 1 << 4,
-        Jump_Prediction = 1 << 5
+        Jump_Prediction = 1 << 5,
+        Vault_Down = 1 << 6,
     }
 
     public class VaultingController : MonoBehaviour
@@ -62,6 +63,10 @@ namespace Climbing
             {
                 Add(new VaultJumpPrediction(controller));
             }
+            if (vaultActions.HasFlag(VaultActions.Vault_Down))
+            {
+                Add(new VaultDown(controller));
+            }
         }
 
 
@@ -73,32 +78,21 @@ namespace Climbing
                 curAction = null;
             }
 
-            if ((controller.characterInput.jump || controller.characterInput.drop) && !controller.isVaulting)
+            foreach (var item in actions)
             {
-                curAction = null;
-
-                foreach (var item in actions)
+                if (item.CheckAction())
                 {
-                    if (!controller.isVaulting)
-                    {
-                        controller.isVaulting = item.CheckAction();
-
-                        if (controller.isVaulting)
-                        {
-                            curAction = item;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    curAction = item;
+                    controller.isVaulting = true;
+                    break;
                 }
             }
 
             if (curAction != null && controller.isVaulting)
             {
-                controller.isVaulting = curAction.Update();
+                if (!curAction.Update())
+                    controller.isVaulting = false;
+
             }
         }
 
@@ -106,7 +100,9 @@ namespace Climbing
         {
             if (curAction != null && controller.isVaulting)
             {
-                controller.isVaulting = curAction.FixedUpdate();
+                if(!curAction.FixedUpdate())
+                    controller.isVaulting = false;
+
             }
         }
 

@@ -28,7 +28,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (controller.characterInput.jump && !isVaulting && !controller.isJumping && controller.isGrounded)
+            if (controller.characterInput.jump && !controller.isVaulting && !controller.isJumping && controller.isGrounded)
             {
                 RaycastHit hit;
                 //Vector3 origin = vaultingController.transform.position + kneeRaycastOrigin;
@@ -58,7 +58,6 @@ namespace Climbing
                             else
                                 controller.characterAnimation.animator.CrossFade("Reach High", 0.1f);
 
-                            isVaulting = true;
                             startPos = controller.transform.position;
                             startRot = controller.transform.rotation;
                             targetPos = hit2.point;
@@ -84,26 +83,25 @@ namespace Climbing
         public override bool Update()
         {
             bool ret = false;
-            if (isVaulting)
+            if (controller.isVaulting)
             {
                 ret = true;
 
                 float actualSpeed = Time.deltaTime / animLength;
-                vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
+                vaultTime += actualSpeed * animator.animState.speed;
                 controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
 
-                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Reach") || animator.GetCurrentAnimatorStateInfo(0).IsName("Reach High"))
+                if (animator.animState.IsName("Reach") || animator.animState.IsName("Reach High"))
                 {
                     if (height <= 1)
                         controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 1.0f);
                     else
                         controller.characterAnimation.SetMatchTarget(AvatarTarget.Root, targetPos, targetRot, Vector3.zero, 0, 0.25f);
 
-                    if (animator.IsInTransition(0) && vaultTime > 0.5f)
+                    if (animator.animator.IsInTransition(0) && vaultTime > 0.5f)
                     {
                         controller.ToggleWalk();
                         controller.EnableController();
-                        isVaulting = false;
                         height = 0;
                         ret = false;
                     }
@@ -115,13 +113,13 @@ namespace Climbing
 
         public override void OnAnimatorIK(int layerIndex)
         {
-            if (height <= 1 || !isVaulting)
+            if (height <= 1 || !controller.isVaulting)
                 return;
 
-            float curve = animator.GetFloat(HandAnimVariableName);
+            float curve = animator.animator.GetFloat(HandAnimVariableName);
 
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
+            animator.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, curve);
+            animator.animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPosition);
         }
 
         public override void DrawGizmos()

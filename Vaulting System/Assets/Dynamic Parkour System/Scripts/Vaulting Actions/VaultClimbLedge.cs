@@ -15,6 +15,9 @@ namespace Climbing
 
         public override bool CheckAction()
         {
+            if (controller.isVaulting)
+                return false;
+
             return climbController.ClimbCheck();
         }
 

@@ -124,15 +124,6 @@ namespace Climbing
             return Quaternion.Euler(0f, targetAngle, 0f);
         }
 
-        public void Jump()
-        {
-            if (isGrounded)
-            {
-                characterMovement.Jump();
-                characterAnimation.Jump();
-            }
-        }
-
         public void ResetMovement()
         {
             characterMovement.ResetSpeed();

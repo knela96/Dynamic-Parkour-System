@@ -12,7 +12,7 @@ namespace Climbing
 
         public override bool CheckAction()
         {
-            if (controller.characterInput.jump && !isVaulting)
+            if (controller.characterInput.jump && !controller.isVaulting)
             {
                 RaycastHit hit;
                 Vector3 origin = controller.transform.position + kneeRaycastOrigin;
@@ -36,7 +36,6 @@ namespace Climbing
                         {
                             controller.characterAnimation.animator.CrossFade("Deep Jump", 0.05f);
 
-                            isVaulting = true;
                             startPos = controller.transform.position;
                             startRot = controller.transform.rotation;
                             targetPos = hit2.point;
@@ -56,24 +55,27 @@ namespace Climbing
 
         public override bool Update()
         {
-            if (isVaulting)
+            if (controller.isVaulting)
             {
                 float actualSpeed = Time.deltaTime / animLength;
-                vaultTime += actualSpeed * animator.GetCurrentAnimatorStateInfo(0).speed;
+                vaultTime += actualSpeed * animator.animState.speed;
 
-                if (vaultTime > 1)
+                if (vaultTime >= 1)
                 {
-                    isVaulting = false; 
                     controller.EnableController();
                 }
-                else if(vaultTime >= 0)
+                else
                 {
-                    controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
-                    controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    if (vaultTime >= 0)
+                    {
+                        controller.transform.rotation = Quaternion.Lerp(startRot, targetRot, vaultTime * 4);
+                        controller.transform.position = Vector3.Lerp(startPos, targetPos, vaultTime);
+                    }
+                    return true;
                 }
             }
 
-            return isVaulting;
+            return false;
         }
 
         public override void DrawGizmos()
