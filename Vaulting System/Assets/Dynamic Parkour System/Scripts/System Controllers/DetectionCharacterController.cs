@@ -8,37 +8,27 @@ namespace Climbing
     [RequireComponent(typeof(ThirdPersonController))]
     public class DetectionCharacterController : MonoBehaviour
     {
-        // Start is called before the first frame update
-        CapsuleCollider collider;
         public bool showDebug = true;
 
-        public Vector3 OriginLedgeRay;
-        public float numRays = 5;
-        public Vector3 OriginFeetRay;
-        public float OriginLedgeLength;
-        public float OriginFeetLength;
+        [Header("Layers")]
         public LayerMask ledgeLayer;
         public LayerMask wallLayer;
         public LayerMask climbLayer;
         public LayerMask environmentLayer;
 
-        public Vector3 LedgePosition;
-        public float debugSphereSize = 0.05f;
-        bool foundWall = false;
-        Vector3 PointFoot1 = Vector3.zero;
-        Vector3 PointFoot2 = Vector3.zero;
-        Vector3 PointFootFwd = Vector3.zero;
-
-        void Start()
-        {
-            collider = GetComponent<CapsuleCollider>();
-        }
+        [Header("Rays")]
+        [SerializeField] private Vector3 OriginLedgeRay;
+        [SerializeField] private Vector3 OriginFeetRay;
+        [SerializeField] private float LedgeRayLength = 1.5f;
+        [SerializeField] private float FeetRayLength = 0.6f;
+        [SerializeField] private float FindLedgeNumRays = 7;
+        [SerializeField] private float DropLedgeNumRays = 8;
 
         public bool FindLedgeCollision(out RaycastHit hit)
         {
             Vector3 rayOrigin = transform.TransformDirection(OriginLedgeRay) + transform.position;
 
-            for(int i = 0; i < numRays; i++)
+            for(int i = 0; i < FindLedgeNumRays; i++)
             {
                 bool ret = ThrowRayToLedge(rayOrigin + new Vector3(0, 0.15f * i, 0), out hit);
 
@@ -54,7 +44,7 @@ namespace Climbing
         }
         public bool FindDropLedgeCollision(out RaycastHit hit)
         {
-            for (int i = 0; i < numRays; i++)
+            for (int i = 0; i < DropLedgeNumRays; i++)
             {
                 Vector3 origin = transform.position + transform.forward * 0.8f - new Vector3(0, i * 0.15f, 0);
 
@@ -81,18 +71,17 @@ namespace Climbing
 
         public bool FindFootCollision(Vector3 targetPos, Quaternion rot, Vector3 normal)
         {
-            foundWall = true;
+            bool foundWall = true;
 
-            PointFoot1 = targetPos + rot * (new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay);
-            PointFoot2 = targetPos + rot * (new Vector3(0.10f, 0, 0) + OriginFeetRay);
-            PointFootFwd = -normal;
+            Vector3 PointFoot1 = targetPos + rot * (new Vector3(-0.15f, -0.10f, 0) + OriginFeetRay);
+            Vector3 PointFoot2 = targetPos + rot * (new Vector3(0.10f, 0, 0) + OriginFeetRay);
 
             RaycastHit hit;
-            if (!Physics.Raycast(PointFoot1, -normal, out hit, OriginFeetLength, wallLayer))
+            if (!Physics.Raycast(PointFoot1, -normal, out hit, FeetRayLength, wallLayer))
             {
                 foundWall = false;
             }
-            if (!Physics.Raycast(PointFoot2, -normal, out hit, OriginFeetLength, wallLayer))
+            if (!Physics.Raycast(PointFoot2, -normal, out hit, FeetRayLength, wallLayer))
             {
                 foundWall = false;
             }
@@ -104,10 +93,10 @@ namespace Climbing
         {
             if (showDebug)
             {
-                Debug.DrawLine(origin, origin + transform.forward * OriginLedgeLength, Color.green);
+                Debug.DrawLine(origin, origin + transform.forward * LedgeRayLength, Color.green);
             }
 
-            if (Physics.Raycast(origin, transform.forward, out hit, OriginLedgeLength, ledgeLayer))
+            if (Physics.Raycast(origin, transform.forward, out hit, LedgeRayLength, ledgeLayer))
             {
                 if (showDebug) //Normal
                 {

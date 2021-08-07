@@ -40,18 +40,24 @@ namespace Climbing
         private Vector3 HandPosition = Vector3.zero;
         private Vector3 leftHandPosition, rightHandPosition, leftFootPosition, rightFootPosition = Vector3.zero;
 
+        [Header("Offset Positions")]
         [SerializeField] private Vector3 FreeHangOffset;
         [SerializeField] private Vector3 BracedHangOffset;
+
+        [Header("IK Settings")]
         [SerializeField] private Vector3 originHandIKBracedOffset;
         [SerializeField] private Vector3 originHandIKFreeOffset;
         [SerializeField] private Vector3 originFootIKOffset;
         [SerializeField] private float IKHandRayLength = 0.5f;
         [SerializeField] private float IKFootRayLength = 0.5f;
+
+        [Header("IK GameObjects")]
         [SerializeField] private GameObject LHand;
         [SerializeField] private GameObject RHand;
         [SerializeField] private GameObject LFoot;
         [SerializeField] private GameObject RFoot;
 
+        [Header("Animation Curves")]
         public string LHandAnimVariableName = "LHandCurve";
         public string RHandAnimVariableName = "RHandCurve";
         public string LFootAnimVariableName = "LeftFootCurve";
@@ -377,7 +383,7 @@ namespace Climbing
             Vector3 origin = leftHandPosition + (rightHandPosition - leftHandPosition) / 2;
             origin.y = leftHandPosition.y;
 
-            //Checks if the player fits to the top surface to climb
+            //Checks if the player fits on the top surface to climb
             RaycastHit hit;
             if (characterController.characterDetection.ThrowClimbRay(origin, transform.forward, IKHandRayLength, out hit))
             {

@@ -7,13 +7,12 @@ namespace Climbing
 {
     public class InputCharacterController : MonoBehaviour
     {
-        ThirdPersonController controller;
-        public PlayerControls controls = null;
+        private PlayerControls controls = null;
 
-        public Vector2 movement;
-        public bool run;
-        public bool jump;
-        public bool drop;
+        [HideInInspector] public Vector2 movement;
+        [HideInInspector] public bool run;
+        [HideInInspector] public bool jump;
+        [HideInInspector] public bool drop;
 
         private void OnEnable()
         {
@@ -43,20 +42,6 @@ namespace Climbing
             controls.Player.Drop.canceled += ctx => drop = ctx.ReadValueAsButton();
             controls.Player.Run.performed += ctx => run = ctx.ReadValueAsButton();
             controls.Player.Run.canceled += ctx => run = ctx.ReadValueAsButton();
-        }
-
-        private void Start()
-        {
-            controller = GetComponent<ThirdPersonController>();
-        }
-        private void Update()
-        {
-            //if (jump)
-            //    Time.timeScale += 0.1f;
-            //else if (drop)
-            //    Time.timeScale -= 0.1f;
-            //else if (run)
-            //    Time.timeScale = 1.0f;
         }
 
         void ToggleRun()

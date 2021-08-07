@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Climbing
 {
+    [RequireComponent(typeof(ClimbController))]
     public class VaultClimbLedge : VaultAction
     {
         ClimbController climbController;

@@ -5,15 +5,17 @@ using System;
 
 namespace Climbing
 {
+    [RequireComponent(typeof(ThirdPersonController))]
     public class JumpPredictionController : MonoBehaviour
     {
         public bool showDebug = false;
 
+        [Header("Jump Settings")]
         [SerializeField] private float maxHeight = 1.5f;
         [SerializeField] private float maxDistance = 5.0f;
 
-        private float turnSmoothVelocity;
         private ThirdPersonController controller;
+        private float turnSmoothVelocity;
         private Vector3 origin;
         private Vector3 target;
         private float distance = 0;
@@ -176,7 +178,7 @@ namespace Climbing
 
                             if(dist.sqrMagnitude >= 2)
                             {   
-                                end = hit.point + hit.normal * (controller.collider2.radius * 2);
+                                end = hit.point + hit.normal * (controller.slidingCapsuleCollider.radius * 2);
                             }
                             else
                             {

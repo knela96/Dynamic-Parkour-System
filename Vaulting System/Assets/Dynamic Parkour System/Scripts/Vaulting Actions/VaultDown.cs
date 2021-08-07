@@ -39,7 +39,7 @@ namespace Climbing
                     if (controller.characterMovement.limitMovement && (controller.characterInput.drop || timeDrop > 0.15f) && controller.characterInput.movement != Vector2.zero)
                     {
                         animator.animator.CrossFade("Jump Down Slow", 0.1f);
-                        controller.characterMovement.timeDrop = -1;
+                        timeDrop = -1;
                         controller.isJumping = true;
                         return true;
                     }

@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    CinemachineCameraOffset cameraOffset;
+    private CinemachineCameraOffset cameraOffset;
 
     public Vector3 _offset;
     public Vector3 _default;
     private Vector3 _target;
-    private Vector3 _current;
 
     public float maxTime = 2.0f;
     private float curTime = 0.0f;
-
     private bool anim = false;
 
 

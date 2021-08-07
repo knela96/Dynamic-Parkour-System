@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532925082188}
-  m_LocalRotation: {x: -0.029345432, y: -0.06377025, z: 0.0047613992, w: 0.99752176}
+  m_LocalRotation: {x: -0.029345429, y: -0.06377024, z: 0.004761399, w: 0.9975217}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -101,8 +101,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5556358532959275495}
-  m_LocalRotation: {x: 0.03200534, y: 0.002313589, z: -0.00007408536, w: 0.9994851}
-  m_LocalPosition: {x: -1.5997871, y: 1.9113504, z: -2.2720213}
+  m_LocalRotation: {x: 0.03162671, y: 0.0022977379, z: -0.00007270644, w: 0.9994972}
+  m_LocalPosition: {x: -1.4810903, y: 2.0128083, z: -2.2720213}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5556358533142032527}
@@ -1297,14 +1297,8 @@ MonoBehaviour:
   characterMovement: {fileID: 5556358534646836588}
   characterAnimation: {fileID: 5556358534646836589}
   characterDetection: {fileID: 5556358534646836587}
-  jumpPrediction: {fileID: 5556358534646836585}
   cameraController: {fileID: 5556358533377525083}
-  cam: {fileID: 5556358532959275490}
-  Transform_Mesh: {fileID: 5374658958455714127}
-  stepHeight: 0.6
-  stepVelocity: 0.08
-  camReference: {fileID: 5556358533377525084}
-  moving: 0
+  vaultingController: {fileID: 0}
   isGrounded: 0
   allowMovement: 1
   onAir: 0
@@ -1312,8 +1306,12 @@ MonoBehaviour:
   inSlope: 0
   isVaulting: 0
   dummy: 0
-  collider1: {fileID: 5556358534646836576}
-  collider2: {fileID: 6941776532399528574}
+  mainCamera: {fileID: 5556358532959275490}
+  freeCamera: {fileID: 5556358533377525084}
+  stepHeight: 0.6
+  stepVelocity: 0.08
+  normalCapsuleCollider: {fileID: 5556358534646836576}
+  slidingCapsuleCollider: {fileID: 6941776532399528574}
 --- !u!114 &5556358534646836588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1326,31 +1324,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e4e8fc79c695540bc086f95f326b45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebug: 0
   rb: {fileID: 0}
-  speed: 3
+  limitMovement: 0
+  stopMotion: 0
+  velLimit: 0
+  curSpeed: 6
   walkSpeed: 3
   JogSpeed: 3
   RunSpeed: 4.5
-  jumpForce: 5
   fallForce: 2.5
-  timeDrop: 0
-  velLimit: 0
   enableFeetIK: 1
-  heightFromGroundRaycast: 0.7
-  raycastDownDistance: 0.7
+  useProIKFeature: 1
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1281
+  heightFromGroundRaycast: 0.7
+  raycastDownDistance: 0.7
   pelvisOffset: 0
-  pelvisUpandDownSpeed: 0.25
+  pelvisUpDownSpeed: 0.25
   feetToIKPositionSpeed: 0.25
   leftFootAnimVariableName: LeftFootCurve
   rightFootAnimVariableName: RightFootCurve
-  useProIKFeature: 1
-  showDebug: 0
-  limitMovement: 0
-  stopMotion: 0
-  currentState: 0
 --- !u!114 &5556358534646836586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1363,10 +1358,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0fa37f735bf1b46b01f94365ed169e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
+  vaultActions: -1
   controller: {fileID: 0}
   animator: {fileID: 0}
-  vaultActions: -1
-  debug: 0
 --- !u!114 &5556358534646836587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1380,11 +1375,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebug: 0
-  OriginLedgeRay: {x: 0, y: 1.57, z: 0.1}
-  numRays: 7
-  OriginFeetRay: {x: 0.3, y: -1, z: -0.3}
-  OriginLedgeLength: 1.5
-  OriginFeetLength: 0.6
   ledgeLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -1397,8 +1387,12 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1025
-  LedgePosition: {x: 0, y: 0, z: 0}
-  debugSphereSize: 0.05
+  OriginLedgeRay: {x: 0, y: 1.57, z: 0.1}
+  OriginFeetRay: {x: 0.3, y: -1, z: -0.3}
+  LedgeRayLength: 1.5
+  FeetRayLength: 0.6
+  FindLedgeNumRays: 7
+  DropLedgeNumRays: 8
 --- !u!114 &5556358534646836589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1412,11 +1406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5556358534646836591}
-  switchCameras: {fileID: 0}
-  avatarTarget: 4
-  target: {fileID: 0}
-  startnormalizedTime: 0
-  targetNormalizedTime: 0.56
+  switchCameras: {fileID: 5556358532959275488}
 --- !u!114 &5556358534646836585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1429,11 +1419,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca52b1107b69e94793d17118572494c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebug: 0
   maxHeight: 1.25
   maxDistance: 5
-  maxTime: 2
-  showDebug: 0
-  accuracy: 50
   curPoint: {fileID: 0}
 --- !u!114 &5556358534646836584
 MonoBehaviour:
@@ -1447,12 +1435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c149647432e0594ba0d2332dc9f41ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onLedge: 0
-  toLedge: 0
-  characterDetection: {fileID: 5556358534646836587}
-  characterController: {fileID: 5556358534646836590}
-  pointConnection: {fileID: 0}
-  rootOffset: 1.09
+  debug: 0
   FreeHangOffset: {x: 0, y: 0.02, z: -0.2}
   BracedHangOffset: {x: 0, y: 0.12, z: -0.15}
   originHandIKBracedOffset: {x: 0.08, y: 1.65, z: -0.25}
@@ -1460,18 +1443,14 @@ MonoBehaviour:
   originFootIKOffset: {x: 0, y: 0, z: -0.41}
   IKHandRayLength: 0.73
   IKFootRayLength: 0.85
-  distanceToLedgeBraced: 0.3
-  distanceToLedgeFree: 0.1
-  limitLHand: {fileID: 5418328446914608113}
-  limitRHand: {fileID: 6884716734290235065}
-  limitLFoot: {fileID: 6614467266380392676}
-  limitRFoot: {fileID: 4314689455366298590}
-  smallHopMaxDistance: 0.33
+  LHand: {fileID: 5418328446914608113}
+  RHand: {fileID: 6884716734290235065}
+  LFoot: {fileID: 6614467266380392676}
+  RFoot: {fileID: 4314689455366298590}
   LHandAnimVariableName: LHandCurve
   RHandAnimVariableName: RHandCurve
   LFootAnimVariableName: LeftFootCurve
   RFootAnimVariableName: RightFootCurve
-  debug: 0
 --- !u!1001 &5556358533754312356
 PrefabInstance:
   m_ObjectHideFlags: 0

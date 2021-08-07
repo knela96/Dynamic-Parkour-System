@@ -5,11 +5,13 @@ using UnityEngine;
 namespace Climbing
 {
     [RequireComponent(typeof(ThirdPersonController))]
+    [RequireComponent(typeof(Animator))]
     public class AnimationCharacterController : MonoBehaviour
     {
-        public Animator animator;
         private ThirdPersonController controller;
         private Vector3 animVelocity;
+
+        [HideInInspector] public Animator animator;
         public SwitchCameras switchCameras;
         public AnimatorStateInfo animState;
 
@@ -101,39 +103,6 @@ namespace Climbing
                 {
 
                     animator.CrossFade("Braced Hang Hop Down", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.7f;
-                }
-            }
-            else if (state == ClimbController.ClimbState.FHanging)
-            {
-                if (direction.x == -1 && direction.y == 0)
-                {
-                    animator.CrossFade("Free Hang Hop Left", 0.2f);
-                    startTime = 0.2f;
-                    endTime = 0.49f;
-                }
-                else if (direction.x == 1 && direction.y == 0)
-                {
-                    animator.CrossFade("Free Hang Hop Left", 0.2f);
-                    startTime = 0.2f;
-                    endTime = 0.49f;
-                }
-                else if (direction.x == 0 && direction.y == 1 ||
-                        direction.x == -1 && direction.y == 1 ||
-                        direction.x == 1 && direction.y == 1)
-                {
-
-                    animator.CrossFade("Free Hang Hop Left", 0.2f);
-                    startTime = 0.3f;
-                    endTime = 0.48f;
-                }
-                else if (direction.x == 0 && direction.y == -1 ||
-                        direction.x == -1 && direction.y == -1 ||
-                        direction.x == 1 && direction.y == -1)
-                {
-
-                    animator.CrossFade("Free Hang Hop Left", 0.2f);
                     startTime = 0.3f;
                     endTime = 0.7f;
                 }
