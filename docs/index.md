@@ -13,9 +13,9 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 | Auto Step                 | Jump Prediction System      |
 | Climb Obstacles           |                             |
 | Jump to Poles             |                             |
-| Climb Ledgess             |                             |
+| Climb Ledges              |                             |
 | Jump Ledge to Ledge       |                             |
-| Drop from Ledges          |                             |
+| Drop to Ledges            |                             |
 | Braced and Hang Climbing  |                             |
 
 ## Dependencies
