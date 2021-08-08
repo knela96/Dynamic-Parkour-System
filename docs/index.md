@@ -34,8 +34,8 @@ allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 allowfullscreen></iframe>
 
 ## Download Build Demo
+[Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-testing)
 
 ## Download Unity Package Plugin
-[Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-testing)
 [Unity Package](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0)
 
