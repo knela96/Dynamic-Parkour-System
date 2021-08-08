@@ -11,7 +11,7 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 | Vault Down                | Vaulting System             |
 | Slide                     | Climbing System             |
 | Auto Step                 | Jump Prediction System      |
-| Climb Obstacles           | Warping Motion              |
+| Climb Obstacles           | Motion Warping              |
 | Jump to Poles             |                             |
 | Climb Ledges              |                             |
 | Jump Ledge to Ledge       |                             |
