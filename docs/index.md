@@ -40,7 +40,7 @@ allowfullscreen></iframe>
 
 
 ## Download
-[Github Repository](https://github.com/knela96/Dynamic-Parkour-System)
+[Dynamic Parkour System Github Repository](https://github.com/knela96/Dynamic-Parkour-System)
 
 [Unity Package](github.com/knela96/Dynamic-Parkour-System/releases/latest)
 
