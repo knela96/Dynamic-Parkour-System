@@ -1,37 +1,41 @@
-## Welcome to GitHub Pages
+## Dynamic Parkour System
 
-You can use the [editor on GitHub](https://github.com/knela96/Dynamic-Parkour-System/edit/Git-Pages/docs/index.md) to maintain and preview the content for your website in Markdown files.
+<p align="center">
+  <img align="middle" src="https://github.com/knela96/Dynamic-Parkour-System/blob/Git-Pages/docs/Resources/Presentation.png" alt="Dynamic Parkour System" width="500" height="auto">
+</p>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import any model and have an already working controller with parkour capabilities like in Assassin's Creed and Uncharted games. This package is fully customizable with its own Character Controller, being really easy to configure and fast to use. It has the possibility to choose between some already build-in Parkour Actions.
 
-### Markdown
+### Actions
+- Vault Fence
+- Vault Box
+- Vault Down
+- Slide
+- Auto Step
+- Climb Obstacles
+- Jump to Poles
+- Climb Ledges
+- Jump Ledge to Ledge
+- Drop from Ledges
+- Braced and Hang Climbing
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Features
+- IK System
+- Custom Character Controller
+- Vaulting System
+- Climbing System
+- Jump Prediction System
 
-```markdown
-Syntax highlighted code block
+## Gameplay Demo
+<iframe width="560" height="315"
+src="https://www.youtube.com/embed/mw6ozapAuYY" 
+frameborder="0" 
+allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen></iframe>
 
-# Header 1
-## Header 2
-### Header 3
+## Download Build Demo
 
-- Bulleted
-- List
+## Download Unity Package Plugin
+[Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-testing)
+[Unity Package](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0)
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/knela96/Dynamic-Parkour-System/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
