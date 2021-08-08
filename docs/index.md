@@ -64,5 +64,3 @@ Animations and Model from [Mixamo](https://www.mixamo.com/)
 
 [Bringing a Hero from Paragon to Life with UE](https://www.youtube.com/watch?v=YlKA22Hzerk&t=1642s)
 
-[IGN documentary of the making of Assassin's Creed 3](https://www.youtube.com/watch?v=zoEqI97-HaU)
-
