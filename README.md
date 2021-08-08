@@ -54,9 +54,3 @@ Twitter: [@Knela96](https://twitter.com/knela96)
 
 ## External Sources
 Animations and Model from [Mixamo](https://www.mixamo.com/)
-
-## References
-[Traversal Mechanics in the Vast World of Horizon Zero Dawn](https://www.youtube.com/watch?v=LrLHsbTK5bM)
-
-[Bringing a Hero from Paragon to Life with UE](https://www.youtube.com/watch?v=YlKA22Hzerk&t=1642s)
-
