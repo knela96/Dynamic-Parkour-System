@@ -6,8 +6,8 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 
 |   Actions                 | Features                    |
 |         ---------         |         ----------          |
-| Vault Fence               | IK System                   |
-| Vault Box                 | Custom Character Controller |
+| Vault Fence               | Custom Character Controller |
+| Vault Box                 | IK System                   |
 | Vault Down                | Vaulting System             |
 | Slide                     | Climbing System             |
 | Auto Step                 | Jump Prediction System      |
