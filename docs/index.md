@@ -1,8 +1,6 @@
 ## Dynamic Parkour System
 
-<p align="center">
-  <img align="middle" src="/docs/Resources/Presentation.png" alt="Dynamic Parkour System" width="500" height="auto">
-</p>
+![](Resources/Card.png)
 
 Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import any model and have an already working controller with parkour capabilities like in Assassin's Creed and Uncharted games. This package is fully customizable with its own Character Controller, being really easy to configure and fast to use. It has the possibility to choose between some already build-in Parkour Actions.
 
@@ -20,6 +18,9 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 | Drop from Ledges          |                             |
 | Braced and Hang Climbing  |                             |
 
+## Dependencies
+To make the Dynamic Parkour System work it requires the importation of Cinemachine and Input System Packets located in Unity Packet Manager.
+
 ## Gameplay Demo
 <iframe width="560" height="315"
 src="https://www.youtube.com/embed/mw6ozapAuYY" 
@@ -27,9 +28,18 @@ frameborder="0"
 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
 allowfullscreen></iframe>
 
-## Download Build Demo
-[Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-testing)
-
-## Download Unity Package Plugin
+## Download
 [Unity Package](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0)
+
+[Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-beta)
+
+[Documentation](/docs/Downloads/DynamicParkourSystem_Documentation.pdf)
+
+## Troubleshooting
+If you have any problem or find any bug report it in the Official Repository inside [Issues](https://github.com/knela96/Dynamic-Parkour-System/issues) section
+
+## Contact Me
+Website: [ericcanela.com](https://ericcanela.com)
+
+Twitter: [@Knela96](https://twitter.com/knela96)
 
