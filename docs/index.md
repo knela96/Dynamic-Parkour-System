@@ -19,7 +19,7 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 | Braced and Hang Climbing  |                             |
 
 ## Dependencies
-To make the Dynamic Parkour System work it requires the importation of Cinemachine and Input System Packets located in Unity Packet Manager.
+To make the Dynamic Parkour System work, it requires the importation of Cinemachine and Input System Packets located in Unity Packet Manager.
 
 ## Gameplay Demo
 <iframe width="560" height="315"
@@ -28,12 +28,23 @@ frameborder="0"
 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
 allowfullscreen></iframe>
 
+## Controls
+
+|                           |   Keyboard & Mouse    | GamePad                           |
+|    ---------              |         ---------     |         ----------                |
+|   Movement                | W, A, S, D            | Left Joystick                     |
+|   Look Around             | Move Mouse            | Right Joystick                    |
+|   Run (Hold)              | Left Shift            | Right Trigger                     |
+|   Jump and Climb          | Space Bar             | X(Playstation) or A(Xbox) button  |
+|   Drop and Slide          | C                     | O(PlayStation) or B(Xbox) button  |
+
+
 ## Download
 [Unity Package](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0)
 
 [Unity Build Demo](https://github.com/knela96/Dynamic-Parkour-System/releases/tag/v1.0-beta)
 
-[Documentation](/docs/Downloads/DynamicParkourSystem_Documentation.pdf)
+[Documentation](https://github.com/knela96/Dynamic-Parkour-System/blob/Git-Pages/docs/Downloads/DynamicParkourSystem_Documentation.pdf)
 
 ## Troubleshooting
 If you have any problem or find any bug report it in the Official Repository inside [Issues](https://github.com/knela96/Dynamic-Parkour-System/issues) section
@@ -42,4 +53,14 @@ If you have any problem or find any bug report it in the Official Repository ins
 Website: [ericcanela.com](https://ericcanela.com)
 
 Twitter: [@Knela96](https://twitter.com/knela96)
+
+## External Sources
+Animations and Model from [Mixamo](https://www.mixamo.com/)
+
+## References
+[Traversal Mechanics in the Vast World of Horizon Zero Dawn](https://www.youtube.com/watch?v=LrLHsbTK5bM)
+
+[Bringing a Hero from Paragon to Life with UE](https://www.youtube.com/watch?v=YlKA22Hzerk&t=1642s)
+
+[IGN documentary of the making of Assassin's Creed 3](https://www.youtube.com/watch?v=zoEqI97-HaU)
 
