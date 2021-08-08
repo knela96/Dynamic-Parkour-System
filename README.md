@@ -1,6 +1,6 @@
 ## Dynamic Parkour System
 
-![](Resources/Card.png)
+![](https://github.com/knela96/Dynamic-Parkour-System/blob/Git-Pages/docs/Resources/Card.png)
 
 Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import any model and have an already working controller with parkour capabilities like in Assassin's Creed and Uncharted games. This package is fully customizable with its own Character Controller, being really easy to configure and fast to use. It has the possibility to choose between some already build-in Parkour Actions.
 
@@ -22,11 +22,7 @@ Dynamic Parkour System is a FREE plugin  for Unity that allows anyone to import 
 To make the Dynamic Parkour System work, it requires the importation of Cinemachine and Input System Packets located in Unity Packet Manager.
 
 ## Gameplay Demo
-<iframe width="560" height="315"
-src="https://www.youtube.com/embed/mw6ozapAuYY" 
-frameborder="0" 
-allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-allowfullscreen></iframe>
+[Youtube Link](https://www.youtube.com/embed/mw6ozapAuYY)
 
 ## Controls
 
