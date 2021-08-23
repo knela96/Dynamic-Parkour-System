@@ -26,13 +26,7 @@ namespace Climbing
                 Vector3 pos1 = t.ConnectedPoints[i].target1.transform.position;
                 Vector3 pos2 = t.ConnectedPoints[i].target2.transform.position;
 
-                switch (t.ConnectedPoints[i].type)
-                {
-                    case ConnectionType.direct:
-                        Handles.color = Color.red;
-                        break;
-                }
-
+                Handles.color = Color.red;
                 Handles.DrawLine(pos1, pos2);
                 t.refresh = false;
             }
@@ -60,13 +54,7 @@ namespace Climbing
                 Vector3 pos1 = t.transform.position;
                 Vector3 pos2 = t.ConnectedPoints[i].target.transform.position;
 
-                switch (t.ConnectedPoints[i].type)
-                {
-                    case ConnectionType.direct:
-                        Handles.color = Color.red;
-                        break;
-                }
-
+                Handles.color = Color.red;
                 Handles.DrawLine(pos1, pos2);
                 t.refresh = false;
             }

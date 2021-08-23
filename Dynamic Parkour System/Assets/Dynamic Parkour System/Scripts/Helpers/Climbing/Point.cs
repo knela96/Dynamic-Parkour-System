@@ -10,13 +10,6 @@ namespace Climbing
     {
         public Vector3 direction;
         public Point target;
-        public ConnectionType type;
-    }
-
-    public enum ConnectionType
-    {
-        direct,
-        top
     }
 
     public enum PointType

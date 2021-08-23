@@ -8,11 +8,10 @@ namespace Climbing
     [ExecuteInEditMode]
     public class HandlePointConnection : MonoBehaviour
     {
-        public float minDistance = 1.5f;
-        public float directThreshold = 0.5f;
+        public float maxDistance = 1.5f;
+        public float minDistance = 0.5f;
         public bool updateConnections;
         public bool resetConnections;
-        public bool skipDiagonals = true;
 
         public List<Point> allPoints = new List<Point>();
         Vector3[] availableDirections = new Vector3[8];
@@ -78,7 +77,7 @@ namespace Climbing
             {
                 Point targetPoint = allPoints[p];
                 float dis = Vector3.Distance(from.transform.position, targetPoint.transform.position);
-                if (dis < minDistance && dis > directThreshold /*&& from.transform.parent != targetPoint.transform.parent*/)
+                if (dis < maxDistance && dis > minDistance /*&& from.transform.parent != targetPoint.transform.parent*/)
                 {
                     Vector3 direction = targetPoint.transform.position - from.transform.position;
                     Vector3 relativeDirection = from.transform.InverseTransformDirection(direction);
@@ -139,7 +138,6 @@ namespace Climbing
             Neighbour n = new Neighbour();
             n.target = target;
             n.direction = direction;
-            n.type = ConnectionType.direct;
             from.neighbours.Add(n);
 
             #if UNITY_EDITOR
@@ -151,15 +149,8 @@ namespace Climbing
         {
             DrawLine dl = transform.GetComponent<DrawLine>();
 
-            if (dl != null)
+            if (dl)
                 dl.refresh = true;
-
-            for(int i = 0; i < allPoints.Count; i++)
-            {
-                DrawLineIndividual d = allPoints[i].transform.GetComponent<DrawLineIndividual>();
-                if (d != null)
-                    d.refresh = true;
-            }
         }
 
         public List<Connection> GetAllConnections()
@@ -173,7 +164,6 @@ namespace Climbing
                     Connection con = new Connection();
                     con.target1 = allPoints[i];
                     con.target2 = allPoints[i].neighbours[j].target;
-                    con.type = allPoints[i].neighbours[j].type;
 
                     if(!ContainsConnection(ret, con))
                     {
@@ -192,7 +182,7 @@ namespace Climbing
             for(int i = 0; i <l.Count; i++)
             {
                 if(l[i].target1 == c.target1 && l[i].target2 == c.target2 || 
-                    l[i].target2 == c.target1 && l[i].target1 == c.target2)
+                   l[i].target2 == c.target1 && l[i].target1 == c.target2)
                 {
                     ret = true;
                     break;
@@ -206,7 +196,6 @@ namespace Climbing
     {
         public Point target1;
         public Point target2;
-        public ConnectionType type;
     }
 
 }

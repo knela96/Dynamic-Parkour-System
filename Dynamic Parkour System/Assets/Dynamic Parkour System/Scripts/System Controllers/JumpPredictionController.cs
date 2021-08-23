@@ -1,4 +1,23 @@
-﻿using System.Collections;
+﻿/*
+Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+Copyright (C) 2021  Èric Canela Sol
+Contact: knela96@gmail.com or @knela96 twitter
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -64,7 +83,7 @@ namespace Climbing
             {
                 if (controller.characterInput.jump && controller.characterInput.movement != Vector2.zero)
                 {
-                    List<HandlePointsV2> points = new List<HandlePointsV2>();
+                    List<HandlePoints> points = new List<HandlePoints>();
                     controller.characterDetection.FindAheadPoints(ref points);
 
                     float minRange = float.NegativeInfinity;
@@ -84,9 +103,9 @@ namespace Climbing
                     if (fp == null)
                     {
                         RaycastHit hit;
-                        if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f))
+                        if (controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 0.5f, out hit, controller.characterDetection.defaultLayer))
                         {
-                            HandlePointsV2 handle = hit.transform.GetComponentInChildren<HandlePointsV2>();
+                            HandlePoints handle = hit.transform.GetComponentInChildren<HandlePoints>();
                             if (handle)
                             {
                                 for (int i = 0; i < handle.pointsInOrder.Count; i++)
@@ -170,7 +189,7 @@ namespace Climbing
                         Vector3 end = transform.position + inputDir * 4;
 
                         RaycastHit hit;
-                        if(Physics.Raycast(transform.position, inputDir, out hit, 4, controller.characterDetection.climbLayer))
+                        if(controller.characterDetection.ThrowRayOnDirection(transform.position, inputDir, 4, out hit, controller.characterDetection.climbLayer))
                         {
                             Vector3 temp = hit.point;
                             temp.y = transform.position.y;

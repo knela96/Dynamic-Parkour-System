@@ -1,4 +1,23 @@
-﻿using System.Collections;
+﻿/*
+Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+Copyright (C) 2021  Èric Canela Sol
+Contact: knela96@gmail.com or @knela96 twitter
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,7 +53,7 @@ namespace Climbing
                 Vector3 origin = controller.transform.position + Vector3.up * controller.stepHeight;
 
                 RaycastHit hit;
-                if (Physics.Raycast(origin, controller.transform.forward, out hit, kneeRaycastLength, layer.value))
+                if (controller.characterDetection.ThrowRayOnDirection(origin, controller.transform.forward, kneeRaycastLength, out hit, layer))
                 {
                     if (hit.collider.gameObject.tag != tag)
                         return false;
@@ -43,8 +62,8 @@ namespace Climbing
 
                     RaycastHit hit2;
                     RaycastHit hit3;
-                    Physics.Raycast(controller.transform.position, Vector3.down, out hit3, 1);
-                    if (Physics.Raycast(origin2, Vector3.down, out hit2, 10, layer.value)) //Ground Hit
+                    controller.characterDetection.ThrowRayOnDirection(controller.transform.position, Vector3.down, 1, out hit3);
+                    if (controller.characterDetection.ThrowRayOnDirection(origin2, Vector3.down, 10, out hit2, layer)) //Ground Hit
                     {
                         height = hit2.point.y - controller.transform.position.y;
 
@@ -71,7 +90,7 @@ namespace Climbing
                             //Calculate Hand Rest Position n Rotation
                             Vector3 right = Vector3.Cross(hit.normal, Vector3.up);
                             leftHandPosition = hit.point + (right * -0.5f);
-                            leftHandPosition.y = hit2.point.y; 
+                            leftHandPosition.y = hit2.point.y;
 
                             return true;
                         }
@@ -130,7 +149,9 @@ namespace Climbing
 
         public override void DrawGizmos()
         {
-            Gizmos.DrawSphere(leftHandPosition, 10);
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(leftHandPosition, 0.07f);
+            Gizmos.DrawSphere(targetPos, 0.07f);
         }
     }
 }

@@ -1,4 +1,23 @@
-﻿using System.Collections;
+﻿/*
+Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+Copyright (C) 2021  Èric Canela Sol
+Contact: knela96@gmail.com or @knela96 twitter
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +30,7 @@ namespace Climbing
         public bool showDebug = true;
 
         [Header("Layers")]
+        public LayerMask defaultLayer = ~0;
         public LayerMask ledgeLayer;
         public LayerMask wallLayer;
         public LayerMask climbLayer;
@@ -118,8 +138,8 @@ namespace Climbing
 
             if (showDebug)
             {
-                Debug.DrawLine(origin1, origin1 + direction * length, Color.red);
-                Debug.DrawLine(origin2, origin2 + direction * length, Color.red);
+                Debug.DrawLine(origin1, origin1 + direction * length, Color.green);
+                Debug.DrawLine(origin2, origin2 + direction * length, Color.green);
             }
 
             if (!Physics.Raycast(origin1, direction, out hit, length) && !Physics.Raycast(origin2, direction, out hit, length)) //Check Forward
@@ -159,14 +179,33 @@ namespace Climbing
             return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, wallLayer);
         }
 
+        public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length, out RaycastHit hit, LayerMask layer)
+        {
+            if (showDebug)
+            {
+                Debug.DrawLine(origin, origin + direction * length, Color.green);
+            }
+
+            return Physics.Raycast(origin, direction, out hit, length, layer);
+        }
         public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length, out RaycastHit hit)
         {
             if (showDebug)
             {
-                Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
+                Debug.DrawLine(origin, origin + direction * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length);
+            return Physics.Raycast(origin, direction, out hit, length);
+        }
+
+        public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length)
+        {
+            if (showDebug)
+            {
+                Debug.DrawLine(origin, origin + direction * length, Color.green);
+            }
+
+            return Physics.Raycast(origin, direction, length);
         }
 
         public bool IsGrounded(float stepHeight) {
@@ -178,7 +217,7 @@ namespace Climbing
             return Physics.Raycast(transform.position + new Vector3(0, 0.3f, 0), Vector3.down, out hit, 0.7f);//0.2f
         }
 
-        public void FindAheadPoints(ref List<HandlePointsV2> list)
+        public void FindAheadPoints(ref List<HandlePoints> list)
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, 5, climbLayer.value);
 
@@ -186,7 +225,7 @@ namespace Climbing
             {
                 if (Vector3.Dot(item.transform.position, transform.position) > 0)
                 {
-                    HandlePointsV2 handle = item.GetComponentInChildren<HandlePointsV2>();
+                    HandlePoints handle = item.GetComponentInChildren<HandlePoints>();
                     if (handle)
                         list.Add(handle);
                 }

@@ -5,28 +5,21 @@ using UnityEngine;
 namespace Climbing
 {
     [ExecuteInEditMode]
-    public class HandlePointsV2 : MonoBehaviour
+    public class HandlePoints : MonoBehaviour
     {
         [Header("Helper Properties")]
-        public bool singlePoint;
-
         public PointType pointType;
-        public bool move = false;
+        [SerializeField] private GameObject pointPrefab;
+        [SerializeField] private float posInterval = 0.5f;
 
         [Header("Update")]
-        public bool updatePoints;
+        [SerializeField] private bool deleteAll;
+        [SerializeField] private bool createIndicators;
+        [SerializeField] private bool updatePoints;
 
         [Header("Helper Utilities")]
-        public bool deleteAll;
-        public bool createIndicators;
-
-        public GameObject pointPrefab;
-        public float posInterval = 0.5f;
-
         public Point furthestLeft;
         public Point furthestRight;
-
-        //[HideInInspector]
         public List<Point> pointsInOrder;
 
         void HandlePrefab()
@@ -41,47 +34,30 @@ namespace Climbing
 
         void Update()
         {
-            if (updatePoints)
-            {
-                HandlePrefab();
-                UpdatePoints();
-                updatePoints = false;
-            }
-
             if (createIndicators)
             {
-                HandlePrefab();
-
-                if (!singlePoint)
-                    CreateIndicators();
-                else
-                    CreateIndicators_Single();
-
                 createIndicators = false;
+                HandlePrefab();
+                CreateIndicators();
+            }
+
+            if (updatePoints)
+            {
+                updatePoints = false;
+                HandlePrefab();
+                UpdatePoints();
             }
 
             if (deleteAll)
             {
-                DeteleAll();
                 deleteAll = false;
+                DeteleAll();
             }
         }
 
         void UpdatePoints()
         {
             Point[] ps = GetComponentsInChildren<Point>();
-
-            if (singlePoint)
-            {
-                pointsInOrder = new List<Point>();
-
-                for (int i = 0; i < ps.Length; i++)
-                {
-                    ps[i].type = pointType;
-                    pointsInOrder.Add(ps[i]);
-                }
-                return;
-            }
 
             if (ps.Length < 1)
             {
@@ -95,7 +71,6 @@ namespace Climbing
             ps = GetComponentsInChildren<Point>();
 
             CreatePoints(furthestLeft, furthestRight);
-
         }
 
         void DeletePrevious(Point[] ps, Point furthestLeft, Point furthestRight)
@@ -104,16 +79,16 @@ namespace Climbing
             {
                 if (ps[i] != furthestLeft && ps[i] != furthestRight)
                 {
-                    DestroyImmediate(ps[i].gameObject.transform.gameObject);
+                    Destroy(ps[i].gameObject.transform.gameObject);
                 }
             }
         }
 
         void CreatePoints(Point furthestLeft, Point furthestRight)
         {
-            float disLtoR = Vector3.Distance(GetPos(furthestLeft), GetPos(furthestRight));
+            float disLtoR = Vector3.Distance(furthestLeft.transform.position, furthestRight.transform.position);
             int pointCount = Mathf.FloorToInt(disLtoR / posInterval);
-            Vector3 direction = GetPos(furthestRight) - GetPos(furthestLeft);
+            Vector3 direction = furthestRight.transform.position - furthestLeft.transform.position;
             direction.Normalize();
 
             Vector3[] positions = new Vector3[pointCount];
@@ -126,11 +101,11 @@ namespace Climbing
             {
                 interval += posInterval;
 
-                positions[i] = GetPos(furthestLeft) + (direction * interval);
+                positions[i] = furthestLeft.transform.position + (direction * interval);
 
-                if (Vector3.Distance(positions[i], GetPos(furthestRight)) >= posInterval)
+                if (Vector3.Distance(positions[i], furthestRight.transform.position) >= posInterval)
                 {
-                    GameObject p = Instantiate(pointPrefab, positions[i], furthestLeft.transform.rotation) as GameObject;
+                    GameObject p = Instantiate(pointPrefab, positions[i], furthestLeft.transform.rotation);
                     p.transform.parent = transform;
                     Point point = p.GetComponent<Point>();
                     point.type = pointType;
@@ -143,11 +118,6 @@ namespace Climbing
                     break;
                 }
             }
-        }
-
-        Vector3 GetPos(Point p)
-        {
-            return p.transform.position;
         }
 
         void DeteleAll()
@@ -180,13 +150,6 @@ namespace Climbing
             furthestRight = rightPoint.GetComponent<Point>();
             furthestLeft.type = pointType;
             furthestRight.type = pointType;
-        }
-        void CreateIndicators_Single()
-        {
-            GameObject leftPoint = Instantiate(pointPrefab) as GameObject;
-            leftPoint.transform.parent = transform;
-            leftPoint.transform.localPosition = Vector3.zero;
-            leftPoint.transform.localEulerAngles = Vector3.zero;
         }
 
         public Point GetClosestPoint(Vector3 playerPos)

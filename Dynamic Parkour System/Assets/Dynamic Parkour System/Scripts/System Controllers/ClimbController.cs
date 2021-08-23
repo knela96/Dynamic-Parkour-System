@@ -1,4 +1,23 @@
-﻿using System.Collections;
+﻿    /*
+    Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+    Copyright (C) 2021  Èric Canela Sol
+    Contact: knela96@gmail.com or @knela96 twitter
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Climbing;
@@ -428,9 +447,9 @@ namespace Climbing
             float xDistance = 0;
             
             if (horizontalMovement > 0 && reachedEnd)
-                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(rightHandPosition);
+                point = curLedge.GetComponentInChildren<HandlePoints>().GetClosestPoint(rightHandPosition);
             else
-                point = curLedge.GetComponentInChildren<HandlePointsV2>().GetClosestPoint(leftHandPosition);
+                point = curLedge.GetComponentInChildren<HandlePoints>().GetClosestPoint(leftHandPosition);
 
             currentPoint = point;
 
@@ -442,32 +461,29 @@ namespace Climbing
 
                 if (toPoint != null)
                 {
-                    if (toPoint.type == ConnectionType.direct) //Jump Reachable
+                    curLedge = toPoint.target.transform.parent.parent.gameObject;
+                    target = toPoint.target.transform.position;
+                    targetRot = curLedge.transform.rotation;
+                    targetPoint = toPoint.target;
+
+                    //Reposition Player if target is a Right Point
+                    if (toPoint.target == curLedge.GetComponentInChildren<HandlePoints>().furthestRight)
                     {
-                        curLedge = toPoint.target.transform.parent.parent.gameObject;
-                        target = toPoint.target.transform.position;
-                        targetRot = curLedge.transform.rotation;
-                        targetPoint = toPoint.target;
-
-                        //Reposition Player if target is a Right Point
-                        if (toPoint.target == curLedge.GetComponentInChildren<HandlePointsV2>().furthestRight)
-                        {
-                            target -= toPoint.target.transform.rotation * new Vector3(0.5f, 0, 0);
-                        }
-
-                        onLedge = false;
-                        toLedge = true;
-                        jumping = true;
-
-                        direction = toPoint.direction;
-
-                        if ((xDistance < smallHopMaxDistance && xDistance > -smallHopMaxDistance) && direction.y != 0)
-                            direction.x = 0;
-
-                        wallFound = characterDetection.FindFootCollision(target, targetRot, -toPoint.target.transform.forward);
-
-                        characterController.characterAnimation.LedgeToLedge(curClimbState, direction, ref startTime, ref endTime);
+                        target -= toPoint.target.transform.rotation * new Vector3(0.5f, 0, 0);
                     }
+
+                    onLedge = false;
+                    toLedge = true;
+                    jumping = true;
+
+                    direction = toPoint.direction;
+
+                    if ((xDistance < smallHopMaxDistance && xDistance > -smallHopMaxDistance) && direction.y != 0)
+                        direction.x = 0;
+
+                    wallFound = characterDetection.FindFootCollision(target, targetRot, -toPoint.target.transform.forward);
+
+                    characterController.characterAnimation.LedgeToLedge(curClimbState, direction, ref startTime, ref endTime);
                 }
             }
         }
@@ -677,7 +693,7 @@ namespace Climbing
                     Debug.DrawLine(origin, origin + -tangent * (raylength), Color.cyan);
 
                 RaycastHit hit;
-                if (Physics.Raycast(origin, -tangent, out hit, raylength, characterDetection.ledgeLayer))
+                if (characterDetection.ThrowRayOnDirection(origin, -tangent, raylength, out hit, characterDetection.ledgeLayer))
                 {
                     raylength = (curClimbState == ClimbState.BHanging) ? distanceToLedgeBraced : distanceToLedgeFree;
                     Vector3 newPos = (hit.point + hit.normal * raylength);
@@ -714,7 +730,7 @@ namespace Climbing
             Vector3 targetPos = Vector3.zero;
 
             curLedge = hit.transform.gameObject;
-            HandlePointsV2 handle = curLedge.GetComponentInChildren<HandlePointsV2>();
+            HandlePoints handle = curLedge.GetComponentInChildren<HandlePoints>();
             List<Point> points = handle.pointsInOrder;
 
             float dist = float.PositiveInfinity;

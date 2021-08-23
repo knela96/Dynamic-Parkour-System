@@ -1,4 +1,23 @@
-﻿using System.Collections;
+﻿/*
+Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+Copyright (C) 2021  Èric Canela Sol
+Contact: knela96@gmail.com or @knela96 twitter
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,8 +55,6 @@ namespace Climbing
 
         [Header("Feet IK")]
         public bool enableFeetIK = true;
-        public bool useProIKFeature = false;
-        [SerializeField] private LayerMask environmentLayer;
 
         [SerializeField] private float heightFromGroundRaycast = 0.7f;
         [Range(0, 2f)] [SerializeField] private float raycastDownDistance = 1.5f;
@@ -149,7 +166,7 @@ namespace Climbing
                 //If player fins Small Obstacle Auto Steps it without affecting the movement
                 AutoStep();
 
-                //Sets velocity for mvoement animations
+                //Sets velocity for movement animations
                 controller.characterAnimation.SetAnimVelocity(rb.velocity);
             }
             else
@@ -179,11 +196,11 @@ namespace Climbing
             float right = 0.25f;
 
             //Throws raycasts down to detect limits of surface
-            if (!Physics.Raycast(origin, Vector3.down, 1))
+            if (!controller.characterDetection.ThrowRayOnDirection(origin, Vector3.down, 1))
                 ret = CheckSurfaceBoundary();
-            else if (!Physics.Raycast(origin + transform.right * right, Vector3.down, 1) && ret == false)
+            else if (!controller.characterDetection.ThrowRayOnDirection(origin + transform.right * right, Vector3.down, 1) && ret == false)
                 ret = CheckSurfaceBoundary();
-            else if (!Physics.Raycast(origin + transform.right * -right, Vector3.down, 1) && ret == false)
+            else if (!controller.characterDetection.ThrowRayOnDirection(origin + transform.right * -right, Vector3.down, 1) && ret == false)
                 ret = CheckSurfaceBoundary();
 
             if (showDebug)
@@ -209,7 +226,7 @@ namespace Climbing
 
             //Throws a raycast towards the player from a lower position to the surface the player is on
             RaycastHit hit1;
-            if (Physics.Raycast(origin2, -transform.forward, out hit1, 1))
+            if (controller.characterDetection.ThrowRayOnDirection(origin2, -transform.forward, 1, out hit1))
             {
                 if (showDebug)
                     Debug.DrawLine(hit1.point, hit1.point + hit1.normal, Color.cyan);
@@ -217,8 +234,8 @@ namespace Climbing
                 //Throws two more raycasts to detect corners
                 RaycastHit hit2;
                 RaycastHit hit3;
-                Physics.Raycast(origin2 + transform.right * 0.05f, -transform.forward, out hit2, 1);
-                Physics.Raycast(origin2 + transform.right * -0.05f, -transform.forward, out hit3, 1);
+                controller.characterDetection.ThrowRayOnDirection(origin2 + transform.right * 0.05f, -transform.forward, 1, out hit2);
+                controller.characterDetection.ThrowRayOnDirection(origin2 + transform.right * -0.05f, -transform.forward, 1, out hit3);
 
                 if (hit2.normal == Vector3.zero)
                     hit2.normal = hit1.normal;
@@ -338,22 +355,12 @@ namespace Climbing
 
             //Left Foot IK Position and Rotation
             anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-
-            if (useProIKFeature)
-            {
-                anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnimVariableName));
-            }
-
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnimVariableName));
             MoveFeetToIKPoint(AvatarIKGoal.LeftFoot, leftFootIKPosition, leftFootIKRotation, ref lastLeftFootPosition);
 
             //Right Foot IK Position and Rotation
             anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-
-            if (useProIKFeature)
-            {
-                anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnimVariableName));
-            }
-
+            anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnimVariableName));
             MoveFeetToIKPoint(AvatarIKGoal.RightFoot, rightFootIKPosition, rightFootIKRotation, ref lastRightFootPosition);
         }
 
@@ -365,15 +372,14 @@ namespace Climbing
             {
                 targetIKPosition = transform.InverseTransformPoint(targetIKPosition);
                 positionIKHolder = transform.InverseTransformPoint(positionIKHolder);
+
                 float yVariable = Mathf.Lerp(lastFootPositionY, positionIKHolder.y, feetToIKPositionSpeed);
-                targetIKPosition.y += yVariable;
-
                 lastFootPositionY = yVariable;
-
+                targetIKPosition.y += yVariable;
                 targetIKPosition = transform.TransformPoint(targetIKPosition);
-
-                anim.SetIKRotation(foot, rotationHolder);
             }
+
+            anim.SetIKRotation(foot, rotationHolder);
             anim.SetIKPosition(foot, targetIKPosition);
         }
 
@@ -387,13 +393,10 @@ namespace Climbing
 
             float leftOffsetPosition = leftFootIKPosition.y - transform.position.y;
             float rightOffsetPosition = rightFootIKPosition.y - transform.position.y;
-
             float totalOffset = leftOffsetPosition < rightOffsetPosition ? leftOffsetPosition : rightOffsetPosition;
 
             Vector3 newPelvisPosition = anim.bodyPosition + Vector3.up * totalOffset;
-
             newPelvisPosition.y = Mathf.Lerp(lastPelvisPositionY, newPelvisPosition.y, pelvisUpDownSpeed);
-
             anim.bodyPosition = newPelvisPosition;
 
             lastPelvisPositionY = anim.bodyPosition.y;
@@ -407,7 +410,7 @@ namespace Climbing
             if (showDebug)
                 Debug.DrawLine(fromRaycastPosition, fromRaycastPosition + Vector3.down * (raycastDownDistance + heightFromGroundRaycast), Color.green);
 
-            if (Physics.Raycast(fromRaycastPosition, Vector3.down, out feetHit, raycastDownDistance + heightFromGroundRaycast, environmentLayer))
+            if (controller.characterDetection.ThrowRayOnDirection(fromRaycastPosition, Vector3.down, raycastDownDistance + heightFromGroundRaycast, out feetHit, controller.characterDetection.environmentLayer))
             {
                 feetIKPositions = fromRaycastPosition;
                 feetIKPositions.y = feetHit.point.y + pelvisOffset;
@@ -435,23 +438,23 @@ namespace Climbing
 
             Vector3 offset = new Vector3(0, 0.01f, 0);
             RaycastHit hit;
-            if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, Vector3.forward, controller.slidingCapsuleCollider.radius + 0.1f, out hit))
+            if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, transform.forward, controller.slidingCapsuleCollider.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), Vector3.forward, controller.slidingCapsuleCollider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), transform.forward, controller.slidingCapsuleCollider.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
                 }
             }
-            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(-1.5f, 0, 1), controller.slidingCapsuleCollider.radius + 0.1f, out hit))
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, transform.TransformDirection(new Vector3(-1.5f, 0, 1)), controller.slidingCapsuleCollider.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(-1.5f,0,1), controller.slidingCapsuleCollider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), transform.TransformDirection(new Vector3(-1.5f,0,1)), controller.slidingCapsuleCollider.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
                 }
             }
-            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, new Vector3(1.5f, 0, 1), controller.slidingCapsuleCollider.radius + 0.1f, out hit))
+            else if (controller.characterDetection.ThrowRayOnDirection(transform.position + offset, transform.TransformDirection(new Vector3(1.5f, 0, 1)), controller.slidingCapsuleCollider.radius + 0.1f, out hit))
             {
-                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), new Vector3(1.5f, 0, 1), controller.slidingCapsuleCollider.radius + 0.2f, out hit))
+                if (!controller.characterDetection.ThrowRayOnDirection(transform.position + offset + new Vector3(0, controller.stepHeight, 0), transform.TransformDirection(new Vector3(1.5f, 0, 1)), controller.slidingCapsuleCollider.radius + 0.2f, out hit))
                 {
                     rb.position += new Vector3(0, controller.stepVelocity, 0);
                 }
