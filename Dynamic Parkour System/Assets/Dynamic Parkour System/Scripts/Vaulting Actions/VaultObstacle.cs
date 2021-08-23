@@ -1,5 +1,5 @@
 ﻿/*
-Dynamic Parkour System grants parkour capabilities to any character for a Unity game.
+Dynamic Parkour System grants parkour capabilities to any humanoid character model.
 Copyright (C) 2021  Èric Canela Sol
 Contact: knela96@gmail.com or @knela96 twitter
 
