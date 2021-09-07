@@ -1,26 +1,25 @@
-﻿    /*
-    Dynamic Parkour System grants parkour capabilities to any humanoid character model.
-    Copyright (C) 2021  Èric Canela Sol
-    Contact: knela96@gmail.com or @knela96 twitter
+﻿/*
+Dynamic Parkour System grants parkour capabilities to any humanoid character model.
+Copyright (C) 2021  Èric Canela Sol
+Contact: knela96@gmail.com or @knela96 twitter
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-    */
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Climbing;
 
 namespace Climbing
 {
@@ -71,6 +70,8 @@ namespace Climbing
         [SerializeField] private float IKFootRayLength = 0.5f;
 
         [Header("IK GameObjects")]
+        [Tooltip("Auto Search the bones when not specified")]
+        [SerializeField] private bool AutoSearchBones;
         [SerializeField] private GameObject LHand;
         [SerializeField] private GameObject RHand;
         [SerializeField] private GameObject LFoot;
@@ -89,6 +90,27 @@ namespace Climbing
             characterController = GetComponent<ThirdPersonController>();
             characterAnimation = characterController.characterAnimation;
             characterDetection = characterController.characterDetection;
+
+            if (LHand == null || RHand == null || LFoot == null || RFoot == null)
+            {
+                if (AutoSearchBones)
+                {
+                    Debug.LogWarning("In the Player ClimbController script is recommended to set the bones of Hands and Feet");
+
+                    if (LHand == null)
+                        LHand = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftHand).gameObject;
+                    if (RHand == null)
+                        RHand = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightHand).gameObject;
+                    if (LFoot == null)
+                        LFoot = characterAnimation.animator.GetBoneTransform(HumanBodyBones.LeftFoot).gameObject;
+                    if (RFoot == null)
+                        RFoot = characterAnimation.animator.GetBoneTransform(HumanBodyBones.RightFoot).gameObject;
+                }
+                else
+                {
+                    Debug.LogError("In the Player check that the ClimbController script has the GameObjects of the Hands and Feet assigned");
+                }
+            }
         }
 
         public void onDrawGizmos()
@@ -265,8 +287,6 @@ namespace Climbing
                 {
                     matchingTarget = true;
                     rotTime = 0;
-
-                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
                 }
 
                 //Climb 
@@ -683,7 +703,7 @@ namespace Climbing
                 Vector3 tangent = Vector3.Cross(Vector3.up, direction).normalized;
                 transform.rotation = Quaternion.LookRotation(-tangent);
 
-                //Sets the model at a relative distance from the ledge without cliping into surface
+                //Sets the model at a relative distance from the ledge without clipping into surface
                 Vector3 origin = transform.position - transform.forward * 0.25f;
                 origin.y += curOriginGrabOffset.y;
 

@@ -30,11 +30,8 @@ namespace Climbing
         public bool showDebug = true;
 
         [Header("Layers")]
-        public LayerMask defaultLayer = ~0;
         public LayerMask ledgeLayer;
-        public LayerMask wallLayer;
         public LayerMask climbLayer;
-        public LayerMask environmentLayer;
 
         [Header("Rays")]
         [SerializeField] private Vector3 OriginLedgeRay;
@@ -97,11 +94,11 @@ namespace Climbing
             Vector3 PointFoot2 = targetPos + rot * (new Vector3(0.10f, 0, 0) + OriginFeetRay);
 
             RaycastHit hit;
-            if (!Physics.Raycast(PointFoot1, -normal, out hit, FeetRayLength, wallLayer))
+            if (!Physics.Raycast(PointFoot1, -normal, out hit, FeetRayLength))
             {
                 foundWall = false;
             }
-            if (!Physics.Raycast(PointFoot2, -normal, out hit, FeetRayLength, wallLayer))
+            if (!Physics.Raycast(PointFoot2, -normal, out hit, FeetRayLength))
             {
                 foundWall = false;
             }
@@ -151,7 +148,7 @@ namespace Climbing
                     Debug.DrawLine(origin3, origin3 - Vector3.up * length, Color.cyan);
                 }
 
-                if (Physics.Raycast(origin3, -Vector3.up, out hit, length, climbLayer))
+                if (Physics.Raycast(origin3, -Vector3.up, out hit, length))
                 {
                     return true;
                 }
@@ -176,7 +173,7 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, wallLayer);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length);
         }
 
         public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length, out RaycastHit hit, LayerMask layer)
@@ -219,7 +216,7 @@ namespace Climbing
 
         public void FindAheadPoints(ref List<HandlePoints> list)
         {
-            Collider[] cols = Physics.OverlapSphere(transform.position, 5, climbLayer.value);
+            Collider[] cols = Physics.OverlapSphere(transform.position, 5);
 
             foreach (var item in cols)
             {

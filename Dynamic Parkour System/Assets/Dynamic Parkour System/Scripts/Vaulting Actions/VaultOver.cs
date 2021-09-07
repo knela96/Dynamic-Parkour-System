@@ -51,10 +51,11 @@ namespace Climbing
                         hit.transform.tag != tag)
                         return false;
 
+                    //Gets Box width and adds an offset for the downward ray
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
+                    //Get landing position and set target position
                     RaycastHit hit2;
-                    //Get landing position
                     if (controller.characterDetection.ThrowRayOnDirection(origin2, Vector3.down, 10, out hit2))
                     {
                         if (hit2.collider)

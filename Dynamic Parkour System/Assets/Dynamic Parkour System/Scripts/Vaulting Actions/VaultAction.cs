@@ -38,7 +38,6 @@ namespace Climbing
         protected float kneeRaycastLength;
         protected float landOffset;
         protected float startDelay = 0f;
-        protected LayerMask layer;
         protected string tag;
 
         public VaultAction(ThirdPersonController _controller)
@@ -58,7 +57,6 @@ namespace Climbing
             kneeRaycastLength = action.kneeRaycastLength;
             landOffset = action.landOffset;
             startDelay = Mathf.Abs(action.startDelay) * -1;
-            layer = action.layer;
             tag = action.tag;
         }
 

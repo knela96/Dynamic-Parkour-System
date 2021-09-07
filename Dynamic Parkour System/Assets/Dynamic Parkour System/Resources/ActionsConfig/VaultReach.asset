@@ -19,7 +19,7 @@ MonoBehaviour:
   startDelay: 0
   layer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 4294967295
   tag: Reach
   midHeight: 1.2
   maxHeight: 2

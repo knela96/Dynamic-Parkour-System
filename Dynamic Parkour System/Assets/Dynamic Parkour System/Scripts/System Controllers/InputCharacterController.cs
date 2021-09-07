@@ -47,14 +47,10 @@ namespace Climbing
 
         void Awake()
         {
+            //Hold and Release
             controls = new PlayerControls();
             controls.Player.Movement.performed += ctx => movement = ctx.ReadValue<Vector2>();
             controls.Player.Movement.canceled += ctx => movement = ctx.ReadValue<Vector2>();
-
-            //Press
-            //controls.Player.Run.performed += ctx => ToggleRun();
-
-            //Hold
             controls.Player.Jump.performed += ctx => jump = ctx.ReadValueAsButton();
             controls.Player.Jump.canceled += ctx => jump = ctx.ReadValueAsButton();
             controls.Player.Drop.performed += ctx => drop = ctx.ReadValueAsButton();

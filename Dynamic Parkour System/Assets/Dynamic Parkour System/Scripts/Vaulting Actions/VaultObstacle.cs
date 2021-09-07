@@ -27,7 +27,6 @@ namespace Climbing
     {
         private Vector3 leftHandPosition;
         private Quaternion leftHandRotation;
-
         private string HandAnimVariableName;
 
         public VaultObstacle(ThirdPersonController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
@@ -58,6 +57,8 @@ namespace Climbing
                         || hit.transform.tag != tag)
                         return false;
 
+
+                    //Gets Fence width and adds an offset for the downward ray
                     Vector3 origin2 = origin + (-hit.normal * (hit.transform.localScale.z + landOffset));
 
                     RaycastHit hit2;

@@ -21,11 +21,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Climbing/Vaulting Reach Action")]
-public class ActionVaultReach : Action
+namespace Climbing
 {
-    public float midHeight;
-    public float maxHeight;
+    [CreateAssetMenu(menuName = "Climbing/Vaulting Reach Action")]
+    public class ActionVaultReach : Action
+    {
+        public float midHeight;
+        public float maxHeight;
 
-    public string HandAnimVariableName;
+        public string HandAnimVariableName;
+    }
 }

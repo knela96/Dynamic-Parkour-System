@@ -63,8 +63,8 @@ namespace Climbing
         [Range(0, 1f)] [SerializeField] private float pelvisUpDownSpeed = 0.25f;
         [Range(0, 1f)] [SerializeField] private float feetToIKPositionSpeed = 0.25f;
 
-        public string leftFootAnimVariableName = "LeftFootCurve";
-        public string rightFootAnimVariableName = "RightFootCurve";
+        public string leftFootAnim = "LeftFootCurve";
+        public string rightFootAnim = "RightFootCurve";
 
         private Vector3 leftFootPosition, leftFootIKPosition, rightFootPosition, rightFootIKPosition;
         private Quaternion leftFootIKRotation, rightFootIKRotation;
@@ -355,12 +355,12 @@ namespace Climbing
 
             //Left Foot IK Position and Rotation
             anim.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1);
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnimVariableName));
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftFoot, anim.GetFloat(leftFootAnim));
             MoveFeetToIKPoint(AvatarIKGoal.LeftFoot, leftFootIKPosition, leftFootIKRotation, ref lastLeftFootPosition);
 
             //Right Foot IK Position and Rotation
             anim.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnimVariableName));
+            anim.SetIKRotationWeight(AvatarIKGoal.RightFoot, anim.GetFloat(rightFootAnim));
             MoveFeetToIKPoint(AvatarIKGoal.RightFoot, rightFootIKPosition, rightFootIKRotation, ref lastRightFootPosition);
         }
 
@@ -410,7 +410,7 @@ namespace Climbing
             if (showDebug)
                 Debug.DrawLine(fromRaycastPosition, fromRaycastPosition + Vector3.down * (raycastDownDistance + heightFromGroundRaycast), Color.green);
 
-            if (controller.characterDetection.ThrowRayOnDirection(fromRaycastPosition, Vector3.down, raycastDownDistance + heightFromGroundRaycast, out feetHit, controller.characterDetection.environmentLayer))
+            if (controller.characterDetection.ThrowRayOnDirection(fromRaycastPosition, Vector3.down, raycastDownDistance + heightFromGroundRaycast, out feetHit))
             {
                 feetIKPositions = fromRaycastPosition;
                 feetIKPositions.y = feetHit.point.y + pelvisOffset;

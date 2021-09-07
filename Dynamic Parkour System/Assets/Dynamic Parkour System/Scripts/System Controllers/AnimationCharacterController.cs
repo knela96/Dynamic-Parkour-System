@@ -189,7 +189,7 @@ namespace Climbing
             if (normalizeTime > targetNormalizedTime)
                 return;
 
-            animator.SetTarget(avatarTarget, targetNormalizedTime); //Just for our reference. Not used here.
+            animator.SetTarget(avatarTarget, targetNormalizedTime); //Sets Target Bone for reference motion
             animator.MatchTarget(targetPos + offset, targetRot, avatarTarget, matchTargetWeightMask, startnormalizedTime, targetNormalizedTime, true);
         }
     }

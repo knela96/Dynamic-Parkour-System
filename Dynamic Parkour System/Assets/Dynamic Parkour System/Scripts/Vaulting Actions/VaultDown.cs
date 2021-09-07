@@ -25,7 +25,7 @@ namespace Climbing
 {
     public class VaultDown : VaultAction
     {
-        float timeDrop = 0;
+        private float timeDrop = 0;
 
         public VaultDown(ThirdPersonController _vaultingController) : base(_vaultingController)
         {
@@ -47,8 +47,8 @@ namespace Climbing
                         Vector3 origin2 = controller.transform.position + Vector3.up * 0.1f;
 
                         RaycastHit hit;
-                        if (!controller.characterDetection.ThrowRayOnDirection(origin, Vector3.down, 1.5f, out hit, controller.characterDetection.environmentLayer) ||
-                             controller.characterDetection.ThrowRayOnDirection(origin2, controller.transform.forward, 1.0f, out hit, controller.characterDetection.environmentLayer))
+                        if (!controller.characterDetection.ThrowRayOnDirection(origin, Vector3.down, 1.5f, out hit) ||
+                             controller.characterDetection.ThrowRayOnDirection(origin2, controller.transform.forward, 1.0f, out hit))
                         {
                             timeDrop = 0;
                         }

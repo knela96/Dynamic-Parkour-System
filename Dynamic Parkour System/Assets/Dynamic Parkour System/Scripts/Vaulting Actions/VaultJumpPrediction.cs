@@ -26,7 +26,7 @@ namespace Climbing
     [RequireComponent(typeof(JumpPredictionController))]
     public class VaultJumpPrediction : VaultAction
     {
-        JumpPredictionController jumpController;
+        private JumpPredictionController jumpController;
 
         public VaultJumpPrediction(ThirdPersonController _vaultingController) : base(_vaultingController)
         {

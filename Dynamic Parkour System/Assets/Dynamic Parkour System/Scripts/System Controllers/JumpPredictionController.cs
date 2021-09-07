@@ -103,7 +103,7 @@ namespace Climbing
                     if (fp == null)
                     {
                         RaycastHit hit;
-                        if (controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 0.5f, out hit, controller.characterDetection.defaultLayer))
+                        if (controller.characterDetection.ThrowRayOnDirection(transform.position, Vector3.down, 0.5f, out hit))
                         {
                             HandlePoints handle = hit.transform.GetComponentInChildren<HandlePoints>();
                             if (handle)
@@ -189,7 +189,7 @@ namespace Climbing
                         Vector3 end = transform.position + inputDir * 4;
 
                         RaycastHit hit;
-                        if(controller.characterDetection.ThrowRayOnDirection(transform.position, inputDir, 4, out hit, controller.characterDetection.climbLayer))
+                        if(controller.characterDetection.ThrowRayOnDirection(transform.position, inputDir, 4, out hit))
                         {
                             Vector3 temp = hit.point;
                             temp.y = transform.position.y;

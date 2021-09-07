@@ -25,23 +25,15 @@ namespace Climbing
 {
     public class VaultReach : VaultAction
     {
-        float maxHeight = 0;
-        float midHeight = 0;
-
-        float height = 0;
-
-
+        private float maxHeight = 0;
+        private float height = 0;
         private Vector3 leftHandPosition;
-
         private string HandAnimVariableName;
 
         public VaultReach(ThirdPersonController _vaultingController, Action _actionInfo) : base(_vaultingController, _actionInfo)
         {
             ActionVaultReach action = (ActionVaultReach)_actionInfo;
-
             maxHeight = action.maxHeight;
-            midHeight = action.midHeight;
-
             HandAnimVariableName = action.HandAnimVariableName;
         }
 
@@ -53,7 +45,7 @@ namespace Climbing
                 Vector3 origin = controller.transform.position + Vector3.up * controller.stepHeight;
 
                 RaycastHit hit;
-                if (controller.characterDetection.ThrowRayOnDirection(origin, controller.transform.forward, kneeRaycastLength, out hit, layer))
+                if (controller.characterDetection.ThrowRayOnDirection(origin, controller.transform.forward, kneeRaycastLength, out hit, controller.characterDetection.climbLayer))
                 {
                     if (hit.collider.gameObject.tag != tag)
                         return false;
@@ -63,7 +55,7 @@ namespace Climbing
                     RaycastHit hit2;
                     RaycastHit hit3;
                     controller.characterDetection.ThrowRayOnDirection(controller.transform.position, Vector3.down, 1, out hit3);
-                    if (controller.characterDetection.ThrowRayOnDirection(origin2, Vector3.down, 10, out hit2, layer)) //Ground Hit
+                    if (controller.characterDetection.ThrowRayOnDirection(origin2, Vector3.down, 10, out hit2, controller.characterDetection.climbLayer)) //Ground Hit
                     {
                         height = hit2.point.y - controller.transform.position.y;
 
