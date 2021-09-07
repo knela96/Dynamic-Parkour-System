@@ -287,6 +287,8 @@ namespace Climbing
                 {
                     matchingTarget = true;
                     rotTime = 0;
+
+                    characterAnimation.SetMatchTarget(AvatarTarget.LeftHand, target, targetRot, targetRot * BracedHangOffset, startTime, endTime);
                 }
 
                 //Climb 
@@ -680,16 +682,18 @@ namespace Climbing
             //Checks if Foot detects a wall to place the feet
             if(curClimbState == ClimbState.BHanging)
             {
-                if (!characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.1f, out hit3) &&
-                    !characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.1f, out hit4))
+                bool b1 = characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.1f, out hit3);
+                bool b2 = characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.1f, out hit4);
+                if (!b1 && !b2)
                 {
                     wallFound = false;
                 }
             }
             else if (curClimbState == ClimbState.FHanging)
             {
-                if (characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.1f, out hit3) &&
-                    characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.1f, out hit4))
+                bool b1 = characterController.characterDetection.ThrowFootRayToLedge(origin3, Vector3.forward, IKFootRayLength + 0.1f, out hit3);
+                bool b2 = characterController.characterDetection.ThrowFootRayToLedge(origin4, Vector3.forward, IKFootRayLength + 0.1f, out hit4);
+                if (b1 && b2)
                 {
                     wallFound = true;
                 }

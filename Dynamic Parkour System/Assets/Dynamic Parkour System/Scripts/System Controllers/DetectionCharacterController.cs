@@ -173,7 +173,7 @@ namespace Climbing
                 Debug.DrawLine(origin, origin + transform.TransformDirection(direction) * length, Color.green);
             }
 
-            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length);
+            return Physics.Raycast(origin, transform.TransformDirection(direction), out hit, length, climbLayer);
         }
 
         public bool ThrowRayOnDirection(Vector3 origin, Vector3 direction, float length, out RaycastHit hit, LayerMask layer)

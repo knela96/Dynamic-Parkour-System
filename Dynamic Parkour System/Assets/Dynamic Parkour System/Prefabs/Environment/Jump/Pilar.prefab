@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2455220558709814183}
   - component: {fileID: 4989844887466356660}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1527513838067588218}
   - component: {fileID: 4319935708311318747}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,15 +89,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffee305532df40741ad9692ceaf23cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  singlePoint: 1
   pointType: 1
-  move: 0
-  updatePoints: 0
-  deleteAll: 0
-  createIndicators: 0
   pointPrefab: {fileID: 3720768991260851332, guid: c9e6d30b089b8e548830d3a6e491426b,
     type: 3}
   posInterval: 0.5
+  deleteAll: 0
+  createIndicators: 0
+  updatePoints: 0
   furthestLeft: {fileID: 0}
   furthestRight: {fileID: 0}
   pointsInOrder:
@@ -114,7 +112,7 @@ GameObject:
   - component: {fileID: 3480564469665299438}
   - component: {fileID: 3235628349513314716}
   - component: {fileID: 7380720472834175106}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Pilar
   m_TagString: Pole
   m_Icon: {fileID: 0}

@@ -38,7 +38,9 @@ namespace Climbing
             {
                 createIndicators = false;
                 HandlePrefab();
+                DeteleAll();
                 CreateIndicators();
+                UpdatePoints();
             }
 
             if (updatePoints)

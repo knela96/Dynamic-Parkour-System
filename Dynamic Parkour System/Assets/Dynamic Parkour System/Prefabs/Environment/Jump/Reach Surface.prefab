@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7406969537883025952}
   - component: {fileID: 7406969537883025953}
   - component: {fileID: 7406969537883025954}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Reach Surface
   m_TagString: Reach
   m_Icon: {fileID: 0}
