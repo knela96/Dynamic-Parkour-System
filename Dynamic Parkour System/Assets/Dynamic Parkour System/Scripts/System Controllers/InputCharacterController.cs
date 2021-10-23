@@ -57,6 +57,7 @@ namespace Climbing
             controls.Player.Drop.canceled += ctx => drop = ctx.ReadValueAsButton();
             controls.Player.Run.performed += ctx => run = ctx.ReadValueAsButton();
             controls.Player.Run.canceled += ctx => run = ctx.ReadValueAsButton();
+            controls.GameManager.Exit.performed += ctx => Exit();
         }
 
         void ToggleRun()
@@ -65,6 +66,11 @@ namespace Climbing
                 run = true;
             else
                 run = false;
+        }
+
+        void Exit()
+        {
+            Application.Quit();
         }
     }
 

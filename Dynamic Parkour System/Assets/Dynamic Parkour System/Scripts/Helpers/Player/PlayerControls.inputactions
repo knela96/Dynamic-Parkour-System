@@ -210,6 +210,33 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "GameManager",
+            "id": "576bde22-9ddd-43b8-b1bf-c56d46dc0606",
+            "actions": [
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "82507f7d-ff5e-4598-840e-f499a4ab25c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f4f0b368-25e1-45e9-8987-9afecb4b5efa",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad;Keyboard n Mouse",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

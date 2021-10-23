@@ -1,22 +1,3 @@
-/*
-Dynamic Parkour System grants parkour capabilities to any humanoid character model.
-Copyright (C) 2021  Èric Canela Sol
-Contact: knela96@gmail.com or @knela96 twitter
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 // GENERATED AUTOMATICALLY FROM 'Assets/Dynamic Parkour System/Scripts/Helpers/Player/PlayerControls.inputactions'
 
 using System;
@@ -25,14 +6,12 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace Climbing
+public class @PlayerControls : IInputActionCollection, IDisposable
 {
-    public class @PlayerControls : IInputActionCollection, IDisposable
+    public InputActionAsset asset { get; }
+    public @PlayerControls()
     {
-        public InputActionAsset asset { get; }
-        public @PlayerControls()
-        {
-            asset = InputActionAsset.FromJson(@"{
+        asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerControls"",
     ""maps"": [
         {
@@ -244,6 +223,33 @@ namespace Climbing
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""GameManager"",
+            ""id"": ""576bde22-9ddd-43b8-b1bf-c56d46dc0606"",
+            ""actions"": [
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""82507f7d-ff5e-4598-840e-f499a4ab25c5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f4f0b368-25e1-45e9-8987-9afecb4b5efa"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad;Keyboard n Mouse"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -276,178 +282,217 @@ namespace Climbing
         }
     ]
 }");
-            // Camera
-            m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
-            m_Camera_CameraLook = m_Camera.FindAction("CameraLook", throwIfNotFound: true);
-            // Player
-            m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-            m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-            m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
-            m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
-            m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        }
-
-        public void Dispose()
-        {
-            UnityEngine.Object.Destroy(asset);
-        }
-
-        public InputBinding? bindingMask
-        {
-            get => asset.bindingMask;
-            set => asset.bindingMask = value;
-        }
-
-        public ReadOnlyArray<InputDevice>? devices
-        {
-            get => asset.devices;
-            set => asset.devices = value;
-        }
-
-        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-        public bool Contains(InputAction action)
-        {
-            return asset.Contains(action);
-        }
-
-        public IEnumerator<InputAction> GetEnumerator()
-        {
-            return asset.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Enable()
-        {
-            asset.Enable();
-        }
-
-        public void Disable()
-        {
-            asset.Disable();
-        }
-
         // Camera
-        private readonly InputActionMap m_Camera;
-        private ICameraActions m_CameraActionsCallbackInterface;
-        private readonly InputAction m_Camera_CameraLook;
-        public struct CameraActions
-        {
-            private @PlayerControls m_Wrapper;
-            public CameraActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-            public InputAction @CameraLook => m_Wrapper.m_Camera_CameraLook;
-            public InputActionMap Get() { return m_Wrapper.m_Camera; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
-            public void SetCallbacks(ICameraActions instance)
-            {
-                if (m_Wrapper.m_CameraActionsCallbackInterface != null)
-                {
-                    @CameraLook.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
-                    @CameraLook.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
-                    @CameraLook.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
-                }
-                m_Wrapper.m_CameraActionsCallbackInterface = instance;
-                if (instance != null)
-                {
-                    @CameraLook.started += instance.OnCameraLook;
-                    @CameraLook.performed += instance.OnCameraLook;
-                    @CameraLook.canceled += instance.OnCameraLook;
-                }
-            }
-        }
-        public CameraActions @Camera => new CameraActions(this);
-
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_CameraLook = m_Camera.FindAction("CameraLook", throwIfNotFound: true);
         // Player
-        private readonly InputActionMap m_Player;
-        private IPlayerActions m_PlayerActionsCallbackInterface;
-        private readonly InputAction m_Player_Movement;
-        private readonly InputAction m_Player_Run;
-        private readonly InputAction m_Player_Drop;
-        private readonly InputAction m_Player_Jump;
-        public struct PlayerActions
+        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+        m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        // GameManager
+        m_GameManager = asset.FindActionMap("GameManager", throwIfNotFound: true);
+        m_GameManager_Exit = m_GameManager.FindAction("Exit", throwIfNotFound: true);
+    }
+
+    public void Dispose()
+    {
+        UnityEngine.Object.Destroy(asset);
+    }
+
+    public InputBinding? bindingMask
+    {
+        get => asset.bindingMask;
+        set => asset.bindingMask = value;
+    }
+
+    public ReadOnlyArray<InputDevice>? devices
+    {
+        get => asset.devices;
+        set => asset.devices = value;
+    }
+
+    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+    public bool Contains(InputAction action)
+    {
+        return asset.Contains(action);
+    }
+
+    public IEnumerator<InputAction> GetEnumerator()
+    {
+        return asset.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public void Enable()
+    {
+        asset.Enable();
+    }
+
+    public void Disable()
+    {
+        asset.Disable();
+    }
+
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private ICameraActions m_CameraActionsCallbackInterface;
+    private readonly InputAction m_Camera_CameraLook;
+    public struct CameraActions
+    {
+        private @PlayerControls m_Wrapper;
+        public CameraActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CameraLook => m_Wrapper.m_Camera_CameraLook;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void SetCallbacks(ICameraActions instance)
         {
-            private @PlayerControls m_Wrapper;
-            public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Movement => m_Wrapper.m_Player_Movement;
-            public InputAction @Run => m_Wrapper.m_Player_Run;
-            public InputAction @Drop => m_Wrapper.m_Player_Drop;
-            public InputAction @Jump => m_Wrapper.m_Player_Jump;
-            public InputActionMap Get() { return m_Wrapper.m_Player; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-            public void SetCallbacks(IPlayerActions instance)
+            if (m_Wrapper.m_CameraActionsCallbackInterface != null)
             {
-                if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
-                {
-                    @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                    @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                    @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
-                    @Drop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
-                    @Drop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
-                    @Drop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
-                    @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                    @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                    @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                }
-                m_Wrapper.m_PlayerActionsCallbackInterface = instance;
-                if (instance != null)
-                {
-                    @Movement.started += instance.OnMovement;
-                    @Movement.performed += instance.OnMovement;
-                    @Movement.canceled += instance.OnMovement;
-                    @Run.started += instance.OnRun;
-                    @Run.performed += instance.OnRun;
-                    @Run.canceled += instance.OnRun;
-                    @Drop.started += instance.OnDrop;
-                    @Drop.performed += instance.OnDrop;
-                    @Drop.canceled += instance.OnDrop;
-                    @Jump.started += instance.OnJump;
-                    @Jump.performed += instance.OnJump;
-                    @Jump.canceled += instance.OnJump;
-                }
+                @CameraLook.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
+                @CameraLook.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
+                @CameraLook.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnCameraLook;
+            }
+            m_Wrapper.m_CameraActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @CameraLook.started += instance.OnCameraLook;
+                @CameraLook.performed += instance.OnCameraLook;
+                @CameraLook.canceled += instance.OnCameraLook;
             }
         }
-        public PlayerActions @Player => new PlayerActions(this);
-        private int m_KeyboardnMouseSchemeIndex = -1;
-        public InputControlScheme KeyboardnMouseScheme
+    }
+    public CameraActions @Camera => new CameraActions(this);
+
+    // Player
+    private readonly InputActionMap m_Player;
+    private IPlayerActions m_PlayerActionsCallbackInterface;
+    private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_Run;
+    private readonly InputAction m_Player_Drop;
+    private readonly InputAction m_Player_Jump;
+    public struct PlayerActions
+    {
+        private @PlayerControls m_Wrapper;
+        public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @Drop => m_Wrapper.m_Player_Drop;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_Player; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
+        public void SetCallbacks(IPlayerActions instance)
         {
-            get
+            if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                if (m_KeyboardnMouseSchemeIndex == -1) m_KeyboardnMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard n Mouse");
-                return asset.controlSchemes[m_KeyboardnMouseSchemeIndex];
+                @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
+                @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @Drop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+            }
+            m_Wrapper.m_PlayerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Movement.started += instance.OnMovement;
+                @Movement.performed += instance.OnMovement;
+                @Movement.canceled += instance.OnMovement;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
-        private int m_GamepadSchemeIndex = -1;
-        public InputControlScheme GamepadScheme
+    }
+    public PlayerActions @Player => new PlayerActions(this);
+
+    // GameManager
+    private readonly InputActionMap m_GameManager;
+    private IGameManagerActions m_GameManagerActionsCallbackInterface;
+    private readonly InputAction m_GameManager_Exit;
+    public struct GameManagerActions
+    {
+        private @PlayerControls m_Wrapper;
+        public GameManagerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Exit => m_Wrapper.m_GameManager_Exit;
+        public InputActionMap Get() { return m_Wrapper.m_GameManager; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GameManagerActions set) { return set.Get(); }
+        public void SetCallbacks(IGameManagerActions instance)
         {
-            get
+            if (m_Wrapper.m_GameManagerActionsCallbackInterface != null)
             {
-                if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
-                return asset.controlSchemes[m_GamepadSchemeIndex];
+                @Exit.started -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnExit;
+                @Exit.performed -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnExit;
+                @Exit.canceled -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnExit;
+            }
+            m_Wrapper.m_GameManagerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Exit.started += instance.OnExit;
+                @Exit.performed += instance.OnExit;
+                @Exit.canceled += instance.OnExit;
             }
         }
-        public interface ICameraActions
+    }
+    public GameManagerActions @GameManager => new GameManagerActions(this);
+    private int m_KeyboardnMouseSchemeIndex = -1;
+    public InputControlScheme KeyboardnMouseScheme
+    {
+        get
         {
-            void OnCameraLook(InputAction.CallbackContext context);
+            if (m_KeyboardnMouseSchemeIndex == -1) m_KeyboardnMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard n Mouse");
+            return asset.controlSchemes[m_KeyboardnMouseSchemeIndex];
         }
-        public interface IPlayerActions
+    }
+    private int m_GamepadSchemeIndex = -1;
+    public InputControlScheme GamepadScheme
+    {
+        get
         {
-            void OnMovement(InputAction.CallbackContext context);
-            void OnRun(InputAction.CallbackContext context);
-            void OnDrop(InputAction.CallbackContext context);
-            void OnJump(InputAction.CallbackContext context);
+            if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
+            return asset.controlSchemes[m_GamepadSchemeIndex];
         }
+    }
+    public interface ICameraActions
+    {
+        void OnCameraLook(InputAction.CallbackContext context);
+    }
+    public interface IPlayerActions
+    {
+        void OnMovement(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
+        void OnDrop(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+    }
+    public interface IGameManagerActions
+    {
+        void OnExit(InputAction.CallbackContext context);
     }
 }
