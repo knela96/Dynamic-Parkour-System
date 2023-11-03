@@ -52,7 +52,7 @@ Website: [ericcanela.com](https://ericcanela.com)
 
 Twitter: [@Knela96](https://twitter.com/knela96)
 
-BuyMeACoffee: [ericcaneladev](buymeacoffee.com/ericcaneladev)
+BuyMeACoffee: [ericcaneladev](https://www.buymeacoffee.com/ericcaneladev)
 
 ## External Sources
 Animations and Model from [Mixamo](https://www.mixamo.com/)
